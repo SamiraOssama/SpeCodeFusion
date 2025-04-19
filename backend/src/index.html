@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload PDF</title>
+</head>
+<body>
+    <h1>Upload PDF for Processing</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="pdf" />
+        <button type="submit">Upload & Process</button>
+    </form>
+    <div id="response"></div>
+
+    <script>
+        document.getElementById("uploadForm").onsubmit = async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+
+            try {
+                const response = await fetch("http://localhost:5000/upload", {  // Updated port
+                    method: "POST",
+                    body: formData,
+                });
+
+                const result = await response.json();
+                document.getElementById("response").innerText = response.ok
+                    ? `Success: ${JSON.stringify(result)}`
+                    : `Error: ${JSON.stringify(result)}`;
+            } catch (err) {
+                console.error(err);
+                document.getElementById("response").innerText = "Error occurred during upload.";
+            }
+        };
+    </script>
+</body>
+</html>
