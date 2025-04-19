@@ -1,0 +1,45 @@
+/* Add this to your CSS file */
+.sign-up-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+  
+  .sign-up-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .sign-up-form form div {
+    margin-bottom: 15px;
+  }
+  
+  .sign-up-form form label {
+    display: block;
+    font-weight: bold;
+  }
+  
+  .sign-up-form form input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .sign-up-form form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .sign-up-form form button:hover {
+    background-color: #45a049;
+  }
+  
