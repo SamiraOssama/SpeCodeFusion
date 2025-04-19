@@ -1,0 +1,50 @@
+{
+  "name": "myproject",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.0.4",
+    "axios": "^1.7.9",
+    "chart.js": "^4.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "echarts": "^5.6.0",
+    "express": "^4.21.2",
+    "express-validator": "^7.2.1",
+    "lodash": "^4.17.21",
+    "motion": "^12.4.0",
+    "multer": "^1.4.5-lts.1",
+    "myproject": "file:",
+    "python-shell": "^5.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.4.0",
+    "react-router-dom": "^7.1.5",
+    "rechart": "^0.0.1",
+    "recharts": "^2.15.1",
+    "swiper": "^11.2.2",
+    "victory": "^37.3.6"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.19.0",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.18",
+    "globals": "^15.14.0",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^4.0.4",
+    "vite": "^6.1.0"
+  }
+}
