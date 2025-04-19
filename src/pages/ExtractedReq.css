@@ -1,0 +1,50 @@
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.loading, .error {
+    font-size: 18px;
+    color: red;
+}
+
+.requirements-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.requirements-table th, .requirements-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.requirements-table th {
+    background-color: #007bff;
+    color: white;
+}
+
+.upload-code-btn {
+    margin-top: 20px;
+    padding: 12px 24px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.upload-code-btn:hover {
+    background-color: #0056b3;
+}
