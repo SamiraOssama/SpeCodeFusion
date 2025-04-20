@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #0000FF;
+  --color-secondary: #0000BF;
+  --color-light: #0080FF;
+  --color-dark: #0000BF;
+  --color-dark2: #000080;
+
+  --container-center: true;
+  --container-padding: 2rem;
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1536px;
+}
+@layer components {
+  .primary-btn {
+    @apply inline-block bg-primary text-white
+    font-semibold rounded-lg duration-299 shadow-[0px_10px_8px_7px_#0] py-2 px-6
+    transition-all ease-in-out;
+  }
+
+  .primary-btn:hover {
+    @apply bg-secondary scale-100;
+    box-shadow: none; /* Removes the shadow on hover */
+  }
+}
+
+
+
+@font-face {
+  font-family: "Poppins", sans-serif;
+}
