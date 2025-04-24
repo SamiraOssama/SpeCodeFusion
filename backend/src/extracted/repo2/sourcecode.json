@@ -1,0 +1,66 @@
+{
+  "repo_url": "https://github.com/Arreejj/gam3eyetnaa",
+  "files_analyzed": 1,
+  "functions_found": 3,
+  "functions": [
+    {
+      "name": "togglemenu",
+      "file": "navscroll.js",
+      "filepath": "D:\\SpeCodeFusion\\backend\\src\\uploads\\repo2\\github_clone\\js\\navscroll.js",
+      "language": "javascript",
+      "start_line": 4,
+      "end_line": 11,
+      "line_count": 7,
+      "body": "function togglemenu() {\n    if (menu.style.maxHeight == \"0px\") {\n        menu.style.maxHeight = \"390px\";\n    }\n    else {\n        menu.style.maxHeight = \"0px\";\n    }\n}"
+    },
+    {
+      "name": "togglemenu",
+      "file": "navscroll.js",
+      "filepath": "D:\\SpeCodeFusion\\backend\\src\\uploads\\repo2\\github_clone\\js\\navscroll.js",
+      "language": "javascript",
+      "start_line": 4,
+      "end_line": 11,
+      "line_count": 7,
+      "body": "togglemenu() {\n    if (menu.style.maxHeight == \"0px\") {\n        menu.style.maxHeight = \"390px\";\n    }\n    else {\n        menu.style.maxHeight = \"0px\";\n    }\n}"
+    },
+    {
+      "name": "if",
+      "file": "navscroll.js",
+      "filepath": "D:\\SpeCodeFusion\\backend\\src\\uploads\\repo2\\github_clone\\js\\navscroll.js",
+      "language": "javascript",
+      "start_line": 5,
+      "end_line": 7,
+      "line_count": 2,
+      "body": "if (menu.style.maxHeight == \"0px\") {\n        menu.style.maxHeight = \"390px\";\n    }"
+    }
+  ],
+  "functional_requirements": [
+    {
+      "requirement": "The system shall include a function 'togglemenu' whose purpose needs to be documented.",
+      "source": "unknown",
+      "file": "navscroll.js",
+      "language": "javascript",
+      "function": "togglemenu",
+      "location": "D:\\SpeCodeFusion\\backend\\src\\uploads\\repo2\\github_clone\\js\\navscroll.js:4-11"
+    },
+    {
+      "requirement": "The system shall include a function 'togglemenu' whose purpose needs to be documented.",
+      "source": "unknown",
+      "file": "navscroll.js",
+      "language": "javascript",
+      "function": "togglemenu",
+      "location": "D:\\SpeCodeFusion\\backend\\src\\uploads\\repo2\\github_clone\\js\\navscroll.js:4-11"
+    },
+    {
+      "requirement": "The system shall include a function 'if' whose purpose needs to be documented.",
+      "source": "unknown",
+      "file": "navscroll.js",
+      "language": "javascript",
+      "function": "if",
+      "location": "D:\\SpeCodeFusion\\backend\\src\\uploads\\repo2\\github_clone\\js\\navscroll.js:5-7"
+    }
+  ],
+  "start_time": 1745357460.4675968,
+  "status": "success",
+  "processing_time": 2.431161880493164
+}

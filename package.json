@@ -26,6 +26,8 @@
     "motion": "^12.4.0",
     "multer": "^1.4.5-lts.1",
     "myproject": "file:",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
     "python-shell": "^5.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

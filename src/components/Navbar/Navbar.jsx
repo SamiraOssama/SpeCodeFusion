@@ -24,6 +24,7 @@ const Navbar = () => {
       fetchRequestCount(parsedUser.id);
     }
   }, []);
+  
 
   const fetchRequestCount = async (userId) => {
     try {
@@ -46,6 +47,14 @@ const Navbar = () => {
     user ? navigate("/Dashboarddmalak") : navigate("/login");
   };
 
+  const renderRequestBadge = () => {
+    return requestCount > 0 && (
+      <span className="absolute -top-2 -right-4 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+        {requestCount}
+      </span>
+    );
+  };
+
   return (
     <nav className="bg-white shadow-md">
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
@@ -63,11 +72,7 @@ const Navbar = () => {
                 className="text-gray-700 hover:text-blue-500 transition whitespace-nowrap"
               >
                 {menu.title}
-                {menu.id === 5 && requestCount > 0 && (
-                  <span className="absolute -top-2 -right-4 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {requestCount}
-                  </span>
-                )}
+                {menu.id === 5 && renderRequestBadge()}
               </Link>
             </div>
           ))}
@@ -81,7 +86,7 @@ const Navbar = () => {
 
           {user ? (
             <div className="flex items-center space-x-4">
-              <span className="text-gray-700 whitespace-nowrap">Welcome, {user.username}!</span>
+              <span className="text-gray-700 whitespace-nowrap">Welcome, {user.username || user.email}!</span>
               <button
                 onClick={handleLogout}
                 className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition whitespace-nowrap"
@@ -119,11 +124,7 @@ const Navbar = () => {
                 onClick={() => setIsOpen(false)}
               >
                 <span>{menu.title}</span>
-                {menu.id === 5 && requestCount > 0 && (
-                  <span className="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {requestCount}
-                  </span>
-                )}
+                {menu.id === 5 && renderRequestBadge()}
               </Link>
             </div>
           ))}
@@ -140,7 +141,7 @@ const Navbar = () => {
 
           {user ? (
             <div className="mt-4">
-              <p className="text-gray-700 py-2">Welcome, {user.username}!</p>
+              <p className="text-gray-700 py-2">Welcome, {user.username || user.email}!</p>
               <button
                 onClick={handleLogout}
                 className="w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"

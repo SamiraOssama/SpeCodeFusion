@@ -11,83 +11,103 @@ exports.signup = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { username, email, password } = req.body;
+  const { username, email, password, role } = req.body;
 
   try {
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ message: "User already exists" });
 
+    // Set the role to 'user' if it's not provided
+    const userRole = role || 'user'; // Default role is 'user'
+
     const hashedPassword = await bcrypt.hash(password, 10);
-    user = new User({ username, email, password: hashedPassword });
+    user = new User({ username, email, password: hashedPassword, role: userRole });
     await user.save();
 
-    const token = jwt.sign({ id: user.id, email }, "secretkey", { expiresIn: "3h" });
+    const token = jwt.sign(
+      { id: user.id, email: user.email, role: user.role },
+      process.env.JWT_SECRET, 
+      { expiresIn: "3h" }
+    );
 
-    res.status(201).json({ token, message: "Signup successful", user: { username, email } });
+    res.status(201).json({ token, message: "Signup successful", user: { username, email, role: userRole } });
   } catch (err) {
     res.status(500).json({ message: "Server Error" });
   }
 };
 
-// ✅ User Login
+exports.googleCallback = async (req, res) => {
+  const user = req.user;
+
+  if (user.isGoogleUser && !user.username) {
+
+    user.username = user.email.split("@")[0]; 
+    await user.save(); 
+  }
+  const token = jwt.sign(
+    { id: user.id, email: user.email, role: user.role },
+    process.env.JWT_SECRET, 
+    { expiresIn: "3h" }
+  );
+  
+  res.redirect(`http://localhost:5173/google-login-success?token=${token}`);
+};
+
 exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // 1. Find user by email (case insensitive)
-    const user = await User.findOne({ email: email.toLowerCase().trim() });
-    if (!user) {
-      return res.status(401).json({ message: "Invalid email or password" });
-    }
+    const user = await User.findOne({ email });
+    if (!user) return res.status(401).json({ message: "Invalid email or password" });
 
-    // 2. Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Invalid email or password" });
-    }
+    if (!isMatch) return res.status(401).json({ message: "Invalid email or password" });
 
-    // 3. Create token with more user data
     const token = jwt.sign(
-      { 
-        id: user._id, 
-        email: user.email,
-        username: user.username
-      }, 
-      process.env.JWT_SECRET || "secretkey", // Use environment variable
+      { id: user.id, email: user.email, role: user.role },
+      process.env.JWT_SECRET, 
       { expiresIn: "3h" }
     );
 
-    // 4. Send response with all needed user data
-    res.json({
+    const responseData = {
       message: "Login successful",
       token,
       user: {
-        _id: user._id,
         username: user.username,
         email: user.email,
-        // Add any other relevant user fields
+        role: user.role,  
       }
-    });
+    };
 
+    res.json(responseData); 
   } catch (err) {
-    console.error("Login error:", err);
     res.status(500).json({ message: "Server Error" });
   }
 };
 
-// ✅ Get User Profile
+
+
 exports.getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("-password"); // Exclude password
-    if (!user) return res.status(404).json({ message: "User not found" });
+    console.log("🔎 Fetching profile for user ID:", req.user.id); // Log the ID
 
-    res.json(user);
-  } catch (err) {
-    res.status(500).json({ message: "Server Error" });
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      username: user.username, 
+      email: user.email,
+      role: user.role,
+      profilePicture: user.profilePicture || null,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching user profile" });
   }
 };
 
-// ✅ Update User Profile
 exports.updateProfile = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -105,7 +125,7 @@ exports.updateProfile = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
-// ✅ Fetch a User by ID
+
 exports.getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select("username email");
@@ -118,7 +138,7 @@ exports.getUserById = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-// ✅ Delete User Account
+
 exports.deleteProfile = async (req, res) => {
   try {
     await User.findByIdAndDelete(req.user.id);
@@ -127,3 +147,4 @@ exports.deleteProfile = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+

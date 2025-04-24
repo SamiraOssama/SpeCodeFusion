@@ -1,19 +1,24 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // For navigation
-import signup from "../assets/images/signup.png"; // Path to your image
-import { FaUser, FaEnvelope, FaLock, FaGoogle } from "react-icons/fa"; // Import icons
+import { useNavigate } from "react-router-dom"; 
+import signup from "../assets/images/signup.png";
+import { FaUser, FaEnvelope, FaLock} from "react-icons/fa"; 
+import { FcGoogle } from "react-icons/fc";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Navbar from "../components/Navbar/Navbar";
 
 const SignUp = () => {
   const navigate = useNavigate();
 
-  // State for form inputs
+ 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordStrength, setPasswordStrength] = useState(0);
-  const [errorMessage, setErrorMessage] = useState(""); // To display errors
+  const [errorMessage, setErrorMessage] = useState(""); 
+  const [showPassword, setShowPassword] = useState(false);
 
-  // Password strength checker function
+
+ 
   const checkPasswordStrength = (password) => {
     const lengthCriteria = password.length >= 8;
     const numberCriteria = /[0-9]/.test(password);
@@ -29,12 +34,12 @@ const SignUp = () => {
     setPasswordStrength(strength);
   };
 
-  // Form submit handler
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage(""); // Clear previous errors
+    setErrorMessage(""); 
 
-    // Validate password
+   
     if (!password.match(/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d@#$%^&*!?.]{8,}$/)) {
       setErrorMessage(
         "Password must be at least 8 characters long, include a number and an uppercase letter."
@@ -56,7 +61,7 @@ const SignUp = () => {
       if (response.ok) {
         console.log("Signup successful:", data);
         alert(data.message);
-        navigate("/login"); // Redirect to login page
+        navigate("/login"); 
       } else {
         setErrorMessage(data.message || "Signup failed. Please try again.");
       }
@@ -66,7 +71,7 @@ const SignUp = () => {
     }
   };
 
-  // Password strength message
+
   const getPasswordStrengthMessage = () => {
     if (passwordStrength === 0) return "Weak";
     if (passwordStrength <= 25) return "Weak";
@@ -76,8 +81,10 @@ const SignUp = () => {
   };
 
   return (
+    <>
+      <Navbar />
     <div className="min-h-screen flex">
-      {/* Left side (Image) */}
+   
       <div className="w-full md:w-1/2 bg-blue-500 flex justify-center items-center">
         <img
           src={signup}
@@ -86,25 +93,29 @@ const SignUp = () => {
         />
       </div>
 
-      {/* Right side (Form with Blue Background) */}
+  
       <div className="w-full md:w-1/2 bg-blue-500 flex flex-col justify-center items-center p-6">
         <h1 className="text-center text-lg font-semibold text-white mb-4">
           Sign Up
         </h1>
 
-        {/* Display error message */}
+     
         {errorMessage && (
           <p className="text-red-500 bg-white p-2 rounded-md">{errorMessage}</p>
         )}
 
-        {/* Continue with Google Button */}
-        <button className="w-[400px] flex items-center justify-center py-2 px-4 bg-white text-blue-500 font-semibold rounded-2xl shadow-md hover:bg-blue-100 transition duration-200 mb-6">
-          <FaGoogle className="mr-2 text-yellow-500" /> Continue with Google
-        </button>
+   
+<button 
+  onClick={() => window.location.href = "http://localhost:5000/api/users/google"}
+  className="w-[400px] flex items-center justify-center py-2 px-4 bg-white text-blue-500 font-semibold rounded-2xl shadow-md hover:bg-blue-100 transition duration-200 mb-6"
+>
+  <FcGoogle className="mr-2 text-yellow-500" /> Continue with Google
+</button>
+
 
         <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md">
-          {/* Username Field */}
-          <div className="relative">
+
+<div className="relative">
             <FaUser className="absolute left-3 top-3 text-blue-500" />
             <input
               type="text"
@@ -117,8 +128,7 @@ const SignUp = () => {
               className="mt-1 block w-full pl-10 pr-3 py-2 bg-white text-blue-500 border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 placeholder-blue-500"
             />
           </div>
-
-          {/* Email Field */}
+     
           <div className="relative">
             <FaEnvelope className="absolute left-3 top-3 text-blue-500" />
             <input
@@ -133,42 +143,37 @@ const SignUp = () => {
             />
           </div>
 
-          {/* Password Field */}
+          
+
+        
           <div className="relative">
-            <FaLock className="absolute left-3 top-3 text-blue-500" />
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                checkPasswordStrength(e.target.value);
-              }}
-              required
-              placeholder="Password"
-              className="mt-1 block w-full pl-10 pr-3 py-2 bg-white text-blue-500 border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 placeholder-blue-500"
-            />
-          </div>
+  <FaLock className="absolute left-3 top-3 text-blue-500" />
 
-          {/* Password Strength Bar */}
-          <div className="w-full h-1 mt-2 rounded-full bg-gray-300">
-            <div
-              className={`h-full rounded-full ${
-                passwordStrength >= 75
-                  ? "bg-yellow-500"
-                  : passwordStrength >= 50
-                  ? "bg-yellow-400"
-                  : passwordStrength >= 25
-                  ? "bg-yellow-300"
-                  : "bg-gray-300"
-              }`}
-              style={{ width: `${passwordStrength}%` }}
-            ></div>
-          </div>
+  <input
+    type={showPassword ? "text" : "password"}
+    id="password"
+    name="password"
+    value={password}
+    onChange={(e) => {
+      setPassword(e.target.value);
+      checkPasswordStrength(e.target.value);
+    }}
+    required
+    placeholder="Password"
+    className="mt-1 block w-full pl-10 pr-12 py-2 bg-white text-blue-500 border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 placeholder-blue-500"
+  />
 
-          {/* Password Strength Message */}
-          <div className="mt-2 text-sm text-white">
+  {/* Always render the eye icon but position it so it doesn't affect layout */}
+  <span
+    onClick={() => setShowPassword((prev) => !prev)}
+    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-500 cursor-pointer"
+  >
+    {showPassword ? <FaEyeSlash /> : <FaEye />}
+  </span>
+</div>
+
+
+<div className="mt-2 text-sm text-white">
             {getPasswordStrengthMessage()}
           </div>
 
@@ -183,19 +188,19 @@ const SignUp = () => {
           </div>
         </form>
 
-        <div className="mt-4 text-center">
-          <p className="text-sm text-white">
-            Already have an account?{" "}
-            <button
-              onClick={() => navigate("/login")}
-              className="text-white hover:underline"
-            >
-              Login here
-            </button>
-          </p>
-        </div>
+        
+  <span
+    className="text-blue-600 hover:underline cursor-pointer"
+    onClick={() => navigate("/login")}
+  >
+    <p className="mt-4 text-sm text-gray-600">
+    Already have an account?{" "}
+    </p>
+  </span>
+
       </div>
     </div>
+    </>
   );
 };
 

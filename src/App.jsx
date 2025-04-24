@@ -21,6 +21,7 @@ import RepoHistory from "./pages/Repohistory";
 import Allrepos from "./pages/Allrepos";
 import All from "./pages/All";
 import RequestPage from"./pages/Requestpage";
+import GoogleSuccess from "./pages/GoogleSuccess";
  // Fixed casing
 
 function App() {
@@ -140,7 +141,7 @@ function App() {
            <Route path="/Allrepos" element={<Allrepos />}/>
            <Route path="/All" element={<All />}/>
            <Route path="/Requestpage" element={<RequestPage />}/>
-
+           <Route path="/google-login-success" element={<GoogleSuccess />} />
            
         </Routes>
       </main>

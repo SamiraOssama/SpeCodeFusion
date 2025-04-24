@@ -1,10 +1,11 @@
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../../dotenv.env") });
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const path = require("path");
 const fs = require("fs");
 const csv = require("csv-parser");
-
+const passport = require("./middleware/passport");
 const Repo = require("./models/repo"); // ✅ Import Repo model
 const codeRoutes = require("./routes/codeRoutes");
 
@@ -15,6 +16,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
 app.use(express.static("public"));
+app.use(passport.initialize());
 
 // ✅ Ensure directories exist
 const extractedDir = path.join(__dirname, "extracted");
