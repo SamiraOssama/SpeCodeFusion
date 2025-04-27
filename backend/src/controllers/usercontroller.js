@@ -89,7 +89,7 @@ exports.login = async (req, res) => {
 
 exports.getProfile = async (req, res) => {
   try {
-    console.log("🔎 Fetching profile for user ID:", req.user.id); // Log the ID
+    console.log("🔎 Fetching profile for user ID:", req.user.id); 
 
     const user = await User.findById(req.user.id);
 
@@ -108,23 +108,25 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-exports.updateProfile = async (req, res) => {
-  try {
-    const { username, email, password } = req.body;
-    let user = await User.findById(req.user.id);
+const updateProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id);
 
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    if (username) user.username = username;
-    if (email) user.email = email;
-    if (password) user.password = await bcrypt.hash(password, 10);
-
-    await user.save();
-    res.json({ message: "Profile updated successfully!", user });
-  } catch (err) {
-    res.status(500).json({ message: "Server Error" });
+  if (user) {
+    user.username = req.body.username || user.username;
+    user.email = req.body.email || user.email;
+    const updatedUser = await user.save();
+    res.json({
+      id: updatedUser._id,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      profilePicture: updatedUser.profilePicture,
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
   }
-};
+});
+
 
 exports.getUserById = async (req, res) => {
   try {

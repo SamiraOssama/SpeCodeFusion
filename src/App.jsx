@@ -130,7 +130,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/ResetPassword" element={<ResetPassword />} />
           <Route path="/ReportDetail" element={<ReportDetail />} />
-          <Route path="/UserProfile" element={<UserProfile />} />
+          <Route path="/profile" element={<UserProfile />} />
           <Route path="/AdminDashboard" element={<AdminDashboard />} />
           <Route path="/AdminUsers" element={<AdminUsers />} />
           <Route path="/AdminPerformance" element={<AdminPerformance />} />

@@ -10,74 +10,88 @@ import "./UserProfile.css";
 const UserProfile = () => {
   const [editing, setEditing] = useState(false);
   const [user, setUser] = useState({
-    name: "",
+    username: "",
     email: "",
     profilePicture: avatar,
   });
-  const [reports, setReports] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [reports, setReports] = useState([]);
   const navigate = useNavigate();
 
   // Color scheme
   const colors = {
-    primary: "#3B82F6", // Blue
-    secondary: "#10B981", // Green
-    accent: "#EF4444", // Red
+    primary: "#3B82F6",
+    secondary: "#10B981",
+    accent: "#EF4444",
     background: "#F9FAFB",
     card: "#FFFFFF",
     text: "#1F2937",
-    muted: "#6B7280"
+    muted: "#6B7280",
   };
 
   // Animation variants
   const fadeIn = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.5 } }
+    visible: { opacity: 1, transition: { duration: 0.5 } },
   };
 
   const slideUp = {
     hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.3 } }
+    visible: { y: 0, opacity: 1, transition: { duration: 0.3 } },
   };
 
   const cardHover = {
-    hover: { 
+    hover: {
       y: -5,
-      boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)"
-    }
+      boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)",
+    },
   };
 
   useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      fetchUserProfile(parsedUser.id);
+      fetchReports(parsedUser.id);
+    } else {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  const fetchUserProfile = async (userId) => {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/login");
       return;
     }
 
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const [profileRes, reportsRes] = await Promise.all([
-          axios.get("http://localhost:5000/api/users/profile", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get("http://localhost:5000/api/users/reports", {
-            headers: { Authorization: `Bearer ${token}` },
-          })
-        ]);
-        
-        setUser(profileRes.data);
-        setReports(reportsRes.data);
-      } catch (err) {
-        setError(err.response?.data?.message || "Failed to load data");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    try {
+      const res = await axios.get(`http://localhost:5000/api/users/profile/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUser({
+        username: res.data.username,
+        email: res.data.email || "No email provided",
+        profilePicture: res.data.profilePicture || avatar,
+      });
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to load profile data");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    fetchData();
-  }, [navigate]);
+  const fetchReports = async (userId) => {
+    try {
+      const res = await axios.get(`http://localhost:5000/api/reports/user/${userId}`);
+      setReports(res.data.reports || []);
+    } catch (err) {
+      console.error("Failed to fetch reports", err);
+      setReports([]);
+    }
+  };
 
   const toggleEdit = () => setEditing(!editing);
 
@@ -92,10 +106,9 @@ const UserProfile = () => {
     try {
       const res = await axios.put(
         "http://localhost:5000/api/users/profile",
-        { username: user.name, email: user.email },
+        { username: user.username, email: user.email },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
       setUser(res.data.user);
       showNotification("Profile updated successfully!", "success");
       setEditing(false);
@@ -119,7 +132,6 @@ const UserProfile = () => {
       await axios.delete("http://localhost:5000/api/users/profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      
       localStorage.removeItem("token");
       showNotification("Account deleted successfully", "success");
       navigate("/");
@@ -131,12 +143,9 @@ const UserProfile = () => {
   const showNotification = (message, type) => {
     const notification = document.createElement("div");
     notification.className = `flash-notification ${type}`;
-    notification.innerHTML = `
-      <span>${type === "success" ? "✓" : "⚠️"}</span>
-      <p>${message}</p>
-    `;
+    notification.innerHTML = `<span>${type === "success" ? "✓" : "⚠️"}</span><p>${message}</p>`;
     document.body.appendChild(notification);
-    
+
     setTimeout(() => {
       notification.classList.add("fade-out");
       setTimeout(() => notification.remove(), 500);
@@ -146,82 +155,46 @@ const UserProfile = () => {
   return (
     <>
       <Navbar />
-      <motion.div 
-        className="user-profile-container"
-        initial="hidden"
-        animate="visible"
-        variants={fadeIn}
-        style={{ background: colors.background }}
-      >
+      <motion.div className="user-profile-container" initial="hidden" animate="visible" variants={fadeIn} style={{ background: colors.background }}>
         {/* Header */}
-        <motion.header 
-          className="profile-header"
-          variants={slideUp}
-          style={{ background: colors.primary }}
-        >
+        <motion.header className="profile-header" variants={slideUp} style={{ background: colors.primary }}>
           <h1>👤 User Profile</h1>
         </motion.header>
 
         {/* Main Content */}
         <div className="profile-content">
           {/* Profile Card */}
-          <motion.div 
-            className="profile-card"
-            variants={slideUp}
-            whileHover={cardHover}
-            style={{ background: colors.card }}
-          >
+          <motion.div className="profile-card" variants={slideUp} whileHover={cardHover} style={{ background: colors.card }}>
             <div className="profile-info">
-              <motion.div 
-                className="avatar-container"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <img 
-                  src={user.profilePicture} 
-                  alt="Profile" 
-                  className="profile-avatar"
-                />
+              <motion.div className="avatar-container" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <img src={user.profilePicture} alt="Profile" className="profile-avatar" />
                 <div className="avatar-overlay">📷 Change</div>
               </motion.div>
-              
+
               <div className="profile-details">
-                <h2 style={{ color: colors.text }}>{user.name || "Anonymous User"}</h2>
+                <h2 style={{ color: colors.text }}>{user.username || "Anonymous User"}</h2>
                 <p style={{ color: colors.muted }}>{user.email || "No email provided"}</p>
               </div>
             </div>
 
             <div className="profile-actions">
-              <motion.button
-                onClick={toggleEdit}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                style={{ background: colors.primary }}
-              >
+              <motion.button onClick={toggleEdit} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} style={{ background: colors.primary }}>
                 <FiEdit /> {editing ? "Cancel" : "Edit Profile"}
               </motion.button>
-              
-              <Link 
-                to="/change-password" 
-                className="change-password-btn"
-                style={{ background: colors.secondary }}
-              >
+
+              <Link to="/change-password" className="change-password-btn" style={{ background: colors.secondary }}>
                 <FiLock /> Change Password
               </Link>
             </div>
           </motion.div>
 
           {/* Reports Section */}
-          <motion.div 
-            className="reports-section"
-            variants={slideUp}
-            style={{ background: colors.card }}
-          >
+          <motion.div className="reports-section" variants={slideUp} style={{ background: colors.card }}>
             <div className="section-header">
               <FiFileText className="section-icon" />
               <h3>Reports History</h3>
             </div>
-            
+
             {isLoading ? (
               <div className="loading-spinner" />
             ) : reports.length > 0 ? (
@@ -232,17 +205,10 @@ const UserProfile = () => {
                   <span>Status</span>
                 </div>
                 {reports.map((report) => (
-                  <motion.div 
-                    key={report.id}
-                    className="report-row"
-                    whileHover={{ background: "#F3F4F6" }}
-                    transition={{ duration: 0.2 }}
-                  >
+                  <motion.div key={report.id} className="report-row" whileHover={{ background: "#F3F4F6" }} transition={{ duration: 0.2 }}>
                     <span>{new Date(report.date).toLocaleDateString()}</span>
                     <span>{report.title}</span>
-                    <span className={`status-badge ${report.status.toLowerCase()}`}>
-                      {report.status}
-                    </span>
+                    <span className={`status-badge ${report.status.toLowerCase()}`}>{report.status}</span>
                   </motion.div>
                 ))}
               </div>
@@ -254,16 +220,8 @@ const UserProfile = () => {
           </motion.div>
 
           {/* Delete Account Section */}
-          <motion.div 
-            className="delete-section"
-            variants={slideUp}
-          >
-            <motion.button
-              onClick={deleteProfile}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              style={{ background: colors.accent }}
-            >
+          <motion.div className="delete-section" variants={slideUp}>
+            <motion.button onClick={deleteProfile} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} style={{ background: colors.accent }}>
               <FiTrash2 /> Delete Account
             </motion.button>
           </motion.div>
@@ -272,53 +230,27 @@ const UserProfile = () => {
         {/* Edit Profile Modal */}
         <AnimatePresence>
           {editing && (
-            <motion.div 
-              className="edit-modal-overlay"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <motion.div 
-                className="edit-modal"
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                style={{ background: colors.card }}
-              >
+            <motion.div className="edit-modal-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <motion.div className="edit-modal" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}>
                 <div className="modal-header">
                   <h3>✏️ Edit Profile</h3>
                   <button onClick={toggleEdit} className="close-btn">
                     <FiX />
                   </button>
                 </div>
-                
+
                 <form onSubmit={updateProfile}>
                   <div className="form-group">
                     <label>Name</label>
-                    <input
-                      type="text"
-                      value={user.name}
-                      onChange={(e) => setUser({ ...user, name: e.target.value })}
-                      required
-                    />
+                    <input type="text" value={user.username} onChange={(e) => setUser({ ...user, username: e.target.value })} required />
                   </div>
-                  
+
                   <div className="form-group">
                     <label>Email</label>
-                    <input
-                      type="email"
-                      value={user.email}
-                      onChange={(e) => setUser({ ...user, email: e.target.value })}
-                      required
-                    />
+                    <input type="email" value={user.email} onChange={(e) => setUser({ ...user, email: e.target.value })} required />
                   </div>
-                  
-                  <motion.button
-                    type="submit"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    style={{ background: colors.primary }}
-                  >
+
+                  <motion.button type="submit" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <FiSave /> Save Changes
                   </motion.button>
                 </form>

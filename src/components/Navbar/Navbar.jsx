@@ -6,7 +6,7 @@ const NavbarMenu = [
   { id: 1, title: "Home", path: "/" },
   { id: 2, title: "My Repos", path: "/Allrepos" },
   { id: 3, title: "All Repos", path: "/All" },
-  { id: 4, title: "My Profile", path: "/UserProfile" },
+  { id: 4, title: "My Profile", path: "/profile" },
   { id: 5, title: "Requests", path: "/Requestpage" },
 ];
 

@@ -47,10 +47,10 @@ const authenticateToken = (req, res, next) => {
     });
   };
   
-  // GET /api/users/profile
+  
   router.get("/profile", authenticateToken, async (req, res) => {
     try {
-      const user = await User.findById(req.user.id).select("-password"); // remove sensitive info
+      const user = await User.findById(req.user.id).select("-password"); 
   
       if (!user) return res.status(404).json({ message: "User not found" });
   
