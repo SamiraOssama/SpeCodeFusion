@@ -2,6 +2,7 @@ const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
+const axios = require('axios');
 
 
 
@@ -14,16 +15,41 @@ exports.signup = async (req, res) => {
   const { username, email, password, role } = req.body;
 
   try {
-    let user = await User.findOne({ email });
-    if (user) return res.status(400).json({ message: "User already exists" });
+    
+    const response = await axios.get(`https://api.zerobounce.net/v2/validate`, {
+      params: {
+        api_key: process.env.ZERBOUNCE_API_KEY,
+        email: email,
+      },
+    });
 
-    // Set the role to 'user' if it's not provided
-    const userRole = role || 'user'; // Default role is 'user'
+    const validationResult = response.data;
+    
+    
+    if (validationResult.status !== 'valid') {
+      return res.status(400).json({
+        message: "Invalid email address. Please provide a valid email.",
+        reason: validationResult.status  
+      });
+    }
 
+    
+    let user = await User.findOne({ username });
+    if (user) return res.status(400).json({ message: "Username already exists" });
+
+    
+    user = await User.findOne({ email });
+    if (user) return res.status(400).json({ message: "User already exists with this email" });
+
+    
+    const userRole = role || 'user'; 
+
+   
     const hashedPassword = await bcrypt.hash(password, 10);
     user = new User({ username, email, password: hashedPassword, role: userRole });
     await user.save();
 
+    
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
       process.env.JWT_SECRET, 
@@ -32,25 +58,9 @@ exports.signup = async (req, res) => {
 
     res.status(201).json({ token, message: "Signup successful", user: { username, email, role: userRole } });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server Error" });
   }
-};
-
-exports.googleCallback = async (req, res) => {
-  const user = req.user;
-
-  if (user.isGoogleUser && !user.username) {
-
-    user.username = user.email.split("@")[0]; 
-    await user.save(); 
-  }
-  const token = jwt.sign(
-    { id: user.id, email: user.email, role: user.role },
-    process.env.JWT_SECRET, 
-    { expiresIn: "3h" }
-  );
-  
-  res.redirect(`http://localhost:5173/google-login-success?token=${token}`);
 };
 
 exports.login = async (req, res) => {
@@ -108,24 +118,7 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-const updateProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user.id);
 
-  if (user) {
-    user.username = req.body.username || user.username;
-    user.email = req.body.email || user.email;
-    const updatedUser = await user.save();
-    res.json({
-      id: updatedUser._id,
-      username: updatedUser.username,
-      email: updatedUser.email,
-      profilePicture: updatedUser.profilePicture,
-    });
-  } else {
-    res.status(404);
-    throw new Error('User not found');
-  }
-});
 
 
 exports.getUserById = async (req, res) => {

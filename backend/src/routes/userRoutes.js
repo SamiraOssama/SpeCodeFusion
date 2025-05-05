@@ -1,5 +1,5 @@
 const express = require("express");
-const { signup, login, getProfile, updateProfile, deleteProfile } = require("../controllers/usercontroller");
+const { signup, login, getProfile,  deleteProfile } = require("../controllers/usercontroller");
 const authenticateUser = require("../middleware/authMiddleware");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
@@ -12,7 +12,7 @@ router.post("/login", login);
 
 // ✅ User Profile Management
 router.get("/profile", authenticateUser, getProfile);
-router.put("/profile", authenticateUser, updateProfile);
+
 router.delete("/profile", authenticateUser, deleteProfile);
 
 router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
