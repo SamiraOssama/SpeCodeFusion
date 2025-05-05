@@ -64,14 +64,25 @@ exports.signup = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
-
+  const { emailOrUsername, password } = req.body;  // Using 'emailOrUsername' instead of 'email'
+  
   try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ message: "Invalid email or password" });
+    // Check if the provided identifier is an email or username
+    let user;
+    if (emailOrUsername.includes('@')) {  // If the identifier is an email
+      user = await User.findOne({ email: emailOrUsername });
+    } else {  // If the identifier is a username
+      user = await User.findOne({ username: emailOrUsername });
+    }
+
+    if (!user) {
+      return res.status(401).json({ message: "Invalid username/email or password" });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ message: "Invalid email or password" });
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid username/email or password" });
+    }
 
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
@@ -94,6 +105,8 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+
 
 
 
