@@ -120,6 +120,12 @@ const UserProfile = () => {
       showNotification(err.response?.data?.message || "Update failed", "error");
     }
   };
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    setUser(null);
+    navigate("/login");
+  };
 
   const deleteProfile = async () => {
     if (!window.confirm("Are you sure you want to delete your account? This cannot be undone.")) {
@@ -182,9 +188,16 @@ const UserProfile = () => {
             </div>
 
             <div className="profile-actions">
-              <motion.button onClick={toggleEdit} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} style={{ background: colors.primary }}>
-                <FiEdit /> {editing ? "Cancel" : "Edit Profile"}
-              </motion.button>
+            <motion.button
+  onClick={toggleEdit}
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  style={{ background: colors.primary }}
+  className="flex items-center gap-2 px-4 py-2 rounded-lg text-white"
+>
+  <FiEdit />
+  {editing ? "Cancel" : "Edit Profile"}
+</motion.button>
               {!user.isGoogleUser && (
   <>
     <button
@@ -231,13 +244,35 @@ const UserProfile = () => {
               </div>
             )}
           </motion.div>
+          <span className="flex gap-4 justify-center items-center mt-4">
+  {/* Logout Button with Icon */}
+  <motion.div variants={slideUp}>
+    <motion.button
+      onClick={handleLogout}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      style={{ background: colors.primary }}
+      className="text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition whitespace-nowrap flex items-center gap-2"
+    >
+      <FiLock /> Logout
+    </motion.button>
+  </motion.div>
 
-          {/* Delete Account Section */}
-          <motion.div className="delete-section" variants={slideUp}>
-            <motion.button onClick={deleteProfile} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} style={{ background: colors.accent }}>
-              <FiTrash2 /> Delete Account
-            </motion.button>
-          </motion.div>
+  {/* Delete Account Button with Icon */}
+  <motion.div variants={slideUp}>
+    <motion.button
+      onClick={deleteProfile}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      style={{ background: colors.accent }}
+      className="text-white px-4 py-2 rounded-lg hover:bg-red-700 transition whitespace-nowrap flex items-center gap-2"
+    >
+      <FiTrash2 /> Delete Account
+    </motion.button>
+  </motion.div>
+</span>
+
+
         </div>
 
         {/* Edit Profile Modal */}

@@ -1,5 +1,5 @@
 const express = require("express");
-const { signup, login, getProfile, deleteProfile, sendResetEmail ,changePassword  } = require("../controllers/usercontroller");
+const { signup, login, getProfile, deleteProfile, sendResetEmail ,changePassword, updateUserProfile } = require("../controllers/usercontroller");
 const authenticateUser = require("../middleware/authMiddleware");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
@@ -36,6 +36,7 @@ router.get(
 );
 
 router.put("/change-password", authenticateUser, changePassword);
+router.put("/profile", authenticateUser, updateUserProfile);
 
 // router.post('/send-reset-email', sendResetEmail );
 module.exports = router;
