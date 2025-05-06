@@ -13,6 +13,7 @@ const UserProfile = () => {
     username: "",
     email: "",
     profilePicture: avatar,
+    isGoogleUser: false,
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -75,6 +76,7 @@ const UserProfile = () => {
         username: res.data.username,
         email: res.data.email || "No email provided",
         profilePicture: res.data.profilePicture || avatar,
+        isGoogleUser: res.data.isGoogleUser || false,
       });
     } catch (err) {
       setError(err.response?.data?.message || "Failed to load profile data");
@@ -181,10 +183,11 @@ const UserProfile = () => {
               <motion.button onClick={toggleEdit} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} style={{ background: colors.primary }}>
                 <FiEdit /> {editing ? "Cancel" : "Edit Profile"}
               </motion.button>
-
-              <Link to="/change-password" className="change-password-btn" style={{ background: colors.secondary }}>
-                <FiLock /> Change Password
-              </Link>
+              {!user.isGoogleUser && (
+  <Link to="/change-password" className="change-password-btn" style={{ background: colors.secondary }}>
+    <FiLock /> Change Password
+  </Link>
+)}
             </div>
           </motion.div>
 

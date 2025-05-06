@@ -128,7 +128,7 @@ function App() {
           {/* Auth Pages (No Navbar) */}
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/ResetPassword" element={<ResetPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/ReportDetail" element={<ReportDetail />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/AdminDashboard" element={<AdminDashboard />} />
