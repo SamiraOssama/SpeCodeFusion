@@ -1,5 +1,5 @@
 const express = require("express");
-const { signup, login, getProfile, deleteProfile, sendResetEmail  } = require("../controllers/usercontroller");
+const { signup, login, getProfile, deleteProfile, sendResetEmail ,changePassword  } = require("../controllers/usercontroller");
 const authenticateUser = require("../middleware/authMiddleware");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
@@ -34,6 +34,8 @@ router.get(
     res.redirect(`http://localhost:5173/google-login-success?token=${token}`);
   }
 );
+
+router.put("/change-password", authenticateUser, changePassword);
 
 // router.post('/send-reset-email', sendResetEmail );
 module.exports = router;

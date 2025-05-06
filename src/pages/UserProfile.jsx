@@ -6,6 +6,7 @@ import { FiEdit, FiX, FiSave, FiLock, FiTrash2, FiFileText } from "react-icons/f
 import avatar from "../assets/images/profileavatar.png";
 import Navbar from "../components/Navbar/Navbar";
 import "./UserProfile.css";
+import ChangePassword from  "../pages/ChangePassword";
 
 const UserProfile = () => {
   const [editing, setEditing] = useState(false);
@@ -18,6 +19,7 @@ const UserProfile = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [reports, setReports] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   // Color scheme
@@ -184,9 +186,17 @@ const UserProfile = () => {
                 <FiEdit /> {editing ? "Cancel" : "Edit Profile"}
               </motion.button>
               {!user.isGoogleUser && (
-  <Link to="/change-password" className="change-password-btn" style={{ background: colors.secondary }}>
-    <FiLock /> Change Password
-  </Link>
+  <>
+    <button
+      className="change-password-btn"
+      style={{ background: colors.secondary }}
+      onClick={() => setShowModal(true)}
+    >
+      <FiLock /> Change Password
+    </button>
+
+    {showModal && <ChangePassword onClose={() => setShowModal(false)} />}
+  </>
 )}
             </div>
           </motion.div>
