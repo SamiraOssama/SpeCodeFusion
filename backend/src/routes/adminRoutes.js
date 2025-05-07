@@ -1,37 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
-const { performance } = require("perf_hooks"); // Import performance API
+const Repo = require("../models/repo");
+// const { performance } = require("perf_hooks"); 
+const { getPerformanceStats, deleteRepository } = require("../controllers/adminController");
 
-// GET system performance metrics
-router.get("/performance", async (req, res) => {
-  try {
-    const startTime = performance.now(); // Start measuring response time
+const { signup, login, getProfile, updateProfile, deleteProfile } = require("../controllers/usercontroller");
+const authenticateUser = require("../middleware/authMiddleware");
+const { getAllUsers, deleteUser, createUser, getUserById } = require("../controllers/adminController");
 
-    const userCount = await User.countDocuments(); // Get the total number of users
-    const reportsCompleted = 450; // Replace with a real query if reports are stored in DB
-    const systemHealth = 98; // Replace with real system health data if available
-    const uptime = "99.95%"; // Replace with real uptime monitoring data
 
-    const endTime = performance.now(); // End measuring response time
-    const responseTime = `${Math.round(endTime - startTime)}ms`; // Calculate actual response time
 
-    const performanceData = {
-      uptime,
-      responseTime, // Real response time from MongoDB query execution
-      activeUsers: userCount, // Total users from MongoDB
-      systemHealth,
-      reportsCompleted,
-    };
-
-    res.json(performanceData);
-  } catch (error) {
-    console.error("Error fetching performance data:", error);
-    res.status(500).json({ error: "Failed to fetch performance data" });
-  }
-});
-
-// GET all users
 router.get("/users", async (req, res) => {
   try {
     const users = await User.find({}, "username email"); // Fetch username & email only
@@ -41,19 +20,36 @@ router.get("/users", async (req, res) => {
   }
 });
 
-// DELETE a user by ID
-router.delete("/users/:id", async (req, res) => {
+
+router.get("/users/:id", async (req, res) => {
+  const { id } = req.params; // Retrieve the `id` from the route parameters
   try {
-    const userId = req.params.id;
-    const deletedUser = await User.findByIdAndDelete(userId);
-
-    if (!deletedUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    res.json({ message: "User deleted successfully" });
+    const user = await User.findById(id); // Fetch user by ID
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json(user); // Send user details as the response
   } catch (err) {
-    res.status(500).json({ error: "Failed to delete user" });
+    res.status(500).json({ error: "Failed to fetch user" });
+  }
+});
+
+
+
+
+// Create new user
+router.post("/users", createUser);
+
+// Delete user by ID
+router.delete("/users/:id", deleteUser);
+
+router.get('/performance-stats', async (req, res) => {
+  try {
+    const userCount = await User.countDocuments();
+    const repoCount = await Repo.countDocuments();
+
+    res.json({ userCount, repoCount });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching stats' });
   }
 });
 

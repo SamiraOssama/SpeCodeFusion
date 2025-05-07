@@ -23,6 +23,7 @@ import All from "./pages/All";
 import RequestPage from"./pages/Requestpage";
 import GoogleSuccess from "./pages/GoogleSuccess";
 import ChangePassword from "./pages/ChangePassword";
+import AdminAddUser from "./pages/AdminAddUser";  
  // Fixed casing
 
 function App() {
@@ -144,7 +145,7 @@ function App() {
            <Route path="/Requestpage" element={<RequestPage />}/>
            <Route path="/google-login-success" element={<GoogleSuccess />} />
            <Route path="/change-password" element={<ChangePassword />} />
-
+           <Route path="/AdminAddUser" element={<AdminAddUser />} /> 
         </Routes>
       </main>
     </Router>

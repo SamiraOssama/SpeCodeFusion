@@ -1,20 +1,26 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import avatar from "../assets/images/profileavatar.png";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from "../components/Navbar/Navbar";
-import AdminSidebar from "../components/Navbar/adminsidebar"; // Ensure this exists
+import AdminSidebar from "../components/Navbar/adminsidebar"; 
 
 const AdminDashboard = () => {
-  const admin = {
-    name: "Admin User",
-    email: "admin@example.com",
-    avatar: avatar,
-    role: "System Administrator"
-  };
+  const [admin, setAdmin] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) {
+      navigate("/login"); 
+    } else {
+      setAdmin(user); 
+    }
+  }, [navigate]);
+
+  if (!admin) return null; 
 
   return (
     <>
-      <Navbar /> {/* Navbar at the top */}
+      <Navbar />
 
       <div className="min-h-screen flex">
         {/* Sidebar */}
@@ -27,16 +33,15 @@ const AdminDashboard = () => {
             Admin Dashboard
           </header>
 
-          {/* Admin Info Section */}
+         
           <div className="bg-white shadow-md rounded-lg p-6 flex flex-col items-center text-center">
-            <img
-              src={admin.avatar}
-              alt="Admin Avatar"
-              className="w-24 h-24 rounded-full border-4 border-blue-500 mb-4"
-            />
-            <h2 className="text-xl font-semibold">{admin.name}</h2>
+         
+            <div className="w-24 h-24 rounded-full bg-blue-500 text-white flex items-center justify-center mb-4">
+              {admin.username ? admin.username[0].toUpperCase() : "A"}
+            </div>
+            <h2 className="text-xl font-semibold">{admin.username}</h2>
             <p className="text-gray-600">{admin.email}</p>
-            <p className="text-gray-500 text-sm">{admin.role}</p>
+            <p className="text-gray-500 text-sm">{admin.role || "No Role"}</p>
           </div>
         </div>
       </div>
