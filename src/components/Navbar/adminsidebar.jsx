@@ -51,14 +51,22 @@ const AdminSidebar = () => {
               <span>Add User</span>
             </Link>
           </li>
-         
+          <li>
+  <Link 
+    to="/AdminRepositories" 
+    className="flex items-center space-x-3 px-4 py-2 hover:bg-blue-500 rounded-md transition"
+  >
+    <FaArchive />
+    <span>Repositories</span>
+  </Link>
+</li>
           <li>
             <Link 
               to="/AdminPerformance" 
               className="flex items-center space-x-3 px-4 py-2 hover:bg-blue-500 rounded-md transition"
             >
               <FaChartBar />
-              <span>System Performance</span>
+              <span>System Statistics</span>
             </Link>
           </li>
           <li>

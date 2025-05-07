@@ -7,13 +7,13 @@ const { getPerformanceStats, deleteRepository } = require("../controllers/adminC
 
 const { signup, login, getProfile, updateProfile, deleteProfile } = require("../controllers/usercontroller");
 const authenticateUser = require("../middleware/authMiddleware");
-const { getAllUsers, deleteUser, createUser, getUserById,updateUser} = require("../controllers/adminController");
+const { getAllUsers, deleteUser, createUser, getUserById,updateUser,getAllRepositories} = require("../controllers/adminController");
 
 
 
 router.get("/users", async (req, res) => {
   try {
-    const users = await User.find({}, "username email"); // Fetch username & email only
+    const users = await User.find({}, "username email"); 
     res.json(users);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -22,11 +22,11 @@ router.get("/users", async (req, res) => {
 
 
 router.get("/users/:id", async (req, res) => {
-  const { id } = req.params; // Retrieve the `id` from the route parameters
+  const { id } = req.params; 
   try {
-    const user = await User.findById(id); // Fetch user by ID
+    const user = await User.findById(id); 
     if (!user) return res.status(404).json({ message: "User not found" });
-    res.json(user); // Send user details as the response
+    res.json(user); 
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch user" });
   }
@@ -35,10 +35,10 @@ router.get("/users/:id", async (req, res) => {
 
 router.get("/users/:id", getUserById);
 
-// Create new user
+
 router.post("/users", createUser);
 
-// Delete user by ID
+
 router.delete("/users/:id", deleteUser);
 
 router.get('/performance-stats', async (req, res) => {
@@ -55,5 +55,10 @@ router.get('/performance-stats', async (req, res) => {
 
 
 router.put("/users/:id", updateUser);
+router.get("/repositories", getAllRepositories);
+router.delete('/repositories/:id', deleteRepository);
+
+
+
 
 module.exports = router;

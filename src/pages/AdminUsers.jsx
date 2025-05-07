@@ -85,7 +85,7 @@ const [isModalOpen, setIsModalOpen] = useState(false);
         <Navbar />
     
         <div className="min-h-screen flex">
-          {/* Sidebar */}
+        
           <AdminSidebar /> 
     <div className="p-4">
       <h2 className="text-2xl font-bold mb-4">All Users</h2>

@@ -25,6 +25,7 @@ import GoogleSuccess from "./pages/GoogleSuccess";
 import ChangePassword from "./pages/ChangePassword";
 import AdminAddUser from "./pages/AdminAddUser";  
 import AdminEditUser from "./pages/AdminEditUser";
+import AdminRepositories from './pages/AdminRepositories'; 
  // Fixed casing
 
 function App() {
@@ -148,6 +149,8 @@ function App() {
            <Route path="/change-password" element={<ChangePassword />} />
            <Route path="/AdminAddUser" element={<AdminAddUser />} /> 
            <Route path="/admin/users/edit/:id" element={<AdminEditUser />} />
+           <Route path="/AdminRepositories" element={<AdminRepositories />} />
+
 
 
         </Routes>

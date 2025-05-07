@@ -32,7 +32,7 @@ exports.createUser = async (req, res) => {
       return res.status(400).json({ error: "User already exists" });
     }
 
-    // Create and save user with role
+    
     const newUser = new User({ username, email, password, role });
     await newUser.save();
 
@@ -117,3 +117,31 @@ exports.updateUser = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+exports.getAllRepositories = async (req, res) => {
+  try {
+    const repos = await Repo.find().populate("owner", "username email");
+    res.status(200).json(repos);
+  } catch (error) {
+    console.error("Error fetching all repositories:", error);
+    res.status(500).json({ message: "Failed to fetch repositories." });
+  }
+};
+
+
+
+exports.deleteRepository = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedRepo = await Repo.findByIdAndDelete(id);
+    if (!deletedRepo) {
+      return res.status(404).json({ message: "Repository not found" });
+    }
+    res.status(200).json({ message: "Repository deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting repository:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
