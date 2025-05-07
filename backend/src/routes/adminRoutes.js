@@ -7,7 +7,7 @@ const { getPerformanceStats, deleteRepository } = require("../controllers/adminC
 
 const { signup, login, getProfile, updateProfile, deleteProfile } = require("../controllers/usercontroller");
 const authenticateUser = require("../middleware/authMiddleware");
-const { getAllUsers, deleteUser, createUser, getUserById } = require("../controllers/adminController");
+const { getAllUsers, deleteUser, createUser, getUserById,updateUser} = require("../controllers/adminController");
 
 
 
@@ -33,7 +33,7 @@ router.get("/users/:id", async (req, res) => {
 });
 
 
-
+router.get("/users/:id", getUserById);
 
 // Create new user
 router.post("/users", createUser);
@@ -52,5 +52,8 @@ router.get('/performance-stats', async (req, res) => {
     res.status(500).json({ error: 'Error fetching stats' });
   }
 });
+
+
+router.put("/users/:id", updateUser);
 
 module.exports = router;

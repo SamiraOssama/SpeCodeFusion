@@ -2,11 +2,16 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar";
 import AdminSidebar from "../components/Navbar/adminsidebar";
+import EditUserModal from "../pages/AdminEditUser";
+
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [editingUser, setEditingUser] = useState(null);
+const [isModalOpen, setIsModalOpen] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,9 +35,32 @@ const AdminUsers = () => {
 
   
   const handleEdit = (userId) => {
-    
-    navigate(`/admin/users/edit/${userId}`);
+    const user = users.find((u) => u._id === userId);
+    setEditingUser(user);
+    setIsModalOpen(true);
   };
+  
+  const closeEditModal = () => {
+    setIsModalOpen(false);
+    setEditingUser(null);
+  };
+  
+  const handleSaveUser = async (updatedUser) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/admin/users/${updatedUser._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedUser),
+      });
+      if (!res.ok) throw new Error("Update failed");
+  
+      const newUser = await res.json();
+      setUsers(users.map(u => (u._id === newUser._id ? newUser : u)));
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+  
 
   const handleDelete = (userId) => {
     const isConfirmed = window.confirm("Are you sure you want to delete this user?");
@@ -83,12 +111,21 @@ const AdminUsers = () => {
                   <td className="border border-gray-300 px-4 py-2 flex justify-around">
                    
                   
-                    <button
-                      onClick={() => handleDelete(user._id)}
-                      className="bg-red-500 text-white px-4 py-2 rounded-md"
-                    >
-                      Delete
-                    </button>
+                    <td className="border border-gray-300 px-4 py-2 flex gap-2 justify-center">
+  <button
+    onClick={() => handleEdit(user._id)}
+    className="bg-blue-500 text-white px-4 py-2 rounded-md"
+  >
+    Edit
+  </button>
+  <button
+    onClick={() => handleDelete(user._id)}
+    className="bg-red-500 text-white px-4 py-2 rounded-md"
+  >
+    Delete
+  </button>
+</td>
+
                   </td>
                 </tr>
               ))
@@ -102,6 +139,13 @@ const AdminUsers = () => {
       )}
     </div>
     </div>
+    <EditUserModal
+  isOpen={isModalOpen}
+  onClose={closeEditModal}
+  userData={editingUser}
+  onSave={handleSaveUser}
+/>
+
     </>
   );
 };

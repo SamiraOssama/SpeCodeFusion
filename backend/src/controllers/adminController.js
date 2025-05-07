@@ -91,26 +91,7 @@ exports.getPerformanceStats = async (req, res) => {
   }
 };
 
-// PUT /api/admin/users/:id
-exports.updateUser = async (req, res) => {
-  try {
-    const { username, email, role, password } = req.body;
-    const user = await User.findById(req.params.id);
 
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    if (username) user.username = username;
-    if (email) user.email = email;
-    if (role) user.role = role;
-    if (password) user.password = await bcrypt.hash(password, 10); // optional password update
-
-    await user.save();
-    res.json({ message: "User updated successfully!", user });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server Error" });
-  }
-};
 
 exports.getAllRepos = async (req, res) => {
   try {
@@ -122,4 +103,17 @@ exports.getAllRepos = async (req, res) => {
   }
 };
 
- 
+exports.updateUser = async (req, res) => {
+  try {
+    const { username, email } = req.body;
+    const updated = await User.findByIdAndUpdate(
+      req.params.id,
+      { username, email },
+      { new: true }
+    );
+    if (!updated) return res.status(404).json({ message: "User not found" });
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
