@@ -1,95 +1,58 @@
-import React, { useEffect, useState } from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Navbar from "../components/Navbar/Navbar";
-import AdminSidebar from "../components/Navbar/adminsidebar";
+import AdminSidebar from "../components/Navbar/adminsidebar"; 
 
 const AdminPerformance = () => {
-  const [performanceData, setPerformanceData] = useState(null);
+
+  const [stats, setStats] = useState({
+    userCount: 0,
+    repoCount: 0,
+  });
   const [loading, setLoading] = useState(true);
 
-  // Fetch data from the backend
   useEffect(() => {
-    fetch("http://localhost:3000/api/admin/performance")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch performance data");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Fetched Performance Data:", data);
-        setPerformanceData(data);
+    const fetchStats = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/admin/performance-stats');
+        setStats(response.data);
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching performance data:", error);
+      } catch (err) {
+        console.error("Error fetching stats:", err);
         setLoading(false);
-      });
+      }
+    };
+
+    fetchStats();
   }, []);
 
-  // KPI Data for Pie Chart (Updated dynamically)
-  const kpiData = performanceData
-    ? [
-        { name: "Active Users", value: performanceData.activeUsers, color: "#0088FE" },
-        { name: "Reports Completed", value: performanceData.reportsCompleted, color: "#00C49F" },
-        { name: "System Health", value: performanceData.systemHealth, color: "#FFBB28" },
-      ]
-    : [];
+  if (loading) {
+    return <div>Loading statistics...</div>;
+  }
 
   return (
     <>
-      <Navbar />
-      <div className="min-h-screen flex">
-        {/* Sidebar */}
-        <AdminSidebar />
+    <Navbar />
 
-        {/* Main Content */}
-        <div className="flex-1 p-6 bg-gray-100">
-          {/* Dashboard Header */}
-          <header className="text-2xl font-semibold text-blue-500 mb-6">
-            Admin Performance Dashboard
-          </header>
+    <div className="min-h-screen flex">
+      {/* Sidebar */}
+      <AdminSidebar /> 
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-6 text-blue-700">System Performance</h1>
 
-          {/* Show Loading State */}
-          {loading ? (
-            <p className="text-center text-lg text-gray-700">Loading performance data...</p>
-          ) : (
-            <>
-              {/* Overview Section */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-6">
-                <div className="bg-white p-4 shadow-md rounded-lg text-center">
-                  <h3 className="font-semibold text-lg">System Uptime</h3>
-                  <p className="text-xl font-bold text-green-600">{performanceData.uptime}</p>
-                </div>
-                <div className="bg-white p-4 shadow-md rounded-lg text-center">
-                  <h3 className="font-semibold text-lg">Response Time</h3>
-                  <p className="text-xl font-bold text-blue-500">{performanceData.responseTime}</p>
-                </div>
-                <div className="bg-white p-4 shadow-md rounded-lg text-center">
-                  <h3 className="font-semibold text-lg">Active Users</h3>
-                  <p className="text-xl font-bold text-purple-600">{performanceData.activeUsers}</p>
-                </div>
-              </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="bg-blue-600 text-white p-6 rounded-lg shadow-md">
+          <h2 className="text-lg font-semibold">Total Users</h2>
+          <p className="text-3xl">{stats.userCount}</p>
+        </div>
 
-              {/* KPI Section with Pie Chart */}
-              <div className="bg-white p-6 shadow-md rounded-lg">
-                <h3 className="font-semibold text-lg mb-4">KPI Overview</h3>
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie data={kpiData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={90} label>
-                      {kpiData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </>
-          )}
+        <div className="bg-blue-600 text-white p-6 rounded-lg shadow-md">
+          <h2 className="text-lg font-semibold">Total Repositories</h2>
+          <p className="text-3xl">{stats.repoCount}</p>
         </div>
       </div>
+    </div>
+    </div>
     </>
   );
 };

@@ -1,8 +1,10 @@
 const express = require("express");
-const { signup, login, getProfile, updateProfile, deleteProfile } = require("../controllers/usercontroller");
+const { signup, login, getProfile, deleteProfile, sendResetEmail ,changePassword, updateUserProfile,getUsers } = require("../controllers/usercontroller");
 const authenticateUser = require("../middleware/authMiddleware");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const User = require("../models/user");  // Import your User model for database queries
+
 
 const router = express.Router();
 
@@ -12,9 +14,9 @@ router.post("/login", login);
 
 // ✅ User Profile Management
 router.get("/profile", authenticateUser, getProfile);
-router.put("/profile", authenticateUser, updateProfile);
 router.delete("/profile", authenticateUser, deleteProfile);
 
+// ✅ Google Login
 router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
 router.get(
@@ -23,42 +25,19 @@ router.get(
   (req, res) => {
     const user = req.user;
 
-    
     const token = jwt.sign(
       { id: user._id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
 
-   
     res.redirect(`http://localhost:5173/google-login-success?token=${token}`);
   }
 );
-const authenticateToken = (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.split(" ")[1];
-  
-    if (!token) return res.sendStatus(401);
-  
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-      if (err) return res.sendStatus(403);
-      req.user = user; // contains id and email from token
-      next();
-    });
-  };
-  
-  // GET /api/users/profile
-  router.get("/profile", authenticateToken, async (req, res) => {
-    try {
-      const user = await User.findById(req.user.id).select("-password"); // remove sensitive info
-  
-      if (!user) return res.status(404).json({ message: "User not found" });
-  
-      res.json(user); // This should include username and email
-    } catch (error) {
-      console.error("Error fetching profile:", error);
-      res.status(500).json({ message: "Server error" });
-    }
-  });
 
+router.put("/change-password", authenticateUser, changePassword);
+router.put("/profile", authenticateUser, updateUserProfile);
+
+
+// router.post('/send-reset-email', sendResetEmail );
 module.exports = router;

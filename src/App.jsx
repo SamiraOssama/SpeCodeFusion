@@ -24,7 +24,11 @@ import RequestPage from"./pages/Requestpage";
 import GoogleSuccess from "./pages/GoogleSuccess";
 import StepUpload from "./pages/StepUpload";
 import Report from "./pages/Report";
- // Fixed casing
+import ChangePassword from "./pages/ChangePassword";
+import AdminAddUser from "./pages/AdminAddUser";  
+import AdminEditUser from "./pages/AdminEditUser";
+import AdminRepositories from './pages/AdminRepositories'; 
+import ManageAdmins from "./pages/ManageAdmins";
 
 function App() {
   return (
@@ -130,9 +134,9 @@ function App() {
           {/* Auth Pages (No Navbar) */}
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/ResetPassword" element={<ResetPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/ReportDetail" element={<ReportDetail />} />
-          <Route path="/UserProfile" element={<UserProfile />} />
+          <Route path="/profile" element={<UserProfile />} />
           <Route path="/AdminDashboard" element={<AdminDashboard />} />
           <Route path="/AdminUsers" element={<AdminUsers />} />
           <Route path="/AdminPerformance" element={<AdminPerformance />} />
@@ -162,6 +166,11 @@ function App() {
               </>
             } 
           />
+           <Route path="/change-password" element={<ChangePassword />} />
+           <Route path="/AdminAddUser" element={<AdminAddUser />} /> 
+           <Route path="/admin/users/edit/:id" element={<AdminEditUser />} />
+           <Route path="/AdminRepositories" element={<AdminRepositories />} />
+           <Route path="/admin/manage-admins" element={<ManageAdmins />} />
         </Routes>
       </main>
     </Router>

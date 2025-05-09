@@ -139,3 +139,76 @@
     display: grid;
     grid-template-columns: 1fr 2fr 1;
   }
+  /* Edit Modal Overlay */
+.edit-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Edit Modal Box */
+.edit-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+/* Modal Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+/* Close Button */
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 1.2rem;
+}
+
+.form-group label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.edit-modal button[type="submit"] {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #3B82F6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.edit-modal button[type="submit"]:hover {
+  background-color: #2563eb;
+}

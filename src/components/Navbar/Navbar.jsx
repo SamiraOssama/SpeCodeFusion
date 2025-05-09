@@ -2,13 +2,21 @@ import React, { useState, useEffect } from "react";
 import { IoMdMenu } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 
-const NavbarMenu = [
-  { id: 1, title: "Home", path: "/" },
-  { id: 2, title: "My Repos", path: "/Allrepos" },
-  { id: 3, title: "All Repos", path: "/All" },
-  { id: 4, title: "My Profile", path: "/UserProfile" },
-  { id: 5, title: "Requests", path: "/Requestpage" },
-];
+const getNavbarMenu = (user) => {
+  const menu = [
+    { id: 1, title: "Home", path: "/" },
+    { id: 2, title: "My Repos", path: "/Allrepos" },
+    { id: 3, title: "All Repos", path: "/All" },
+    { id: 4, title: "My Profile", path: "/profile" },
+    { id: 5, title: "Requests", path: "/Requestpage" },
+  ];
+
+  if (user?.role === "admin") {
+    menu.push({ id: 6, title: "Dashboard", path: "/AdminDashboard" });
+  }
+
+  return menu;
+};
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -57,7 +65,8 @@ const Navbar = () => {
 
   return (
     <nav className="bg-white shadow-md">
-      <div className="container mx-auto flex justify-between items-center py-4 px-6">
+      <div className="max-w-screen-xl mx-auto flex justify-between items-center py-4 px-4">
+
         {/* Logo */}
         <Link to="/" className="font-bold text-2xl text-blue-600 whitespace-nowrap">
           SpeCode Fusion
@@ -65,7 +74,8 @@ const Navbar = () => {
 
         {/* Desktop Menu - All items in one line */}
         <div className="hidden lg:flex items-center space-x-6">
-          {NavbarMenu.map((menu) => (
+        {getNavbarMenu(user).map((menu) => (
+
             <div key={menu.id} className="relative flex items-center">
               <Link
                 to={menu.path}

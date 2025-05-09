@@ -7,7 +7,7 @@ import Navbar from "../components/Navbar/Navbar";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [emailOrUsername, setEmailOrUsername] = useState("");  // 'emailOrUsername' instead of 'email'
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -19,7 +19,7 @@ const Login = () => {
       const response = await fetch("http://localhost:5000/api/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ emailOrUsername, password }),  // Send 'emailOrUsername'
       });
 
       const data = await response.json();
@@ -70,11 +70,11 @@ const Login = () => {
             <div className="relative">
               <FaEnvelope className="absolute left-3 top-3 text-blue-500" />
               <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"  // Changed to 'text' to allow for both username and email
+                value={emailOrUsername}
+                onChange={(e) => setEmailOrUsername(e.target.value)}  // Set 'emailOrUsername'
                 required
-                placeholder="Email"
+                placeholder="Username or Email"
                 className="mt-1 block w-full pl-10 pr-3 py-2 bg-white text-blue-500 border border-gray-300 rounded-2xl"
               />
             </div>

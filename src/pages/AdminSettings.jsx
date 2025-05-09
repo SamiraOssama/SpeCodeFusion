@@ -32,7 +32,7 @@ const AdminSettings = () => {
 
         {/* Main Content */}
         <div className="flex-1 p-6">
-          <h1 className="text-2xl font-semibold text-blue-500 dark:text-white mb-6">
+          <h1 className="text-3xl font-bold mb-6 text-blue-700">
             Admin Settings
           </h1>
 
@@ -59,27 +59,11 @@ const AdminSettings = () => {
             </label>
           </div>
 
-          {/* Notification Preferences */}
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4 dark:text-white">Notification Preferences</h2>
-
-        
-
-            {/* System Notifications */}
-            <div>
-              <label className="block text-gray-700 dark:text-white mb-2">System Notifications</label>
-              <select
-                value={systemNotifications}
-                onChange={(e) => setSystemNotifications(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded dark:bg-gray-700 dark:text-white"
-              >
-                <option>Enabled</option>
-                <option>Disabled</option>
-              </select>
-            </div>
+         
+           
           </div>
         </div>
-      </div>
+  
     </>
   );
 };

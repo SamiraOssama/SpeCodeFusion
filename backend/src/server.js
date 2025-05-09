@@ -53,6 +53,7 @@ app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/repos", require("./routes/repoRoutes"));
 app.use("/api/files", require("./routes/fileRoutes"));
 app.use("/api/compatibility", compatibilityRoutes);
+app.use("/api/admin", require("./routes/adminRoutes"));
 app.use("/api", codeRoutes);
 
 // ✅ Fetch Extracted Requirements for a Repository
