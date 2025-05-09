@@ -26,6 +26,7 @@ import ChangePassword from "./pages/ChangePassword";
 import AdminAddUser from "./pages/AdminAddUser";  
 import AdminEditUser from "./pages/AdminEditUser";
 import AdminRepositories from './pages/AdminRepositories'; 
+import ManageAdmins from "./pages/ManageAdmins";
  // Fixed casing
 
 function App() {
@@ -150,7 +151,7 @@ function App() {
            <Route path="/AdminAddUser" element={<AdminAddUser />} /> 
            <Route path="/admin/users/edit/:id" element={<AdminEditUser />} />
            <Route path="/AdminRepositories" element={<AdminRepositories />} />
-
+           <Route path="/admin/manage-admins" element={<ManageAdmins />} />
 
 
         </Routes>

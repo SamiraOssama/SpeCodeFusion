@@ -32,7 +32,7 @@ const AdminSettings = () => {
 
         {/* Main Content */}
         <div className="flex-1 p-6">
-          <h1 className="text-2xl font-semibold text-blue-500 dark:text-white mb-6">
+          <h1 className="text-3xl font-bold mb-6 text-blue-700">
             Admin Settings
           </h1>
 

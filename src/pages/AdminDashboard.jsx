@@ -29,7 +29,7 @@ const AdminDashboard = () => {
         {/* Main Content */}
         <div className="flex-1 p-6 bg-gray-100">
           {/* Dashboard Header */}
-          <header className="text-2xl font-semibold text-blue-500 mb-6">
+          <header className="text-3xl font-bold mb-6 text-blue-700">
             Admin Dashboard
           </header>
 

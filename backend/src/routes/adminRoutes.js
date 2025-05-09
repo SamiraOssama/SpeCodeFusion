@@ -7,7 +7,7 @@ const { getPerformanceStats, deleteRepository } = require("../controllers/adminC
 
 const { signup, login, getProfile, updateProfile, deleteProfile } = require("../controllers/usercontroller");
 const authenticateUser = require("../middleware/authMiddleware");
-const { getAllUsers, deleteUser, createUser, getUserById,updateUser,getAllRepositories} = require("../controllers/adminController");
+const { getAllUsers, deleteUser, createUser, getUserById,updateUser,getAllRepositories,getAdmins} = require("../controllers/adminController");
 
 
 
@@ -58,6 +58,7 @@ router.put("/users/:id", updateUser);
 router.get("/repositories", getAllRepositories);
 router.delete('/repositories/:id', deleteRepository);
 
+router.get('/admins', getAdmins);
 
 
 

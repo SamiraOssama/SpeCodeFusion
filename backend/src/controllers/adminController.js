@@ -1,6 +1,9 @@
 const User = require("../models/user");
 const Repo = require("../models/repo");
-const bcrypt = require("bcryptjs");
+const bcrypt = require('bcryptjs'); // For hashing the password
+const axios = require('axios'); // To validate email using ZeroBounce API
+const jwt = require('jsonwebtoken'); // For generating JWT if needed (optional, but useful for sessions)
+const { validationResult } = require('express-validator'); // For handling validation errors
 
 
 exports.getAllUsers = async (req, res) => {
@@ -12,36 +15,34 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+
 exports.createUser = async (req, res) => {
+  console.log("Request body:", req.body); // Log the request body to check what's being sent
+
   try {
     const { username, email, password, role } = req.body;
 
-   
-
-    if (!username || !email || !password) {
+    if (!username || !email || !password || !role) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    if (!role) {
-      return res.status(400).json({ error: "Role is required when an admin adds a user" });
-    }
-
-  
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: "User already exists" });
     }
 
-    
-    const newUser = new User({ username, email, password, role });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({ username, email, password: hashedPassword, role });
     await newUser.save();
 
     res.status(201).json({ message: "User added successfully", user: newUser });
   } catch (error) {
-    console.error("❌ Error adding user:", error);
+    console.error("❌ Error creating user:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+
 
 
 
@@ -143,5 +144,19 @@ exports.deleteRepository = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+// backend route to fetch only admins
+exports.getAdmins = async (req, res) => {
+  try {
+    const users = await User.find({ role: 'admin' }).select("-password");
+    res.json(users);  // This will send only admins as a JSON response
+  } catch (error) {
+    console.error("Error fetching admin users:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+
+
 
 

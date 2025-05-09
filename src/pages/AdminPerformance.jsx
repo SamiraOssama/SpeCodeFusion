@@ -38,7 +38,7 @@ const AdminPerformance = () => {
       {/* Sidebar */}
       <AdminSidebar /> 
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">System Performance</h1>
+      <h1 className="text-3xl font-bold mb-6 text-blue-700">System Performance</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div className="bg-blue-600 text-white p-6 rounded-lg shadow-md">

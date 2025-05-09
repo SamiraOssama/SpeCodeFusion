@@ -15,7 +15,7 @@ const AdminSidebar = () => {
   };
 
   return (
-    <div className="w-64 h-screen bg-blue-600 text-white flex flex-col">
+    <div className="w-64 max-h-screen-xl bg-blue-600 text-white flex flex-col">
       {/* Sidebar Header */}
       <div className="p-6 text-2xl font-bold border-b border-blue-400">
         Admin Panel
@@ -60,6 +60,13 @@ const AdminSidebar = () => {
     <span>Repositories</span>
   </Link>
 </li>
+<li>
+  <Link to="/admin/manage-admins" className="flex items-center space-x-3 px-4 py-2 hover:bg-blue-500 rounded-md transition">
+  <FaCog />
+  <span>Manage Admins</span>
+  </Link>
+</li>
+
           <li>
             <Link 
               to="/AdminPerformance" 
