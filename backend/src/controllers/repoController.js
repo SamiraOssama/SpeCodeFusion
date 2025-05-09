@@ -4,6 +4,7 @@ const path = require("path");
 const fs = require("fs");
 const { spawn } = require("child_process");
 const mongoose = require("mongoose");
+const pathUtils = require("../utils/pathUtils"); // Import the new path utilities
 
 // =============================================
 // HELPER FUNCTIONS
@@ -18,15 +19,126 @@ const isValidSourceCodeFile = (filename) => {
 const cleanupOnError = (filePath) => {
   if (filePath && fs.existsSync(filePath)) {
     try {
-      fs.unlinkSync(filePath);
+      if (fs.lstatSync(filePath).isDirectory()) {
+        // Use rimraf or recursive removal for directories
+        const rimraf = (path) => {
+          if (fs.existsSync(path)) {
+            fs.readdirSync(path).forEach((file) => {
+              const curPath = path + "/" + file;
+              if (fs.lstatSync(curPath).isDirectory()) {
+                rimraf(curPath);
+              } else {
+                try {
+                  fs.unlinkSync(curPath);
+                } catch (err) {
+                  console.error(`❌ Error removing file ${curPath}:`, err);
+                }
+              }
+            });
+            try {
+              fs.rmdirSync(path);
+            } catch (err) {
+              console.error(`❌ Error removing directory ${path}:`, err);
+            }
+          }
+        };
+        
+        try {
+          rimraf(filePath);
+        } catch (err) {
+          console.error(`❌ Error cleaning up directory ${filePath}:`, err);
+          // If normal cleanup fails, try forcing with child_process
+          try {
+            if (process.platform === 'win32') {
+              require('child_process').execSync(`rd /s /q "${filePath}"`);
+            } else {
+              require('child_process').execSync(`rm -rf "${filePath}"`);
+            }
+          } catch (cmdErr) {
+            console.error(`❌ Forced directory removal also failed for ${filePath}:`, cmdErr);
+          }
+        }
+      } else {
+        // It's a file
+        fs.unlinkSync(filePath);
+      }
     } catch (err) {
       console.error(`❌ Error cleaning up file ${filePath}:`, err);
     }
   }
 };
+
+const validateGithubUrl = async (url) => {
+  // Extract owner and repo name from GitHub URL
+  let repoRegex = /github\.com\/([^\/]+)\/([^\/\.]+)/;
+  let match = url.match(repoRegex);
+  
+  if (!match) {
+    throw new Error("Invalid GitHub repository URL format. Expected format: https://github.com/owner/repo");
+  }
+  
+  let [, owner, repo] = match;
+  
+  // Check if repository exists and is accessible using GitHub API
+  try {
+    const https = require('https');
+    
+    return new Promise((resolve, reject) => {
+      const apiUrl = `https://api.github.com/repos/${owner}/${repo}`;
+      console.log(`🔍 Checking GitHub repository: ${apiUrl}`);
+      
+      const options = {
+        headers: {
+          'User-Agent': 'SpeCodeFusion-3'
+        }
+      };
+      
+      const req = https.get(apiUrl, options, (res) => {
+        let data = '';
+        
+        res.on('data', (chunk) => {
+          data += chunk;
+        });
+        
+        res.on('end', () => {
+          if (res.statusCode === 200) {
+            try {
+              const repoInfo = JSON.parse(data);
+              resolve({
+                valid: true,
+                owner,
+                repo,
+                size: repoInfo.size,
+                default_branch: repoInfo.default_branch,
+                visibility: repoInfo.visibility,
+                message: "Repository is accessible"
+              });
+            } catch (err) {
+              reject(new Error(`Failed to parse GitHub API response: ${err.message}`));
+            }
+          } else if (res.statusCode === 404) {
+            reject(new Error("Repository not found or is private"));
+          } else {
+            reject(new Error(`GitHub API returned status code: ${res.statusCode}`));
+          }
+        });
+      });
+      
+      req.on('error', (err) => {
+        reject(new Error(`Error checking GitHub repository: ${err.message}`));
+      });
+      
+      req.end();
+    });
+  } catch (err) {
+    throw new Error(`Failed to validate GitHub URL: ${err.message}`);
+  }
+};
+
 async function handlePythonProcess(process, res, { success, failure }) {
   let stdout = '';
   let stderr = '';
+  let hasResponded = false;
 
   process.stdout.on('data', (data) => {
     stdout += data.toString();
@@ -36,21 +148,40 @@ async function handlePythonProcess(process, res, { success, failure }) {
   process.stderr.on('data', (data) => {
     stderr += data.toString();
     console.error(`❌ Python Error: ${data}`);
+    
+    // Check for common Windows permission errors
+    if (data.toString().includes('Access is denied') || data.toString().includes('WinError 5')) {
+      console.error('🔒 Windows permission error detected, process may fail');
+    }
+  });
+
+  // Handle unexpected process termination
+  process.on('exit', (code) => {
+    if (code !== 0 && !hasResponded) {
+      console.error(`⚠️ Python process exited unexpectedly with code ${code}`);
+    }
   });
 
   return new Promise((resolve) => {
     process.on('close', async (code) => {
       try {
-        if (code === 0) {
-          const result = await success();
-          res.status(200).json(result);
-        } else {
-          const errorObj = new Error(stderr || "Process exited with error");
-          res.status(500).json(failure(errorObj));
+        if (!hasResponded) {
+          if (code === 0) {
+            const result = await success();
+            res.status(200).json(result);
+          } else {
+            console.error(`❌ Python process exited with code ${code}`);
+            const errorObj = new Error(stderr || `Process exited with code ${code}`);
+            res.status(500).json(failure(errorObj));
+          }
+          hasResponded = true;
         }
       } catch (err) {
         console.error("❌ Error handling process result:", err);
-        res.status(500).json(failure(err));
+        if (!hasResponded) {
+          res.status(500).json(failure(err));
+          hasResponded = true;
+        }
       }
       resolve();
     });
@@ -356,6 +487,7 @@ exports.getReposWithRequests = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch repositories." });
   }
 };
+
 exports.handleRequest = async (req, res) => {
   try {
     const { repoId } = req.params;
@@ -430,12 +562,12 @@ exports.uploadFile = async (req, res) => {
     const repoUploadDir = path.join(__dirname, "../uploads", repo.name);
     const repoExtractedDir = path.join(__dirname, "../extracted", repo.name);
 
-    const sourceCodePath = path.join(repoUploadDir, "github_clone");
+    const sourceCodePath = pathUtils.getSafeRepoPath(path.join(repoUploadDir, "github_clone"));
 
-// Ensure the directory exists
-if (!fs.existsSync(sourceCodePath)) {
-  fs.mkdirSync(sourceCodePath, { recursive: true });
-}
+    // Ensure the directory exists
+    if (!fs.existsSync(sourceCodePath)) {
+      fs.mkdirSync(sourceCodePath, { recursive: true });
+    }
     [repoUploadDir, repoExtractedDir].forEach(dir => {
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
@@ -445,6 +577,23 @@ if (!fs.existsSync(sourceCodePath)) {
     let historyEntry;
   
     if (githubUrl) {
+      // Validate GitHub URL first
+      try {
+        const validationResult = await validateGithubUrl(githubUrl);
+        console.log(`✅ GitHub repository validation successful: ${validationResult.message}`);
+        
+        // Warning for large repositories (size is in KB)
+        if (validationResult.size > 100000) { // 100MB
+          console.warn(`⚠️ Large repository detected (${Math.round(validationResult.size/1024)}MB)`);
+        }
+      } catch (validationError) {
+        console.error("❌ GitHub repository validation failed:", validationError.message);
+        return res.status(400).json({ 
+          message: `GitHub repository validation failed: ${validationError.message}`,
+          error: validationError.message
+        });
+      }
+
       // Handle GitHub URL
       historyEntry = {
         user: userId,
@@ -463,72 +612,102 @@ if (!fs.existsSync(sourceCodePath)) {
       await repo.save();
 
       // Run GitHub analysis
-      const extractedJsonPath = path.join(repoExtractedDir, "sourcecode.json");
-      console.log(`📂 Running GitHub analysis to: ${extractedJsonPath}`);
-// In the GitHub URL handling section of uploadFile:
-// In the GitHub URL handling section of uploadFile:
-const pythonProcess = spawn("python", [
-  path.resolve(__dirname, "../scripts/github_analysis.py"),
-  "--url", githubUrl,
-  "--output", extractedJsonPath,
-  "--clone-dir", sourceCodePath  // This will now work
-], {
-  windowsHide: true,
-  cwd: process.cwd()
-});
+      const pythonProcess = spawn("python", [
+        path.resolve(__dirname, "../scripts/github_analysis.py"),
+        "--url", githubUrl,
+        "--output", path.join(repoExtractedDir),
+        "--clone-dir", sourceCodePath
+      ], {
+        windowsHide: true,
+        cwd: process.cwd(),
+        env: {
+          ...process.env,
+          PYTHONIOENCODING: 'utf-8',
+          PYTHONUNBUFFERED: '1'
+        }
+      });
 
-// Add error handling for spawn
-pythonProcess.on('error', (err) => {
-  console.error('❌ Failed to start Python process:', err);
-  cleanupOnError(sourceCodePath);
-  return res.status(500).json({ 
-      message: "Failed to start analysis process",
-      error: err.message 
-  });
-});
+      // Add error handling for spawn
+      pythonProcess.on('error', (err) => {
+        console.error('❌ Failed to start Python process:', err);
+        cleanupOnError(sourceCodePath);
+        return res.status(500).json({ 
+            message: "Failed to start analysis process",
+            error: err.message 
+        });
+      });
 
-await handlePythonProcess(pythonProcess, res, {
-  success: async () => {
-    if (!fs.existsSync(extractedJsonPath)) {
-      throw new Error("Analysis completed but output file not found");
-    }
+      // Set a reasonable timeout for the process (10 minutes)
+      const timeout = setTimeout(() => {
+        console.error('❌ Python process timed out after 10 minutes');
+        pythonProcess.kill();
+        cleanupOnError(sourceCodePath);
+        return res.status(500).json({
+          message: "Repository analysis timed out. Try again with a smaller repository.",
+          error: "Process exceeded time limit (10 minutes)"
+        });
+      }, 10 * 60 * 1000);
 
-    let analysisData;
-    try {
-      analysisData = JSON.parse(fs.readFileSync(extractedJsonPath, 'utf8'));
-    } catch (e) {
-      throw new Error(`Invalid analysis output: ${e.message}`);
-    }
+      await handlePythonProcess(pythonProcess, res, {
+        success: async () => {
+          clearTimeout(timeout);
+          const extractedJsonPath = path.join(repoExtractedDir, "sourcecode.json");
+          const reportPath = path.join(repoExtractedDir, "compatibility_report.csv");
+          
+          if (!fs.existsSync(extractedJsonPath)) {
+            throw new Error("Analysis completed but output file not found");
+          }
 
-    // Update the repository with analysis results
-    if (repo.sourceCodeHistory.length > 0) {
-      const lastEntry = repo.sourceCodeHistory[repo.sourceCodeHistory.length - 1];
-      lastEntry.metadata = {
-        filesAnalyzed: analysisData.files_analyzed || 0,
-        functionsFound: analysisData.functions_found || 0,
-        functions: analysisData.functions || []
-      };
-      await repo.save();
-    }
+          let analysisData;
+          try {
+            analysisData = JSON.parse(fs.readFileSync(extractedJsonPath, 'utf8'));
+          } catch (e) {
+            throw new Error(`Invalid analysis output: ${e.message}`);
+          }
 
-    return {
-      message: "GitHub repository analyzed successfully!",
-      repo,
-      extractedJsonPath,
-      analysis: {
-        filesAnalyzed: analysisData.files_analyzed || 0,
-        functionsFound: analysisData.functions_found || 0,
-        functions: analysisData.functions || [],
-        summary: `Analyzed ${analysisData.files_analyzed || 0} files with ${analysisData.functions_found || 0} functions`
-      }
-    };
-  },
-  failure: (error) => ({
-    message: "GitHub analysis failed",
-    error: error.message,
-    logs: "Check Python script logs for details"
-  })
-});
+          // Update the repository with analysis results
+          if (repo.sourceCodeHistory.length > 0) {
+            const lastEntry = repo.sourceCodeHistory[repo.sourceCodeHistory.length - 1];
+            lastEntry.metadata = {
+              filesAnalyzed: analysisData.files_analyzed || 0,
+              functionsFound: analysisData.functions_found || 0,
+              functions: analysisData.functions || []
+            };
+            await repo.save();
+          }
+
+          // Prepare response with report information if available
+          const responseData = {
+            message: "GitHub repository analyzed successfully!",
+            repo,
+            analysis: {
+              filesAnalyzed: analysisData.files_analyzed || 0,
+              functionsFound: analysisData.functions_found || 0,
+              functions: analysisData.functions || [],
+              summary: `Analyzed ${analysisData.files_analyzed || 0} files with ${analysisData.functions_found || 0} functions`
+            }
+          };
+
+          // Add report information if it was generated
+          if (fs.existsSync(reportPath)) {
+            responseData.report = {
+              path: reportPath,
+              exists: true,
+              message: "Compatibility report generated successfully"
+            };
+          }
+
+          return responseData;
+        },
+        failure: (error) => {
+          clearTimeout(timeout);
+          return {
+            message: "GitHub analysis failed",
+            error: error.message,
+            logs: "Check Python script logs for details"
+          };
+        }
+      });
     } else {
       // Handle file upload (existing code)
       if (fileType === "sourceCode" && !isValidSourceCodeFile(req.file.originalname)) {
@@ -559,13 +738,13 @@ await handlePythonProcess(pythonProcess, res, {
         const extractedFilePath = path.join(repoExtractedDir, "latest_extracted.csv");
         console.log(`📂 Running SRS extraction to: ${extractedFilePath}`);
 
-        const pythonProcess = spawn("python", [
+        const srsExtractProcess = spawn("python", [
           path.resolve(__dirname, "../scripts/test_model.py"),
           "--file", filePath,
           "--output", extractedFilePath
         ]);
 
-        await handlePythonProcess(pythonProcess, res, {
+        await handlePythonProcess(srsExtractProcess, res, {
           success: () => ({
             message: "SRS uploaded and processed successfully, validated with Gemini!",
             repo,
@@ -585,13 +764,13 @@ await handlePythonProcess(pythonProcess, res, {
         const extractedJsonPath = path.join(repoExtractedDir, "sourcecode.json");
         console.log(`📂 Running source code analysis to: ${extractedJsonPath}`);
 
-        const pythonProcess = spawn("python", [
+        const codeAnalysisProcess = spawn("python", [
           path.resolve(__dirname, "../scripts/gemini_ast.py"),
           "--file", filePath,
           "--output", extractedJsonPath
         ]);
 
-        await handlePythonProcess(pythonProcess, res, {
+        await handlePythonProcess(codeAnalysisProcess, res, {
           success: async () => {
             if (!fs.existsSync(extractedJsonPath)) {
               throw new Error("Analysis completed but output file not found");
@@ -642,6 +821,112 @@ await handlePythonProcess(pythonProcess, res, {
       message: "Server error during file processing",
       error: error.message 
     });
+  }
+};
+
+exports.uploadCSVFile = async (req, res) => {
+  try {
+    const { repoId } = req.params;
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const repo = await Repo.findById(repoId);
+    if (!repo) {
+      return res.status(404).json({ message: "Repository not found" });
+    }
+
+    // Read the file to validate its contents before saving
+    const fileContent = fs.readFileSync(file.path, 'utf8');
+    
+    // Check if the file has content
+    if (!fileContent || fileContent.trim().length === 0) {
+      return res.status(400).json({ message: "The uploaded file is empty" });
+    }
+    
+    // Split by newline and filter out empty lines
+    const lines = fileContent.split('\n').filter(line => line.trim().length > 0);
+    
+    if (lines.length === 0) {
+      return res.status(400).json({ 
+        message: "The CSV file is empty. Please upload a file with actual content."
+      });
+    }
+    
+    if (lines.length === 1) {
+      return res.status(400).json({ 
+        message: "The CSV file contains only headers. Please upload a file with actual requirements."
+      });
+    }
+
+    // Parse the header row
+    const headers = lines[0].split(',').map(h => h.trim());
+    
+    // Check if the file appears to be in CSV format
+    if (headers.length <= 1) {
+      return res.status(400).json({ 
+        message: "The file does not appear to be in a valid CSV format. Please ensure it's properly formatted with comma-separated values."
+      });
+    }
+    
+    // Determine which column has the requirement text
+    const reqTextColIndex = headers.findIndex(h => 
+      h.toLowerCase().includes('requirement') || 
+      h.toLowerCase().includes('text') || 
+      h.toLowerCase().includes('description')
+    );
+    
+    // If no appropriate column was found, alert the user
+    if (reqTextColIndex < 0) {
+      return res.status(400).json({ 
+        message: "The CSV file does not appear to have a column for requirement text. Please ensure your CSV has a column with 'requirement', 'text', or 'description' in the header."
+      });
+    }
+    
+    // Check if there are any non-empty requirements
+    let validRequirementsCount = 0;
+    for (let i = 1; i < lines.length; i++) {
+      const values = lines[i].split(',');
+      
+      // Skip rows that don't have enough columns
+      if (values.length <= reqTextColIndex) continue;
+      
+      // Count rows with non-empty requirement text
+      if (values[reqTextColIndex] && values[reqTextColIndex].trim().length > 0) {
+        validRequirementsCount++;
+      }
+    }
+    
+    if (validRequirementsCount === 0) {
+      return res.status(400).json({ 
+        message: "The CSV file contains no valid requirements. Please check the file format and content."
+      });
+    }
+
+    // Ensure extracted directory exists
+    const extractedDir = path.join(__dirname, "../extracted", repo.name);
+    if (!fs.existsSync(extractedDir)) {
+      fs.mkdirSync(extractedDir, { recursive: true });
+    }
+
+    // Save the validated file
+    const savedFilePath = path.join(extractedDir, "latest_extracted_updated.csv");
+    fs.copyFileSync(file.path, savedFilePath);
+
+    // Clean up the temp file
+    fs.unlinkSync(file.path);
+
+    res.status(200).json({ 
+      message: `CSV file uploaded successfully with ${validRequirementsCount} valid requirements`,
+      repo: repo.name,
+      file: savedFilePath,
+      validRequirementsCount
+    });
+  } catch (error) {
+    console.error("Error uploading CSV file:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -750,28 +1035,101 @@ exports.getExtractedRequirements = async (req, res) => {
     }
 
     const extractedDir = path.join(__dirname, "../extracted", repo.name);
-    const filePath = useUpdated 
-      ? path.join(extractedDir, "latest_extracted_updated.csv")
-      : path.join(extractedDir, "latest_extracted.csv");
-
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ message: "Extracted requirements file not found" });
+    
+    // Try the updated file first if requested, or if not specified, try both
+    let filePath;
+    if (useUpdated) {
+      filePath = path.join(extractedDir, "latest_extracted_updated.csv");
+      if (!fs.existsSync(filePath)) {
+        return res.status(404).json({ 
+          message: "Updated requirements file not found. Please process the SRS file first." 
+        });
+      }
+    } else {
+      // Try updated file first, then fall back to original
+      const updatedPath = path.join(extractedDir, "latest_extracted_updated.csv");
+      const originalPath = path.join(extractedDir, "latest_extracted.csv");
+      
+      if (fs.existsSync(updatedPath)) {
+        filePath = updatedPath;
+      } else if (fs.existsSync(originalPath)) {
+        filePath = originalPath;
+      } else {
+        return res.status(404).json({ 
+          message: "No extracted requirements file found. Please upload and process an SRS document first." 
+        });
+      }
     }
 
     const fileContent = fs.readFileSync(filePath, 'utf8');
-    const lines = fileContent.split('\n');
-    const headers = lines[0].split(',');
-    const result = [];
+    const lines = fileContent.split('\n').filter(line => line.trim() !== ''); // Filter out empty lines
+    
+    // Don't skip the first line - it could be valid data without headers
+    let headerLine = 0;
+    let result = [];
+    
+    // Check if the first line looks like headers
+    const firstLine = lines[0].split(',');
+    const hasHeaders = firstLine.some(header => 
+      header.trim().toLowerCase().includes('requirement') || 
+      header.trim().toLowerCase().includes('text') || 
+      header.trim().toLowerCase().includes('type')
+    );
+    
+    // Use first line as headers if it has header-like text, otherwise use default headers
+    let headers;
+    if (hasHeaders) {
+      headers = firstLine;
+      headerLine = 1; // Skip the header line when processing data
+    } else {
+      // If no headers found, create default headers based on column count
+      const columnCount = firstLine.length;
+      headers = [];
+      if (columnCount >= 1) headers.push('Requirement Text');
+      if (columnCount >= 2) headers.push('Type');
+      if (columnCount >= 3) headers.push('Source');
+      // Add generic column names for any additional columns
+      for (let i = 3; i < columnCount; i++) {
+        headers.push(`Column${i+1}`);
+      }
+    }
+    
+    // Determine which column has the requirement text
+    const reqTextColIndex = headers.findIndex(h => 
+      h.trim().toLowerCase().includes('requirement') || 
+      h.trim().toLowerCase().includes('text') || 
+      h.trim().toLowerCase().includes('description')
+    );
+    
+    // If no appropriate column header found, use the first column as a fallback
+    const textColumnIndex = reqTextColIndex >= 0 ? reqTextColIndex : 0;
 
-    for (let i = 1; i < lines.length; i++) {
-      if (!lines[i]) continue;
-      
+    // Process all lines from data start (after header if there is one)
+    for (let i = headerLine; i < lines.length; i++) {
       const values = lines[i].split(',');
       const obj = {};
-      headers.forEach((header, j) => {
-        obj[header.trim().replace(/"/g, '')] = values[j]?.trim().replace(/"/g, '');
+      
+      // Only add the requirement if there's actual text in the requirement text column
+      const hasRequirementText = textColumnIndex < values.length && 
+                                values[textColumnIndex] && 
+                                values[textColumnIndex].trim().length > 0;
+      
+      if (hasRequirementText) {
+        headers.forEach((header, j) => {
+          if (j < values.length) {
+            obj[header.trim().replace(/"/g, '')] = values[j]?.trim().replace(/"/g, '');
+          }
+        });
+        result.push(obj);
+      }
+    }
+
+    // Check if we found any valid requirements
+    if (result.length === 0) {
+      return res.status(422).json({ 
+        message: "The requirements file exists but contains no valid requirements. Please check the SRS file format.",
+        file: filePath
       });
-      result.push(obj);
     }
 
     res.status(200).json(result);

@@ -3,10 +3,16 @@ import argparse
 import pickle
 import pandas as pd
 import google.generativeai as genai
-from tensorflow.keras.models import load_model
+from tensorflow import keras
+from keras.models import load_model
 from pdf_processing import extract_text_from_pdf
 from requirement_extraction import extract_requirements_from_pdf
 from io import StringIO
+import time
+
+# Constants
+MAX_RETRIES = 3
+RETRY_DELAY = 45  # seconds
 
 # ==============================
 # 🔹 Load API key
@@ -14,9 +20,9 @@ from io import StringIO
 genai.configure(api_key='AIzaSyAHBD3jHdaoYE3zikbDAkCx645jlmg2syc')
 
 # ==============================
-# 🔹 Model setup
+# 🔹 Model setup with retry logic
 # ==============================
-MODEL_NAME = "models/gemini-1.5-pro-latest"
+MODEL_NAME = "models/gemini-1.5-flash-latest"
 gemini_model = genai.GenerativeModel(MODEL_NAME)  # Avoids conflicts with Keras model
 
 # ==============================
@@ -101,55 +107,25 @@ if not extracted_data:
 output_csv_path = os.path.abspath(args.output)
 os.makedirs(os.path.dirname(output_csv_path), exist_ok=True)
 
-df = pd.DataFrame(extracted_data, columns=["Requirement ID", "Requirement Text"])
-df.to_csv(output_csv_path, index=False, encoding="utf-8")
-print(f"✅ Extracted {len(df)} requirements. Saved to: {output_csv_path}")
+# Convert the list of dictionaries to DataFrame
+df = pd.DataFrame(extracted_data)
+print(f"Debug: Original DataFrame columns: {df.columns}")
 
-# ==============================
-# 🔹 Validate & Complete Requirements with Gemini
-# ==============================
-def validate_and_complete_requirements(srs_text, extracted_reqs):
-    """
-    Use Gemini to validate and complete the extracted requirements.
-    Ensures proper CSV formatting before saving.
-    """
-    prompt = f"""
-    Here is an SRS document:
-    {srs_text}
+# Ensure we have the correct columns
+if 'requirement' not in df.columns and 'Requirement Text' in df.columns:
+    df = df.rename(columns={'Requirement Text': 'requirement'})
+if 'label' not in df.columns:
+    df['label'] = 'Functional'  # Default label
+if 'filename' not in df.columns:
+    df['filename'] = os.path.basename(args.file)
 
-    Here are the extracted functional requirements:
-    {extracted_reqs}
+# Save initial CSV with all requirements
+df.to_csv(output_csv_path, index=False, encoding='utf-8')
+print(f"✅ All requirements saved to: {output_csv_path}")
 
-    Please verify if all functional requirements from the SRS are present.
-    If any are missing, add them. Ensure the response is strictly formatted as CSV:
-    "Requirement Text" this is the first column and the second column should be the "label" functional or not and the third column file type "File Name" and write the name of the srs file uploaded 
-    """
-
-    response = gemini_model.generate_content(prompt)
-    if hasattr(response, "text"):  # Ensure response is correctly formatted
-        return response.text.strip()
-    else:
-        raise ValueError("❌ ERROR: Gemini response is empty or incorrect!")
-
-# ==============================
-# 🔹 Load Extracted CSV & Validate with Gemini
-# ==============================
-df = pd.read_csv(output_csv_path)
-
-try:
-    updated_text = validate_and_complete_requirements(srs_text, df.to_csv(index=False))
-    
-    # Convert text output to DataFrame
-    updated_df = pd.read_csv(StringIO(updated_text))
-
-    # At the end of the file, modify the saving logic:
-    updated_csv_path = output_csv_path.replace(".csv", "_updated.csv")
-    updated_df.to_csv(updated_csv_path, index=False, encoding="utf-8")
-
-# Also save the original for reference
-    df.to_csv(output_csv_path, index=False, encoding="utf-8")
-
-    print(f"✅ Initial requirements saved to: {output_csv_path}")
-    print(f"✅ Updated requirements saved to: {updated_csv_path}")
-except Exception as e:
-    print(f"❌ ERROR: Gemini validation failed: {e}")
+# Save only Functional requirements to updated file
+updated_csv_path = output_csv_path.replace(".csv", "_updated.csv")
+functional_reqs = df[df['label'] == 'Functional'].copy()
+functional_reqs.to_csv(updated_csv_path, index=False, encoding='utf-8')
+print(f"✅ Functional requirements saved to: {updated_csv_path}")
+print(f"📊 Summary: Found {len(functional_reqs)} functional requirements out of {len(df)} total requirements")

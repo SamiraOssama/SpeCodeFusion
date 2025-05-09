@@ -16,7 +16,7 @@ logging.basicConfig(
 )
 
 # Configure Gemini API
-genai.configure(api_key='AIzaSyCstv7GXTOUG1GN8ou0XxeWa1e4x4WdDwA')
+genai.configure(api_key='AIzaSyDzuC-JsaUJJagdvlzdO5G96Q8ZCz6Dcek')
 
 # Gemini models to use with fallback
 MODELS = [

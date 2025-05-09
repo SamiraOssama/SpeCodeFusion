@@ -3,12 +3,13 @@ import logging
 import pandas as pd
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import (
+from tensorflow import keras
+from keras.models import Sequential
+from keras.layers import (
     Dense, LSTM, Bidirectional, Embedding, SpatialDropout1D, BatchNormalization, Dropout
 )
-from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import matplotlib.pyplot as plt

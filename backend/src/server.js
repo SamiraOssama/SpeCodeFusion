@@ -8,6 +8,9 @@ const csv = require("csv-parser");
 const passport = require("./middleware/passport");
 const Repo = require("./models/repo"); // ✅ Import Repo model
 const codeRoutes = require("./routes/codeRoutes");
+const compatibilityRoutes = require("./routes/compatibilityRoutes");
+const { initialize } = require("./scripts/init"); // Import initialization script
+const { execSync } = require('child_process');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -18,12 +21,28 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use(passport.initialize());
 
-// ✅ Ensure directories exist
-const extractedDir = path.join(__dirname, "extracted");
-const uploadDir = path.join(__dirname, "uploads");
+// Run the NLTK setup script to ensure NLP resources are available
+const setupNltkPath = path.join(__dirname, 'scripts', 'github_analysis', 'embed', 'setup_nltk.py');
 
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
-if (!fs.existsSync(extractedDir)) fs.mkdirSync(extractedDir, { recursive: true });
+console.log("🔧 Setting up NLTK resources...");
+try {
+  const setupOutput = execSync(`python "${setupNltkPath}"`, { encoding: 'utf-8' });
+  console.log("✅ NLTK setup completed successfully.");
+} catch (error) {
+  console.warn("⚠️ NLTK setup encountered issues, but server will continue:");
+  console.warn(error.message);
+}
+
+// Create necessary directories if they don't exist
+const extractedDir = path.join(__dirname, 'extracted');
+const uploadDir = path.join(__dirname, 'uploads');
+
+[extractedDir, uploadDir].forEach(dir => {
+  if (!fs.existsSync(dir)) {
+    console.log(`📁 Creating directory: ${dir}`);
+    fs.mkdirSync(dir, { recursive: true });
+  }
+});
 
 // ✅ Serve extracted reports as static files
 console.log("🛠️ Serving extracted files from:", extractedDir);
@@ -33,7 +52,9 @@ app.use("/extracted", express.static(extractedDir));
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/repos", require("./routes/repoRoutes"));
 app.use("/api/files", require("./routes/fileRoutes"));
+app.use("/api/compatibility", compatibilityRoutes);
 app.use("/api", codeRoutes);
+
 // ✅ Fetch Extracted Requirements for a Repository
 app.get("/api/repos/:repoId/extracted", async (req, res) => {
   const { repoId } = req.params;
@@ -75,7 +96,7 @@ app.get("/api/repos/:repoId/extracted", async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
-// Handle access requests
+
 // Handle access requests
 app.post('/api/repos/:repoId/request-access', async (req, res) => {
   try {
@@ -119,8 +140,8 @@ app.post('/api/repos/:repoId/request-access', async (req, res) => {
       res.status(500).json({ message: error.message });
   }
 });
-// Handle request approval/rejection
 
+// Handle request approval/rejection
 const repoRoutes = require("./routes/repoRoutes");
 app.use("/api/repos", repoRoutes);
 app.post('/api/repos/:repoId/handle-request', async (req, res) => {
@@ -158,6 +179,7 @@ app.post('/api/repos/:repoId/handle-request', async (req, res) => {
       res.status(500).json({ message: error.message });
   }
 });
+
 app.get('/api/repos/check-request/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
@@ -179,15 +201,29 @@ app.get('/api/repos/check-request/:userId', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
 // routes for notification
 
-// ✅ Connect to MongoDB
-mongoose.connect("mongodb://127.0.0.1:27017/speccode", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log("✅ Connected to MongoDB"))
-.catch((err) => console.error("❌ MongoDB connection error:", err));
+// ✅ Connect to MongoDB and start server
+async function startServer() {
+  try {
+    // Initialize required resources
+    await initialize();
+    
+    // Connect to MongoDB
+    await mongoose.connect("mongodb://127.0.0.1:27017/speccode", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("✅ Connected to MongoDB");
+    
+    // Start server
+    app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+  } catch (error) {
+    console.error("❌ Server startup error:", error);
+    process.exit(1);
+  }
+}
 
-// ✅ Start Server
-app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+// Start the server
+startServer();

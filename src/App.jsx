@@ -22,6 +22,8 @@ import Allrepos from "./pages/Allrepos";
 import All from "./pages/All";
 import RequestPage from"./pages/Requestpage";
 import GoogleSuccess from "./pages/GoogleSuccess";
+import StepUpload from "./pages/StepUpload";
+import Report from "./pages/Report";
  // Fixed casing
 
 function App() {
@@ -142,7 +144,24 @@ function App() {
            <Route path="/All" element={<All />}/>
            <Route path="/Requestpage" element={<RequestPage />}/>
            <Route path="/google-login-success" element={<GoogleSuccess />} />
-           
+           <Route 
+            path="/step-upload" 
+            element={
+              <>
+                <Navbar />
+                <StepUpload />
+              </>
+            } 
+          />
+          <Route 
+            path="/report/:repoId" 
+            element={
+              <>
+                <Navbar />
+                <Report />
+              </>
+            } 
+          />
         </Routes>
       </main>
     </Router>
