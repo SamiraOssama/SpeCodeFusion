@@ -10,7 +10,9 @@ const userSchema = new mongoose.Schema({
     },
   },
   role: { type: String, default: "user" },
-  isGoogleUser: { type: Boolean, default: false }
+  isGoogleUser: { type: Boolean, default: false },
+  resetPasswordToken: { type: String, default: null },
+  resetPasswordExpires: { type: Date, default: null }
 });
 
 

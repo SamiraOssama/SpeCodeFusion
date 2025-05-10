@@ -1,0 +1,16 @@
+filename,requirement,label
+SRS.pdf,The system shall utilize the Spacy Python library to accurately extract relevant CV content using natural language processing.,Functional
+SRS.pdf,Recruiters shall be able to assign each job position a set of screening questions.,Functional
+SRS.pdf,The system shall create an algorithm that takes the average of the CV ranking and the validation of the screening questions to determine the outcome and present the result as a total score that represents the applicant’s overall compatibility.,Functional
+SRS.pdf,The system shall create an approach that uses cosine similarity and Jaccard similarity to compare the parsed CV and the required job vacancy to determine the degree of fit and provide a percentage rating of the applicant’s suitability.,Functional
+SRS.pdf,The applicants shall be able to create an account and log in to the system with their personal information.,Functional
+SRS.pdf,The applicants shall answer the provided screening questions.,Functional
+SRS.pdf,"Recruiters shall be able to provide job vacancies as well as the technical stack, skills, and experience for each job position.",Functional
+SRS.pdf,The applicants shall view the CV rating.,Functional
+SRS.pdf,The applicants shall view the parsing results and edit them.,Functional
+SRS.pdf,Recruiters shall be able to assign each screening question its model answer.,Functional
+SRS.pdf,The applicants shall edit the profile by re-uploading the CV .,Functional
+SRS.pdf,"Recruiters will be able to find applicants whose resumes closely match the job requirements by using the cosine and jaccard similarity methods, which provides an objective CV ranking.",Functional
+SRS.pdf,The applicants shall submit their CVs.,Functional
+SRS.pdf,The applicants shall view the final ranking which are CV score and questions score.,Functional
+SRS.pdf,Recruiters and hiring managers can use the ResuFit website to track applicants during the recruiting process and manage applications.,Functional

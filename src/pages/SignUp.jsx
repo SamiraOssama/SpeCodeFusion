@@ -193,7 +193,7 @@ const SignUp = () => {
     className="text-blue-600 hover:underline cursor-pointer"
     onClick={() => navigate("/login")}
   >
-    <p className="mt-4 text-sm text-gray-600">
+    <p className="mt-4 text-sm text-white">
     Already have an account?{" "}
     </p>
   </span>

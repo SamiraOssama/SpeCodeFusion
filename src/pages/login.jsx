@@ -101,7 +101,7 @@ const Login = () => {
             className="text-blue-600 hover:underline cursor-pointer"
             onClick={() => navigate("/signup")}
           >
-            <p className="mt-4 text-sm text-gray-600">
+            <p className="mt-4 text-sm text-white">
               Don't have an account? Sign up
             </p>
           </span>
@@ -110,7 +110,7 @@ const Login = () => {
             className="text-blue-600 hover:underline cursor-pointer"
             onClick={() => navigate("/reset-password")}
           >
-            <p className="mt-4 text-sm text-gray-600">
+            <p className="mt-4 text-sm text-white">
               Forgot password? Reset it
             </p>
           </span>
