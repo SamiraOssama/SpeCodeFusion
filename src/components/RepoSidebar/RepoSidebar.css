@@ -1,0 +1,61 @@
+.repo-sidebar {
+  width: 250px;
+  min-height: 100%;
+  background-color: #f8f9fa;
+  border-right: 1px solid #e9ecef;
+  padding: 1.5rem 0;
+  transition: all 0.3s ease;
+}
+
+.repo-sidebar.dark {
+  background-color: #1F2937;
+  border-right-color: #374151;
+}
+
+.repo-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 1rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: #4B5563;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.nav-item.dark {
+  color: #9CA3AF;
+}
+
+.nav-item:hover {
+  background-color: #e5e7eb;
+}
+
+.nav-item.dark:hover {
+  background-color: #374151;
+}
+
+.nav-item.active {
+  background-color: #3B82F6;
+  color: white;
+}
+
+.nav-item.dark.active {
+  background-color: #2563EB;
+}
+
+.nav-icon {
+  margin-right: 0.75rem;
+  font-size: 1.25rem;
+}
+
+.nav-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+} 

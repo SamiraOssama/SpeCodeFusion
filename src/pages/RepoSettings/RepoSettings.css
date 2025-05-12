@@ -1,0 +1,30 @@
+.repo-settings-container {
+  display: flex;
+  min-height: calc(100vh - 64px);
+}
+
+.repo-settings-content {
+  flex: 1;
+  padding: 2rem;
+  background-color: white;
+}
+
+.settings-section {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.settings-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+}
+
+.settings-card {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+} 

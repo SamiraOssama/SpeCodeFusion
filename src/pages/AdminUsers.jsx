@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar/Navbar";
 import AdminSidebar from "../components/Navbar/adminsidebar";
 import EditUserModal from "../pages/AdminEditUser";
 
@@ -99,116 +98,113 @@ const AdminUsers = () => {
   );
 
   return (
-    <>
-      <Navbar />
-      <div className="flex min-h-screen">
-        <AdminSidebar />
-        <div className="flex-1 p-6">
-          <h2 className="text-3xl font-bold mb-6 text-blue-700">All Users</h2>
+    <div className="flex min-h-screen">
+      <AdminSidebar />
+      <div className="flex-1 p-6">
+        <h2 className="text-3xl font-bold mb-6 text-blue-700">All Users</h2>
 
-          {/* Filters */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-            <input
-              type="text"
-              placeholder="Search by username or email"
-              className="w-full sm:w-1/3 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+        {/* Filters */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+          <input
+            type="text"
+            placeholder="Search by username or email"
+            className="w-full sm:w-1/3 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
 
-            <div className="flex gap-4 items-center">
-              <select
-                value={sortOrder}
-                onChange={(e) => setSortOrder(e.target.value)}
-                className="px-3 py-2 border rounded-md"
-              >
-                <option value="none">No Sort</option>
-                <option value="az">Username A-Z</option>
-                <option value="za">Username Z-A</option>
-              </select>
+          <div className="flex gap-4 items-center">
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="px-3 py-2 border rounded-md"
+            >
+              <option value="none">No Sort</option>
+              <option value="az">Username A-Z</option>
+              <option value="za">Username Z-A</option>
+            </select>
 
-              <select
-                value={itemsPerPage}
-                onChange={(e) => {
-                  setItemsPerPage(Number(e.target.value));
-                  setCurrentPage(1);
-                }}
-                className="px-3 py-2 border rounded-md"
-              >
-                <option value={10}>Show 10</option>
-                <option value={25}>Show 25</option>
-                <option value={50}>Show 50</option>
-              </select>
-            </div>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => {
+                setItemsPerPage(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+              className="px-3 py-2 border rounded-md"
+            >
+              <option value={10}>Show 10</option>
+              <option value={25}>Show 25</option>
+              <option value={50}>Show 50</option>
+            </select>
           </div>
+        </div>
 
-          {/* Table */}
-          {loading ? (
-            <p>Loading users...</p>
-          ) : error ? (
-            <p className="text-red-500">{error}</p>
-          ) : (
-            <>
-              <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-                <table className="w-full border-collapse">
-                  <thead className="bg-blue-600 text-white">
-                    <tr>
-                      <th className="px-6 py-3 text-left">Username</th>
-                      <th className="px-6 py-3 text-left">Email</th>
-                      <th className="px-6 py-3 text-left">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {paginatedUsers.length > 0 ? (
-                      paginatedUsers.map((user) => (
-                        <tr key={user._id} className="hover:bg-gray-100 border-b">
-                          <td className="px-6 py-4">{user.username}</td>
-                          <td className="px-6 py-4">{user.email}</td>
-                          <td className="px-6 py-4 justify-center gap-20">
-                            <button
-                              onClick={() => handleEdit(user._id)}
-                              className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
-                            >
-                              Edit
-                            </button>
-                            <button
-                              onClick={() => handleDelete(user._id)}
-                              className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                            >
-                              Delete
-                            </button>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="3" className="text-center py-4">
-                          No users found.
+        {/* Table */}
+        {loading ? (
+          <p>Loading users...</p>
+        ) : error ? (
+          <p className="text-red-500">{error}</p>
+        ) : (
+          <>
+            <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+              <table className="w-full border-collapse">
+                <thead className="bg-blue-600 text-white">
+                  <tr>
+                    <th className="px-6 py-3 text-left">Username</th>
+                    <th className="px-6 py-3 text-left">Email</th>
+                    <th className="px-6 py-3 text-left">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paginatedUsers.length > 0 ? (
+                    paginatedUsers.map((user) => (
+                      <tr key={user._id} className="hover:bg-gray-100 border-b">
+                        <td className="px-6 py-4">{user.username}</td>
+                        <td className="px-6 py-4">{user.email}</td>
+                        <td className="px-6 py-4 justify-center gap-20">
+                          <button
+                            onClick={() => handleEdit(user._id)}
+                            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDelete(user._id)}
+                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                          >
+                            Delete
+                          </button>
                         </td>
                       </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="3" className="text-center py-4">
+                        No users found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
 
-              {/* Pagination */}
-              <div className="flex justify-center mt-6 gap-2">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`px-3 py-1 border rounded ${
-                      page === currentPage
-                        ? "bg-blue-500 text-white"
-                        : "bg-white hover:bg-gray-100"
-                    }`}
-                  >
-                    {page}
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
+            {/* Pagination */}
+            <div className="flex justify-center mt-6 gap-2">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`px-3 py-1 border rounded ${
+                    page === currentPage
+                      ? "bg-blue-500 text-white"
+                      : "bg-white hover:bg-gray-100"
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Edit User Modal */}
@@ -218,7 +214,7 @@ const AdminUsers = () => {
         userData={editingUser}
         onSave={handleSaveUser}
       />
-    </>
+    </div>
   );
 };
 

@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { FiFilter, FiBell, FiCheck, FiX } from "react-icons/fi";
+import { useTheme } from "../context/ThemeContext";
 
 export default function RequestsPage() {
+  const { darkMode } = useTheme();
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -55,47 +57,46 @@ export default function RequestsPage() {
     fetchNotifications();
   }, [fetchReposWithRequests]);
 
-// In Requestpage.jsx
-const handleRequest = async (repoId, requestId, action, reason = "") => {
-  try {
-    const response = await fetch(
-      `http://localhost:5000/api/repos/${repoId}/handle-request`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ 
-          requestId: requestId,
-          decision: action === "approve" ? "approved" : "rejected",
-          reason: reason
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`Failed to ${action} request`);
-    }
-
-    // Update UI
-    setRepos(prevRepos => 
-      prevRepos.map(repo => {
-        if (repo._id === repoId) {
-          const updatedRequests = repo.requests.filter(req => req._id !== requestId);
-          return { ...repo, requests: updatedRequests };
+  const handleRequest = async (repoId, requestId, action, reason = "") => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/repos/${repoId}/handle-request`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ 
+            requestId: requestId,
+            decision: action === "approve" ? "approved" : "rejected",
+            reason: reason
+          }),
         }
-        return repo;
-      })
-    );
+      );
 
-    fetchNotifications();
-    return true;
-  } catch (err) {
-    setError(err.message);
-    return false;
-  }
-};
+      if (!response.ok) {
+        throw new Error(`Failed to ${action} request`);
+      }
+
+      
+      setRepos(prevRepos => 
+        prevRepos.map(repo => {
+          if (repo._id === repoId) {
+            const updatedRequests = repo.requests.filter(req => req._id !== requestId);
+            return { ...repo, requests: updatedRequests };
+          }
+          return repo;
+        })
+      );
+
+      fetchNotifications();
+      return true;
+    } catch (err) {
+      setError(err.message);
+      return false;
+    }
+  };
 
   const confirmReject = async (repoId, requestId) => {
     setCurrentRequest({ repoId, requestId });
@@ -115,16 +116,51 @@ const handleRequest = async (repoId, requestId, action, reason = "") => {
     }
   };
 
+  const handleDeleteRequest = async (repoId, requestId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/repos/${repoId}/requests/${requestId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete request");
+      }
+
+      
+      setRepos(prevRepos => 
+        prevRepos.map(repo => {
+          if (repo._id === repoId) {
+            const updatedRequests = repo.requests.filter(req => req._id !== requestId);
+            return { ...repo, requests: updatedRequests };
+          }
+          return repo;
+        })
+      );
+
+      fetchNotifications();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   if (loading) return <p className="text-center text-blue-600">Loading...</p>;
   if (error) return <p className="text-center text-red-600">{error}</p>;
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div className={`p-6 min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">🔑 Access Requests</h1>
+        <h1 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+          🔑 Access Requests
+        </h1>
         <div className="flex items-center space-x-4">
           <div className="relative">
-            <FiBell className="text-2xl cursor-pointer" />
+            <FiBell className={`text-2xl cursor-pointer ${darkMode ? 'text-gray-300' : 'text-gray-700'}`} />
             {notifications.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                 {notifications.length}
@@ -139,10 +175,14 @@ const handleRequest = async (repoId, requestId, action, reason = "") => {
           <button
             key={filter}
             onClick={() => setActiveFilter(filter)}
-            className={`px-4 py-2 rounded flex items-center ${
+            className={`px-4 py-2 rounded flex items-center transition-colors ${
               activeFilter === filter
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200 hover:bg-gray-300"
+                ? darkMode 
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-blue-500 text-white'
+                : darkMode
+                  ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  : 'bg-gray-200 hover:bg-gray-300'
             }`}
           >
             {filter === "pending" && <FiFilter className="mr-1" />}
@@ -154,21 +194,33 @@ const handleRequest = async (repoId, requestId, action, reason = "") => {
       </div>
 
       {repos.length === 0 ? (
-        <p className="text-gray-600">No repositories with requests found.</p>
+        <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+          No repositories with requests found.
+        </p>
       ) : (
         <div className="space-y-6">
           {repos.map((repo) => (
             repo.requests.filter(req => activeFilter === "all" || req.status === activeFilter).length > 0 && (
-              <div key={repo._id} className="bg-white p-4 rounded-lg shadow-md">
-                <h2 className="text-xl font-bold text-blue-600">{repo.name}</h2>
+              <div key={repo._id} className={`p-4 rounded-lg ${
+                darkMode ? 'bg-gray-800 shadow-dark' : 'bg-white shadow-md'
+              }`}>
+                <h2 className={`text-xl font-bold ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                  {repo.name}
+                </h2>
                 <div className="mt-4 space-y-2">
                   {repo.requests
                     .filter(req => activeFilter === "all" || req.status === activeFilter)
                     .map((request) => (
-                      <div key={request._id} className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
+                      <div key={request._id} className={`flex justify-between items-center p-3 rounded-lg ${
+                        darkMode ? 'bg-gray-700' : 'bg-gray-50'
+                      }`}>
                         <div>
-                          <p className="font-medium">{request.username || "Unknown User"}</p>
-                          <p className="text-sm text-gray-600">{request.email || "No email"}</p>
+                          <p className={`font-medium ${darkMode ? 'text-gray-200' : 'text-gray-900'}`}>
+                            {request.username || "Unknown User"}
+                          </p>
+                          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            {request.email || "No email"}
+                          </p>
                           {request.status === "rejected" && request.rejectionReason && (
                             <p className="text-sm text-red-500 mt-1">
                               Reason: {request.rejectionReason}
@@ -193,6 +245,16 @@ const handleRequest = async (repoId, requestId, action, reason = "") => {
                                 className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
                               >
                                 Reject
+                              </button>
+                              <button
+                                onClick={() => {
+                                  if (window.confirm("Are you sure you want to delete this request? This action cannot be undone.")) {
+                                    handleDeleteRequest(repo._id, request._id);
+                                  }
+                                }}
+                                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition"
+                              >
+                                Delete
                               </button>
                             </>
                           )}
@@ -219,22 +281,34 @@ const handleRequest = async (repoId, requestId, action, reason = "") => {
         </div>
       )}
 
-      {/* Rejection Modal */}
+     
       {showRejectModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg max-w-md w-full">
-            <h3 className="text-xl font-bold mb-4">Reject Request</h3>
+          <div className={`p-6 rounded-lg max-w-md w-full ${
+            darkMode ? 'bg-gray-800' : 'bg-white'
+          }`}>
+            <h3 className={`text-xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+              Reject Request
+            </h3>
             <textarea
               value={rejectionReason}
               onChange={(e) => setRejectionReason(e.target.value)}
               placeholder="Optional: Enter reason for rejection..."
-              className="w-full p-3 border rounded mb-4"
+              className={`w-full p-3 border rounded mb-4 ${
+                darkMode 
+                  ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              }`}
               rows={3}
             />
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setShowRejectModal(false)}
-                className="px-4 py-2 border rounded hover:bg-gray-100"
+                className={`px-4 py-2 border rounded transition-colors ${
+                  darkMode
+                    ? 'border-gray-600 text-gray-300 hover:bg-gray-700'
+                    : 'border-gray-300 hover:bg-gray-100'
+                }`}
               >
                 Cancel
               </button>

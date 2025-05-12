@@ -4,11 +4,18 @@
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
+    transition: all 0.3s ease;
+  }
+  
+  /* Dark mode styles */
+  .dark.user-profile-container {
+    background-color: #1F2937;
+    color: #F9FAFB;
   }
   
   .profile-header {
     color: white;
-    padding: 1.5rem;
+    padding: 1.5rem 2rem;
     border-radius: 12px;
     margin-bottom: 2rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -30,17 +37,31 @@
   
   /* Profile Card */
   .profile-card {
-    border-radius: 16px;
+    border-radius: 12px;
     padding: 2rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
   }
   
+  /* Dark mode styles */
+  .dark .profile-card,
+  .dark .reports-section,
+  .dark .preferences-section {
+    background-color: #374151;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+  
+  .profile-card:hover,
+  .reports-section:hover,
+  .preferences-section:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+  
   .profile-info {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
+    gap: 2rem;
+    margin-bottom: 2rem;
   }
   
   .avatar-container {
@@ -48,8 +69,8 @@
     cursor: pointer;
     border-radius: 50%;
     overflow: hidden;
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
   }
   
   .profile-avatar {
@@ -63,26 +84,36 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.7);
     color: white;
-    text-align: center;
     padding: 0.5rem;
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
+    font-size: 0.875rem;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
   }
   
   .avatar-container:hover .avatar-overlay {
-    transform: translateY(0);
+    opacity: 1;
   }
   
   .profile-details h2 {
-    margin: 0;
+    margin: 0 0 0.5rem 0;
     font-size: 1.5rem;
   }
   
   .profile-details p {
-    margin: 0.25rem 0 0;
+    margin: 0;
     font-size: 1rem;
+  }
+  
+  /* Dark mode styles */
+  .dark .profile-details h2 {
+    color: #F9FAFB;
+  }
+  
+  .profile-details p {
+    color: #9CA3AF;
   }
   
   .profile-actions {
@@ -108,15 +139,16 @@
   
   /* Reports Section */
   .reports-section {
-    border-radius: 16px;
+    border-radius: 12px;
     padding: 2rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
   }
   
   .section-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 1rem;
     margin-bottom: 1.5rem;
   }
   
@@ -130,85 +162,257 @@
   }
   
   .reports-table {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    width: 100%;
   }
   
   .table-header {
     display: grid;
-    grid-template-columns: 1fr 2fr 1;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 1rem;
+    font-weight: 600;
+    border-bottom: 1px solid;
+    border-color: inherit;
   }
+  
+  .report-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 1rem;
+    border-bottom: 1px solid;
+    border-color: inherit;
+    transition: all 0.2s ease;
+  }
+  
+  .status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: center;
+  }
+  
+  .status-badge.completed {
+    background: #10B981;
+    color: white;
+  }
+  
+  .status-badge.in_progress {
+    background: #F59E0B;
+    color: white;
+  }
+  
+  .status-badge.pending {
+    background: #6B7280;
+    color: white;
+  }
+  
+  /* Dark mode styles */
+  .dark .table-header,
+  .dark .report-row {
+    border-color: #4B5563;
+    color: #F9FAFB;
+  }
+  
+  .report-row:hover {
+    background-color: #4B5563;
+  }
+  
+  .empty-reports {
+    text-align: center;
+    padding: 3rem;
+  }
+  
+  /* Dark mode styles */
+  .dark .empty-reports {
+    color: #9CA3AF;
+  }
+  
   /* Edit Modal Overlay */
-.edit-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-/* Edit Modal Box */
-.edit-modal {
-  background: white;
-  border-radius: 16px;
-  padding: 2rem;
-  width: 400px;
-  max-width: 90%;
-  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
-  position: relative;
-}
-
-/* Modal Header */
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-/* Close Button */
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-/* Form Styles */
-.form-group {
-  margin-bottom: 1.2rem;
-}
-
-.form-group label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 0.7rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-
-.edit-modal button[type="submit"] {
-  width: 100%;
-  padding: 0.8rem;
-  background-color: #3B82F6;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-}
-.edit-modal button[type="submit"]:hover {
-  background-color: #2563eb;
-}
+  .edit-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+  }
+  
+  /* Edit Modal Box */
+  .edit-modal {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 12px;
+    padding: 2rem;
+  }
+  
+  /* Dark mode styles */
+  .dark .edit-modal {
+    background-color: #374151;
+    color: #F9FAFB;
+  }
+  
+  /* Modal Header */
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .modal-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+  
+  /* Close Button */
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+  
+  /* Form Styles */
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  .form-group input:focus {
+    outline: none;
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  }
+  
+  /* Dark mode styles */
+  .dark .form-group input {
+    background-color: #4B5563;
+    border-color: #6B7280;
+    color: #F9FAFB;
+  }
+  
+  .dark .form-group input::placeholder {
+    color: #9CA3AF;
+  }
+  
+  /* Loading spinner */
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(156, 163, 175, 0.2);
+    border-radius: 50%;
+    margin: 2rem auto;
+    animation: spin 1s linear infinite;
+  }
+  
+  /* Dark mode styles */
+  .dark .status-badge.completed {
+    background: #059669;
+  }
+  
+  .dark .status-badge.in_progress {
+    background: #D97706;
+  }
+  
+  .dark .status-badge.pending {
+    background: #4B5563;
+  }
+  
+  .dark .form-group input:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+  }
+  
+  /* Dark mode styles */
+  .dark .section-header h3 {
+    color: #F9FAFB;
+  }
+  
+  /* Preferences Section */
+  .preferences-section {
+    border-radius: 12px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+  }
+  
+  .preferences-content {
+    margin-top: 1.5rem;
+  }
+  
+  .preference-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  
+  .preference-item:last-child {
+    border-bottom: none;
+  }
+  
+  .preference-info {
+    flex: 1;
+  }
+  
+  .preference-info h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+  
+  .preference-info p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  
+  .theme-toggle-btn {
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .theme-toggle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .theme-toggle-btn:active {
+    transform: translateY(0);
+  }
+  
+  /* Dark mode styles */
+  .dark .preference-item {
+    border-color: var(--color-border);
+  }
+  
+  .dark .theme-toggle-btn:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  }

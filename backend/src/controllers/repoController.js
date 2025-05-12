@@ -1,10 +1,12 @@
 const Repo = require("../models/repo");
 const User = require("../models/user");
+const Notification = require("../models/notification");
 const path = require("path");
 const fs = require("fs");
 const { spawn } = require("child_process");
 const mongoose = require("mongoose");
 const pathUtils = require("../utils/pathUtils"); // Import the new path utilities
+const { createNotification } = require('./notificationController');
 
 // =============================================
 // HELPER FUNCTIONS
@@ -222,7 +224,25 @@ exports.getUserRepositories = async (req, res) => {
     }
 
     const userId = req.user.id;
-    const repos = await Repo.find({ $or: [{ owner: userId }, { members: userId }] });
+    
+    // First find the user to ensure they exist
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Find repositories and populate owner data
+    const repos = await Repo.find({ 
+      $or: [{ owner: userId }, { members: userId }] 
+    }).populate({
+      path: 'owner',
+      select: 'username email'
+    });
+
+    console.log("Found repositories:", repos.map(repo => ({
+      name: repo.name,
+      owner: repo.owner
+    })));
 
     res.status(200).json(repos);
   } catch (error) {
@@ -281,12 +301,18 @@ exports.getRepoOwner = async (req, res) => {
   try {
     const { repoId } = req.params;
     console.log("🔍 Fetching owner for repoId:", repoId);
+    console.log("👤 Authenticated user:", req.user);
 
     if (!mongoose.Types.ObjectId.isValid(repoId)) {
       return res.status(400).json({ message: "Invalid repository ID format." });
     }
 
     const repo = await Repo.findById(repoId).populate("owner", "username email organization");
+    console.log("📦 Found repository:", {
+      id: repo?._id,
+      name: repo?.name,
+      owner: repo?.owner?._id
+    });
 
     if (!repo) {
       return res.status(404).json({ message: "Repository not found" });
@@ -296,12 +322,15 @@ exports.getRepoOwner = async (req, res) => {
       return res.status(404).json({ message: "Owner details not found" });
     }
 
-    res.status(200).json({
+    const ownerData = {
       _id: repo.owner._id,
       name: repo.owner.username || "N/A",
       email: repo.owner.email || "N/A",
       organization: repo.owner.organization || "N/A",
-    });
+    };
+    
+    console.log("👑 Returning owner data:", ownerData);
+    res.status(200).json(ownerData);
   } catch (error) {
     console.error("❌ Error fetching repository owner:", error);
     res.status(500).json({ message: "Server error", error: error.message });
@@ -1139,5 +1168,460 @@ exports.getExtractedRequirements = async (req, res) => {
   }
 };
 
+exports.renameRepository = async (req, res) => {
+  try {
+    const { repoId } = req.params;
+    const { name } = req.body;
+    const userId = req.user.id;
 
+    console.log('Rename request received:', { repoId, name, userId });
 
+    // Validate input
+    if (!name || name.trim() === '') {
+      console.log('Invalid name provided');
+      return res.status(400).json({ message: "Repository name cannot be empty" });
+    }
+
+    // Find the repository
+    const repo = await Repo.findById(repoId);
+    if (!repo) {
+      console.log('Repository not found:', repoId);
+      return res.status(404).json({ message: "Repository not found" });
+    }
+
+    // Check if user has permission (must be owner or member)
+    const isOwner = repo.owner.toString() === userId;
+    const isMember = repo.members.includes(userId);
+    
+    console.log('Permission check:', { isOwner, isMember, userId, repoOwner: repo.owner });
+
+    if (!isMember && !isOwner) {
+      console.log('Permission denied for user:', userId);
+      return res.status(403).json({ message: "You don't have permission to rename this repository" });
+    }
+
+    // Check if the new name is already taken
+    const existingRepo = await Repo.findOne({ 
+      name: name.trim(),
+      _id: { $ne: repoId } // Exclude current repo from check
+    });
+    
+    if (existingRepo) {
+      console.log('Name already taken:', name);
+      return res.status(400).json({ message: "A repository with this name already exists" });
+    }
+
+    // Update repository name
+    const oldName = repo.name;
+    repo.name = name.trim();
+    
+    // Add to history
+    repo.sourceCodeHistory.push({
+      user: userId,
+      action: "Modified Source Code",
+      file: repo.sourceCodeFile || "N/A",
+      timestamp: new Date(),
+      metadata: {
+        name: "Repository Rename",
+        description: `Repository renamed from ${oldName} to ${name.trim()}`
+      }
+    });
+
+    await repo.save();
+    console.log('Repository renamed successfully:', { oldName, newName: name.trim() });
+
+    res.status(200).json({
+      message: "Repository renamed successfully",
+      repo: {
+        id: repo._id,
+        name: repo.name
+      }
+    });
+  } catch (error) {
+    console.error("Error in renameRepository:", error);
+    res.status(500).json({ 
+      message: "Failed to rename repository",
+      error: error.message 
+    });
+  }
+};
+
+exports.searchUsers = async (req, res) => {
+  try {
+    const { query } = req.query;
+    
+    if (!query) {
+      return res.status(400).json({ message: "Search query is required" });
+    }
+
+    // Search for users whose username or email matches the query (case-insensitive)
+    const users = await User.find({
+      $or: [
+        { username: { $regex: query, $options: 'i' } },
+        { email: { $regex: query, $options: 'i' } }
+      ]
+    })
+    .select('username email _id') // Only return necessary fields
+    .limit(5); // Limit results to 5 users
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error searching users:", error);
+    res.status(500).json({ message: "Failed to search users" });
+  }
+};
+
+exports.getCollaborators = async (req, res) => {
+  try {
+    const { repoId } = req.params;
+    const repo = await Repo.findById(repoId)
+      .populate('members', 'username email _id')
+      .populate('invitations.user', 'username email')
+      .populate('invitations.invitedBy', 'username email');
+
+    if (!repo) {
+      return res.status(404).json({ message: "Repository not found" });
+    }
+
+    // Format response to include both members and invitations with their status
+    const response = {
+      members: repo.members,
+      pendingInvitations: repo.invitations.filter(inv => inv.status === "pending"),
+      acceptedInvitations: repo.invitations.filter(inv => inv.status === "accepted"),
+      rejectedInvitations: repo.invitations.filter(inv => inv.status === "rejected")
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error fetching collaborators:", error);
+    res.status(500).json({ message: "Failed to fetch collaborators" });
+  }
+};
+
+exports.inviteCollaborator = async (req, res) => {
+  try {
+    const { repoId } = req.params;
+    const { userId } = req.body;
+    const inviterId = req.user.id;
+
+    const repo = await Repo.findById(repoId).populate('owner', 'username');
+    if (!repo) {
+      return res.status(404).json({ message: "Repository not found" });
+    }
+
+    // Check if trying to invite the owner
+    if (repo.owner._id.toString() === userId) {
+      return res.status(400).json({ message: "Cannot invite the repository owner as they already have access" });
+    }
+
+    // Check if user is already a member
+    if (repo.members.includes(userId)) {
+      return res.status(400).json({ message: "User is already a collaborator" });
+    }
+
+    // Check if there's already a pending invitation
+    const existingInvitation = repo.invitations.find(
+      inv => inv.user.toString() === userId && inv.status === "pending"
+    );
+    if (existingInvitation) {
+      return res.status(400).json({ message: "User already has a pending invitation" });
+    }
+
+    // Create new invitation
+    const newInvitation = {
+      user: userId,
+      invitedBy: inviterId,
+      status: "pending",
+      invitedAt: new Date()
+    };
+    repo.invitations.push(newInvitation);
+
+    await repo.save();
+
+    // Create notification for the invited user
+    await createNotification(
+      userId,
+      'repo_invitation',
+      `You have been invited to collaborate on repository: ${repo.name}`,
+      repo._id,
+      {
+        invitationId: repo.invitations[repo.invitations.length - 1]._id.toString(),
+        invitedBy: inviterId.toString(),
+        repoName: repo.name
+      }
+    );
+
+    // Populate the invitation details for response
+    const populatedRepo = await Repo.findById(repoId)
+      .populate('invitations.user', 'username email')
+      .populate('invitations.invitedBy', 'username email');
+
+    const invitation = populatedRepo.invitations[populatedRepo.invitations.length - 1];
+
+    res.status(200).json({
+      message: "Invitation sent successfully",
+      invitation
+    });
+  } catch (error) {
+    console.error("Error inviting collaborator:", error);
+    res.status(500).json({ message: "Failed to invite collaborator" });
+  }
+};
+
+exports.handleInvitation = async (req, res) => {
+  try {
+    const { repoId, invitationId } = req.params;
+    const { status } = req.body;
+    const userId = req.user.id;
+
+    if (!["accepted", "rejected"].includes(status)) {
+      return res.status(400).json({ message: "Invalid status. Must be 'accepted' or 'rejected'" });
+    }
+
+    const repo = await Repo.findById(repoId).populate('owner', 'username');
+    if (!repo) {
+      return res.status(404).json({ message: "Repository not found" });
+    }
+
+    // Check if the user is the owner
+    if (repo.owner.toString() === userId) {
+      return res.status(403).json({ message: "Repository owners cannot handle invitations" });
+    }
+
+    // Find the pending invitation
+    const invitation = repo.invitations.id(invitationId);
+    if (!invitation) {
+      return res.status(404).json({ message: "Invitation not found" });
+    }
+
+    // Verify the user is the invitee
+    if (invitation.user.toString() !== userId) {
+      return res.status(403).json({ message: "You can only respond to your own invitations" });
+    }
+
+    if (invitation.status !== "pending") {
+      return res.status(400).json({ message: "This invitation has already been processed" });
+    }
+
+    // Update invitation status
+    invitation.status = status;
+    invitation.respondedAt = new Date();
+
+    // If accepted, add user to members
+    if (status === "accepted" && !repo.members.includes(userId)) {
+      repo.members.push(userId);
+    }
+
+    await repo.save();
+
+    // Create notification for the repository owner
+    const user = await User.findById(userId).select('username email');
+    const notificationMessage = status === "accepted"
+      ? `${user.username || user.email} has accepted your invitation to collaborate on repository: ${repo.name}`
+      : `${user.username || user.email} has declined your invitation to collaborate on repository: ${repo.name}`;
+
+    await createNotification(
+      repo.owner._id,
+      'request_response',
+      notificationMessage,
+      repo._id,
+      {
+        responderId: userId,
+        responderName: user.username || user.email,
+        response: status
+      }
+    );
+
+    res.status(200).json({
+      message: `Invitation ${status} successfully`,
+      status,
+      invitation
+    });
+  } catch (error) {
+    console.error("Error handling invitation:", error);
+    res.status(500).json({ message: "Failed to handle invitation" });
+  }
+};
+
+exports.removeCollaborator = async (req, res) => {
+  try {
+    const { repoId, userId } = req.params;
+    const currentUserId = req.user.id;
+
+    // Get repo with owner details
+    const repo = await Repo.findById(repoId)
+      .populate('owner', 'username email')
+      .populate('members', 'username email');
+      
+    if (!repo) {
+      return res.status(404).json({ message: "Repository not found" });
+    }
+
+    // Check if the current user is the owner
+    const isOwner = repo.owner._id.toString() === currentUserId;
+
+    // Check if trying to remove the owner
+    if (repo.owner._id.toString() === userId) {
+      return res.status(403).json({ message: "Cannot remove the repository owner" });
+    }
+
+    // Only owner can remove collaborators
+    if (!isOwner) {
+      return res.status(403).json({ message: "Only the repository owner can remove collaborators" });
+    }
+
+    // Get the user being removed for the notification
+    const removedUser = repo.members.find(member => member._id.toString() === userId);
+    if (!removedUser) {
+      return res.status(400).json({ message: "User is not a collaborator" });
+    }
+
+    // Remove user from members
+    repo.members = repo.members.filter(member => member._id.toString() !== userId);
+
+    // Also remove any pending invitations for this user
+    repo.invitations = repo.invitations.filter(inv => inv.user.toString() !== userId);
+
+    await repo.save();
+
+    // Create notification for the removed user
+    const notificationData = {
+      user: userId,
+      type: 'request_response',
+      message: `You have been removed from the repository "${repo.name}" by ${repo.owner.username || repo.owner.email}`,
+      repoId: repo._id,
+      metadata: {
+        response: 'removed',
+        responderId: currentUserId,
+        responderName: repo.owner.username || repo.owner.email,
+        repoName: repo.name
+      }
+    };
+
+    const notification = new Notification(notificationData);
+    await notification.save();
+
+    res.status(200).json({ 
+      message: "Collaborator removed successfully",
+      removedUserId: userId
+    });
+  } catch (error) {
+    console.error("Error removing collaborator:", error);
+    res.status(500).json({ message: "Failed to remove collaborator" });
+  }
+};
+
+exports.getPendingInvitations = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Find all repositories where the user has pending invitations
+    const repos = await Repo.find({
+      'invitations': {
+        $elemMatch: {
+          user: userId,
+          status: "pending"
+        }
+      }
+    })
+    .populate('owner', 'username email')
+    .populate('invitations.invitedBy', 'username email');
+
+    const pendingInvitations = repos.map(repo => ({
+      repoId: repo._id,
+      repoName: repo.name,
+      owner: repo.owner,
+      invitation: repo.invitations.find(inv => 
+        inv.user.toString() === userId && inv.status === "pending"
+      )
+    }));
+
+    res.status(200).json(pendingInvitations);
+  } catch (error) {
+    console.error("Error fetching pending invitations:", error);
+    res.status(500).json({ message: "Failed to fetch pending invitations" });
+  }
+};
+
+exports.cancelInvitation = async (req, res) => {
+  try {
+    const { repoId, invitationId } = req.params;
+    const userId = req.user.id;
+
+    const repo = await Repo.findById(repoId);
+    if (!repo) {
+      return res.status(404).json({ message: "Repository not found" });
+    }
+
+    // Check if the user is the owner
+    if (repo.owner.toString() !== userId) {
+      return res.status(403).json({ message: "Only repository owners can cancel invitations" });
+    }
+
+    // Find and remove the invitation
+    const invitation = repo.invitations.id(invitationId);
+    if (!invitation) {
+      return res.status(404).json({ message: "Invitation not found" });
+    }
+
+    invitation.remove();
+    await repo.save();
+
+    res.json({ message: "Invitation cancelled successfully" });
+  } catch (error) {
+    console.error('Error in cancelInvitation:', error);
+    res.status(500).json({ message: "Failed to cancel invitation" });
+  }
+};
+
+exports.deletePendingRequest = async (req, res) => {
+  try {
+    const { repoId, requestId } = req.params;
+    const userId = req.user.id;
+
+    const repo = await Repo.findById(repoId);
+    if (!repo) {
+      return res.status(404).json({ message: "Repository not found" });
+    }
+
+    // Check if the user is the owner
+    if (repo.owner.toString() !== userId) {
+      return res.status(403).json({ message: "Only repository owners can delete requests" });
+    }
+
+    // Find the request
+    const request = repo.requests.id(requestId);
+    if (!request) {
+      return res.status(404).json({ message: "Request not found" });
+    }
+
+    if (request.status !== "pending") {
+      return res.status(400).json({ message: "Only pending requests can be deleted" });
+    }
+
+    // Remove the request
+    request.remove();
+    await repo.save();
+
+    // Create notification for the user whose request was deleted
+    await createNotification(
+      request.user,
+      'request_response',
+      `Your access request for repository "${repo.name}" has been deleted by the owner`,
+      repo._id,
+      {
+        response: 'deleted',
+        responderId: userId,
+        repoName: repo.name
+      }
+    );
+
+    res.status(200).json({ 
+      message: "Request deleted successfully",
+      requestId: requestId
+    });
+  } catch (error) {
+    console.error("Error deleting request:", error);
+    res.status(500).json({ message: "Failed to delete request" });
+  }
+};

@@ -1,0 +1,1487 @@
+{
+  "tree": {
+    "name": "github_clone",
+    "type": "directory",
+    "path": "",
+    "children": [
+      {
+        "name": "ATS-GradProject",
+        "type": "directory",
+        "path": "ATS-GradProject",
+        "children": [
+          {
+            "name": "admin",
+            "type": "directory",
+            "path": "ATS-GradProject\\admin",
+            "children": [
+              {
+                "name": "public",
+                "type": "directory",
+                "path": "ATS-GradProject\\admin\\public",
+                "children": [
+                  {
+                    "name": "next.svg",
+                    "type": "file",
+                    "path": "ATS-GradProject\\admin\\public\\next.svg",
+                    "extension": ".svg"
+                  },
+                  {
+                    "name": "vercel.svg",
+                    "type": "file",
+                    "path": "ATS-GradProject\\admin\\public\\vercel.svg",
+                    "extension": ".svg"
+                  }
+                ]
+              },
+              {
+                "name": "src",
+                "type": "directory",
+                "path": "ATS-GradProject\\admin\\src",
+                "children": [
+                  {
+                    "name": "app",
+                    "type": "directory",
+                    "path": "ATS-GradProject\\admin\\src\\app",
+                    "children": [
+                      {
+                        "name": "auth",
+                        "type": "directory",
+                        "path": "ATS-GradProject\\admin\\src\\app\\auth",
+                        "children": [
+                          {
+                            "name": "signin",
+                            "type": "directory",
+                            "path": "ATS-GradProject\\admin\\src\\app\\auth\\signin",
+                            "children": [
+                              {
+                                "name": "page.tsx",
+                                "type": "file",
+                                "path": "ATS-GradProject\\admin\\src\\app\\auth\\signin\\page.tsx",
+                                "extension": ".tsx"
+                              }
+                            ]
+                          },
+                          {
+                            "name": "signup",
+                            "type": "directory",
+                            "path": "ATS-GradProject\\admin\\src\\app\\auth\\signup",
+                            "children": [
+                              {
+                                "name": "page.tsx",
+                                "type": "file",
+                                "path": "ATS-GradProject\\admin\\src\\app\\auth\\signup\\page.tsx",
+                                "extension": ".tsx"
+                              }
+                            ]
+                          },
+                          {
+                            "name": "README.md",
+                            "type": "file",
+                            "path": "ATS-GradProject\\admin\\src\\app\\auth\\README.md",
+                            "extension": ".md"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "dashboard",
+                        "type": "directory",
+                        "path": "ATS-GradProject\\admin\\src\\app\\dashboard",
+                        "children": [
+                          {
+                            "name": "jobs",
+                            "type": "directory",
+                            "path": "ATS-GradProject\\admin\\src\\app\\dashboard\\jobs",
+                            "children": [
+                              {
+                                "name": "create",
+                                "type": "directory",
+                                "path": "ATS-GradProject\\admin\\src\\app\\dashboard\\jobs\\create",
+                                "children": [
+                                  {
+                                    "name": "page.tsx",
+                                    "type": "file",
+                                    "path": "ATS-GradProject\\admin\\src\\app\\dashboard\\jobs\\create\\page.tsx",
+                                    "extension": ".tsx"
+                                  }
+                                ]
+                              },
+                              {
+                                "name": "update",
+                                "type": "directory",
+                                "path": "ATS-GradProject\\admin\\src\\app\\dashboard\\jobs\\update",
+                                "children": [
+                                  {
+                                    "name": "[id]",
+                                    "type": "directory",
+                                    "path": "ATS-GradProject\\admin\\src\\app\\dashboard\\jobs\\update\\[id]",
+                                    "children": [
+                                      {
+                                        "name": "page.tsx",
+                                        "type": "file",
+                                        "path": "ATS-GradProject\\admin\\src\\app\\dashboard\\jobs\\update\\[id]\\page.tsx",
+                                        "extension": ".tsx"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "name": "screening-questions",
+                            "type": "directory",
+                            "path": "ATS-GradProject\\admin\\src\\app\\dashboard\\screening-questions",
+                            "children": [
+                              {
+                                "name": "create",
+                                "type": "directory",
+                                "path": "ATS-GradProject\\admin\\src\\app\\dashboard\\screening-questions\\create",
+                                "children": [
+                                  {
+                                    "name": "page.tsx",
+                                    "type": "file",
+                                    "path": "ATS-GradProject\\admin\\src\\app\\dashboard\\screening-questions\\create\\page.tsx",
+                                    "extension": ".tsx"
+                                  }
+                                ]
+                              },
+                              {
+                                "name": "update",
+                                "type": "directory",
+                                "path": "ATS-GradProject\\admin\\src\\app\\dashboard\\screening-questions\\update",
+                                "children": [
+                                  {
+                                    "name": "[id]",
+                                    "type": "directory",
+                                    "path": "ATS-GradProject\\admin\\src\\app\\dashboard\\screening-questions\\update\\[id]",
+                                    "children": [
+                                      {
+                                        "name": "page.tsx",
+                                        "type": "file",
+                                        "path": "ATS-GradProject\\admin\\src\\app\\dashboard\\screening-questions\\update\\[id]\\page.tsx",
+                                        "extension": ".tsx"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "name": "tech-skills",
+                            "type": "directory",
+                            "path": "ATS-GradProject\\admin\\src\\app\\dashboard\\tech-skills",
+                            "children": [
+                              {
+                                "name": "create",
+                                "type": "directory",
+                                "path": "ATS-GradProject\\admin\\src\\app\\dashboard\\tech-skills\\create",
+                                "children": [
+                                  {
+                                    "name": "page.tsx",
+                                    "type": "file",
+                                    "path": "ATS-GradProject\\admin\\src\\app\\dashboard\\tech-skills\\create\\page.tsx",
+                                    "extension": ".tsx"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "name": "page.tsx",
+                            "type": "file",
+                            "path": "ATS-GradProject\\admin\\src\\app\\dashboard\\page.tsx",
+                            "extension": ".tsx"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "jobs",
+                        "type": "directory",
+                        "path": "ATS-GradProject\\admin\\src\\app\\jobs",
+                        "children": [
+                          {
+                            "name": "apply",
+                            "type": "directory",
+                            "path": "ATS-GradProject\\admin\\src\\app\\jobs\\apply",
+                            "children": [
+                              {
+                                "name": "page.tsx",
+                                "type": "file",
+                                "path": "ATS-GradProject\\admin\\src\\app\\jobs\\apply\\page.tsx",
+                                "extension": ".tsx"
+                              }
+                            ]
+                          },
+                          {
+                            "name": "ranking",
+                            "type": "directory",
+                            "path": "ATS-GradProject\\admin\\src\\app\\jobs\\ranking",
+                            "children": [
+                              {
+                                "name": "page.tsx",
+                                "type": "file",
+                                "path": "ATS-GradProject\\admin\\src\\app\\jobs\\ranking\\page.tsx",
+                                "extension": ".tsx"
+                              }
+                            ]
+                          },
+                          {
+                            "name": "page.tsx",
+                            "type": "file",
+                            "path": "ATS-GradProject\\admin\\src\\app\\jobs\\page.tsx",
+                            "extension": ".tsx"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "screeningQuestion",
+                        "type": "directory",
+                        "path": "ATS-GradProject\\admin\\src\\app\\screeningQuestion",
+                        "children": [
+                          {
+                            "name": "page.tsx",
+                            "type": "file",
+                            "path": "ATS-GradProject\\admin\\src\\app\\screeningQuestion\\page.tsx",
+                            "extension": ".tsx"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "LandingPage.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\app\\LandingPage.tsx",
+                        "extension": ".tsx"
+                      },
+                      {
+                        "name": "favicon.ico",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\app\\favicon.ico",
+                        "extension": ".ico"
+                      },
+                      {
+                        "name": "getLPTheme.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\app\\getLPTheme.tsx",
+                        "extension": ".tsx"
+                      },
+                      {
+                        "name": "globals.css",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\app\\globals.css",
+                        "extension": ".css"
+                      },
+                      {
+                        "name": "layout.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\app\\layout.tsx",
+                        "extension": ".tsx"
+                      },
+                      {
+                        "name": "page.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\app\\page.tsx",
+                        "extension": ".tsx"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "components",
+                    "type": "directory",
+                    "path": "ATS-GradProject\\admin\\src\\components",
+                    "children": [
+                      {
+                        "name": "admin",
+                        "type": "directory",
+                        "path": "ATS-GradProject\\admin\\src\\components\\admin",
+                        "children": [
+                          {
+                            "name": "Jobs.tsx",
+                            "type": "file",
+                            "path": "ATS-GradProject\\admin\\src\\components\\admin\\Jobs.tsx",
+                            "extension": ".tsx"
+                          },
+                          {
+                            "name": "ScreeningQuestions.tsx",
+                            "type": "file",
+                            "path": "ATS-GradProject\\admin\\src\\components\\admin\\ScreeningQuestions.tsx",
+                            "extension": ".tsx"
+                          },
+                          {
+                            "name": "TechSkills.tsx",
+                            "type": "file",
+                            "path": "ATS-GradProject\\admin\\src\\components\\admin\\TechSkills.tsx",
+                            "extension": ".tsx"
+                          },
+                          {
+                            "name": "circularProgressLabel.tsx",
+                            "type": "file",
+                            "path": "ATS-GradProject\\admin\\src\\components\\admin\\circularProgressLabel.tsx",
+                            "extension": ".tsx"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "applicant",
+                        "type": "directory",
+                        "path": "ATS-GradProject\\admin\\src\\components\\applicant",
+                        "children": [
+                          {
+                            "name": "JobVacancyCard.tsx",
+                            "type": "file",
+                            "path": "ATS-GradProject\\admin\\src\\components\\applicant\\JobVacancyCard.tsx",
+                            "extension": ".tsx"
+                          },
+                          {
+                            "name": "ResumeDropzone.tsx",
+                            "type": "file",
+                            "path": "ATS-GradProject\\admin\\src\\components\\applicant\\ResumeDropzone.tsx",
+                            "extension": ".tsx"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "AppBar.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\components\\AppBar.tsx",
+                        "extension": ".tsx"
+                      },
+                      {
+                        "name": "FAQ.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\components\\FAQ.tsx",
+                        "extension": ".tsx"
+                      },
+                      {
+                        "name": "Features.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\components\\Features.tsx",
+                        "extension": ".tsx"
+                      },
+                      {
+                        "name": "Footer.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\components\\Footer.tsx",
+                        "extension": ".tsx"
+                      },
+                      {
+                        "name": "Hero.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\components\\Hero.tsx",
+                        "extension": ".tsx"
+                      },
+                      {
+                        "name": "Highlights.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\components\\Highlights.tsx",
+                        "extension": ".tsx"
+                      },
+                      {
+                        "name": "Pricing.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\components\\Pricing.tsx",
+                        "extension": ".tsx"
+                      },
+                      {
+                        "name": "SessionManager.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\components\\SessionManager.tsx",
+                        "extension": ".tsx"
+                      },
+                      {
+                        "name": "ThemeManager.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\components\\ThemeManager.tsx",
+                        "extension": ".tsx"
+                      },
+                      {
+                        "name": "ToggleColorMode.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\components\\ToggleColorMode.tsx",
+                        "extension": ".tsx"
+                      },
+                      {
+                        "name": "circularProgressLabel.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\components\\circularProgressLabel.tsx",
+                        "extension": ".tsx"
+                      },
+                      {
+                        "name": "header.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\components\\header.tsx",
+                        "extension": ".tsx"
+                      },
+                      {
+                        "name": "mockData.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\components\\mockData.tsx",
+                        "extension": ".tsx"
+                      },
+                      {
+                        "name": "theme.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\components\\theme.tsx",
+                        "extension": ".tsx"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "constants",
+                    "type": "directory",
+                    "path": "ATS-GradProject\\admin\\src\\constants",
+                    "children": [
+                      {
+                        "name": "Applicant.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\constants\\Applicant.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "EducationDropdownItems.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\constants\\EducationDropdownItems.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "JobVacancy.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\constants\\JobVacancy.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "ScreeningQuestions.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\constants\\ScreeningQuestions.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "TechSkills.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\constants\\TechSkills.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "UserRoles.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\constants\\UserRoles.ts",
+                        "extension": ".ts"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "hooks",
+                    "type": "directory",
+                    "path": "ATS-GradProject\\admin\\src\\hooks",
+                    "children": [
+                      {
+                        "name": "useJobVacancies.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\hooks\\useJobVacancies.tsx",
+                        "extension": ".tsx"
+                      },
+                      {
+                        "name": "useJobVacancy.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\hooks\\useJobVacancy.tsx",
+                        "extension": ".tsx"
+                      },
+                      {
+                        "name": "useProfile.tsx",
+                        "type": "file",
+                        "path": "ATS-GradProject\\admin\\src\\hooks\\useProfile.tsx",
+                        "extension": ".tsx"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "middleware.ts",
+                    "type": "file",
+                    "path": "ATS-GradProject\\admin\\src\\middleware.ts",
+                    "extension": ".ts"
+                  }
+                ]
+              },
+              {
+                "name": "types",
+                "type": "directory",
+                "path": "ATS-GradProject\\admin\\types",
+                "children": [
+                  {
+                    "name": "next-auth.d.ts",
+                    "type": "file",
+                    "path": "ATS-GradProject\\admin\\types\\next-auth.d.ts",
+                    "extension": ".ts"
+                  }
+                ]
+              },
+              {
+                "name": "README.md",
+                "type": "file",
+                "path": "ATS-GradProject\\admin\\README.md",
+                "extension": ".md"
+              },
+              {
+                "name": "next-env.d.ts",
+                "type": "file",
+                "path": "ATS-GradProject\\admin\\next-env.d.ts",
+                "extension": ".ts"
+              },
+              {
+                "name": "next.config.js",
+                "type": "file",
+                "path": "ATS-GradProject\\admin\\next.config.js",
+                "extension": ".js"
+              },
+              {
+                "name": "package-lock.json",
+                "type": "file",
+                "path": "ATS-GradProject\\admin\\package-lock.json",
+                "extension": ".json"
+              },
+              {
+                "name": "package.json",
+                "type": "file",
+                "path": "ATS-GradProject\\admin\\package.json",
+                "extension": ".json"
+              },
+              {
+                "name": "tsconfig.json",
+                "type": "file",
+                "path": "ATS-GradProject\\admin\\tsconfig.json",
+                "extension": ".json"
+              }
+            ]
+          },
+          {
+            "name": "backend",
+            "type": "directory",
+            "path": "ATS-GradProject\\backend",
+            "children": [
+              {
+                "name": "src",
+                "type": "directory",
+                "path": "ATS-GradProject\\backend\\src",
+                "children": [
+                  {
+                    "name": "admin",
+                    "type": "directory",
+                    "path": "ATS-GradProject\\backend\\src\\admin",
+                    "children": [
+                      {
+                        "name": "dto",
+                        "type": "directory",
+                        "path": "ATS-GradProject\\backend\\src\\admin\\dto",
+                        "children": [
+                          {
+                            "name": "create-admin.dto.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\admin\\dto\\create-admin.dto.ts",
+                            "extension": ".ts"
+                          },
+                          {
+                            "name": "update-admin.dto.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\admin\\dto\\update-admin.dto.ts",
+                            "extension": ".ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "entities",
+                        "type": "directory",
+                        "path": "ATS-GradProject\\backend\\src\\admin\\entities",
+                        "children": [
+                          {
+                            "name": "admin.entity.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\admin\\entities\\admin.entity.ts",
+                            "extension": ".ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "admin.controller.spec.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\admin\\admin.controller.spec.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "admin.controller.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\admin\\admin.controller.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "admin.module.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\admin\\admin.module.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "admin.service.spec.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\admin\\admin.service.spec.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "admin.service.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\admin\\admin.service.ts",
+                        "extension": ".ts"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "applicant",
+                    "type": "directory",
+                    "path": "ATS-GradProject\\backend\\src\\applicant",
+                    "children": [
+                      {
+                        "name": "dto",
+                        "type": "directory",
+                        "path": "ATS-GradProject\\backend\\src\\applicant\\dto",
+                        "children": [
+                          {
+                            "name": "create-applicant-odoo.dto.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\applicant\\dto\\create-applicant-odoo.dto.ts",
+                            "extension": ".ts"
+                          },
+                          {
+                            "name": "create-applicant.dto.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\applicant\\dto\\create-applicant.dto.ts",
+                            "extension": ".ts"
+                          },
+                          {
+                            "name": "register-applicant.dto.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\applicant\\dto\\register-applicant.dto.ts",
+                            "extension": ".ts"
+                          },
+                          {
+                            "name": "update-applicant.dto.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\applicant\\dto\\update-applicant.dto.ts",
+                            "extension": ".ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "entities",
+                        "type": "directory",
+                        "path": "ATS-GradProject\\backend\\src\\applicant\\entities",
+                        "children": [
+                          {
+                            "name": "applicant.entity.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\applicant\\entities\\applicant.entity.ts",
+                            "extension": ".ts"
+                          },
+                          {
+                            "name": "resume-screening-questions-answers.entity.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\applicant\\entities\\resume-screening-questions-answers.entity.ts",
+                            "extension": ".ts"
+                          },
+                          {
+                            "name": "resume.entity.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\applicant\\entities\\resume.entity.ts",
+                            "extension": ".ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "applicant.controller.spec.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\applicant\\applicant.controller.spec.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "applicant.controller.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\applicant\\applicant.controller.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "applicant.module.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\applicant\\applicant.module.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "applicant.service.spec.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\applicant\\applicant.service.spec.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "applicant.service.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\applicant\\applicant.service.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "resume.controller.spec.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\applicant\\resume.controller.spec.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "resume.controller.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\applicant\\resume.controller.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "resume.service.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\applicant\\resume.service.ts",
+                        "extension": ".ts"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "auth",
+                    "type": "directory",
+                    "path": "ATS-GradProject\\backend\\src\\auth",
+                    "children": [
+                      {
+                        "name": "auth guard",
+                        "type": "directory",
+                        "path": "ATS-GradProject\\backend\\src\\auth\\auth guard",
+                        "children": [
+                          {
+                            "name": "auth-admin.guard.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\auth\\auth guard\\auth-admin.guard.ts",
+                            "extension": ".ts"
+                          },
+                          {
+                            "name": "auth-all.guard.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\auth\\auth guard\\auth-all.guard.ts",
+                            "extension": ".ts"
+                          },
+                          {
+                            "name": "auth-applicant.guard.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\auth\\auth guard\\auth-applicant.guard.ts",
+                            "extension": ".ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "auth.controller.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\auth\\auth.controller.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "auth.module.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\auth\\auth.module.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "auth.service.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\auth\\auth.service.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "constants.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\auth\\constants.ts",
+                        "extension": ".ts"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "chatgpt",
+                    "type": "directory",
+                    "path": "ATS-GradProject\\backend\\src\\chatgpt",
+                    "children": [
+                      {
+                        "name": "chatgpt.module.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\chatgpt\\chatgpt.module.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "chatgpt.service.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\chatgpt\\chatgpt.service.ts",
+                        "extension": ".ts"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "job-vacany",
+                    "type": "directory",
+                    "path": "ATS-GradProject\\backend\\src\\job-vacany",
+                    "children": [
+                      {
+                        "name": "dto",
+                        "type": "directory",
+                        "path": "ATS-GradProject\\backend\\src\\job-vacany\\dto",
+                        "children": [
+                          {
+                            "name": "create-job-vacany.dto.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\job-vacany\\dto\\create-job-vacany.dto.ts",
+                            "extension": ".ts"
+                          },
+                          {
+                            "name": "create-screening-question.dto.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\job-vacany\\dto\\create-screening-question.dto.ts",
+                            "extension": ".ts"
+                          },
+                          {
+                            "name": "update-job-vacany.dto.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\job-vacany\\dto\\update-job-vacany.dto.ts",
+                            "extension": ".ts"
+                          },
+                          {
+                            "name": "update-screening-question.dto.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\job-vacany\\dto\\update-screening-question.dto.ts",
+                            "extension": ".ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "entities",
+                        "type": "directory",
+                        "path": "ATS-GradProject\\backend\\src\\job-vacany\\entities",
+                        "children": [
+                          {
+                            "name": "job-vacancy-screening-question.entity.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\job-vacany\\entities\\job-vacancy-screening-question.entity.ts",
+                            "extension": ".ts"
+                          },
+                          {
+                            "name": "job-vacany-tech-skill.entity.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\job-vacany\\entities\\job-vacany-tech-skill.entity.ts",
+                            "extension": ".ts"
+                          },
+                          {
+                            "name": "job-vacany.entity.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\job-vacany\\entities\\job-vacany.entity.ts",
+                            "extension": ".ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "job-vacany.controller.spec.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\job-vacany\\job-vacany.controller.spec.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "job-vacany.controller.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\job-vacany\\job-vacany.controller.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "job-vacany.module.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\job-vacany\\job-vacany.module.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "job-vacany.service.spec.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\job-vacany\\job-vacany.service.spec.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "job-vacany.service.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\job-vacany\\job-vacany.service.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "screening-questions.controller.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\job-vacany\\screening-questions.controller.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "screening-questions.service.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\job-vacany\\screening-questions.service.ts",
+                        "extension": ".ts"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "odoo",
+                    "type": "directory",
+                    "path": "ATS-GradProject\\backend\\src\\odoo",
+                    "children": [
+                      {
+                        "name": "dto",
+                        "type": "directory",
+                        "path": "ATS-GradProject\\backend\\src\\odoo\\dto",
+                        "children": [
+                          {
+                            "name": "create-odoo.dto.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\odoo\\dto\\create-odoo.dto.ts",
+                            "extension": ".ts"
+                          },
+                          {
+                            "name": "update-odoo.dto.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\odoo\\dto\\update-odoo.dto.ts",
+                            "extension": ".ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "entities",
+                        "type": "directory",
+                        "path": "ATS-GradProject\\backend\\src\\odoo\\entities",
+                        "children": [
+                          {
+                            "name": "odoo.entity.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\odoo\\entities\\odoo.entity.ts",
+                            "extension": ".ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "odoo-connector.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\odoo\\odoo-connector.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "odoo.controller.spec.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\odoo\\odoo.controller.spec.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "odoo.controller.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\odoo\\odoo.controller.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "odoo.module.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\odoo\\odoo.module.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "odoo.service.spec.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\odoo\\odoo.service.spec.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "odoo.service.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\odoo\\odoo.service.ts",
+                        "extension": ".ts"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "settings",
+                    "type": "directory",
+                    "path": "ATS-GradProject\\backend\\src\\settings",
+                    "children": [
+                      {
+                        "name": "dto",
+                        "type": "directory",
+                        "path": "ATS-GradProject\\backend\\src\\settings\\dto",
+                        "children": [
+                          {
+                            "name": "create-tech-skill.dto.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\settings\\dto\\create-tech-skill.dto.ts",
+                            "extension": ".ts"
+                          },
+                          {
+                            "name": "update-tech-skill.dto.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\settings\\dto\\update-tech-skill.dto.ts",
+                            "extension": ".ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "entities",
+                        "type": "directory",
+                        "path": "ATS-GradProject\\backend\\src\\settings\\entities",
+                        "children": [
+                          {
+                            "name": "company.entity.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\settings\\entities\\company.entity.ts",
+                            "extension": ".ts"
+                          },
+                          {
+                            "name": "screening-question.entity.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\settings\\entities\\screening-question.entity.ts",
+                            "extension": ".ts"
+                          },
+                          {
+                            "name": "tech-skill.entity.ts",
+                            "type": "file",
+                            "path": "ATS-GradProject\\backend\\src\\settings\\entities\\tech-skill.entity.ts",
+                            "extension": ".ts"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "company.controller.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\settings\\company.controller.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "settings.module.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\settings\\settings.module.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "tech-skill.controller.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\settings\\tech-skill.controller.ts",
+                        "extension": ".ts"
+                      },
+                      {
+                        "name": "tech-skill.service.ts",
+                        "type": "file",
+                        "path": "ATS-GradProject\\backend\\src\\settings\\tech-skill.service.ts",
+                        "extension": ".ts"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "app.controller.spec.ts",
+                    "type": "file",
+                    "path": "ATS-GradProject\\backend\\src\\app.controller.spec.ts",
+                    "extension": ".ts"
+                  },
+                  {
+                    "name": "app.controller.ts",
+                    "type": "file",
+                    "path": "ATS-GradProject\\backend\\src\\app.controller.ts",
+                    "extension": ".ts"
+                  },
+                  {
+                    "name": "app.module.ts",
+                    "type": "file",
+                    "path": "ATS-GradProject\\backend\\src\\app.module.ts",
+                    "extension": ".ts"
+                  },
+                  {
+                    "name": "app.service.ts",
+                    "type": "file",
+                    "path": "ATS-GradProject\\backend\\src\\app.service.ts",
+                    "extension": ".ts"
+                  },
+                  {
+                    "name": "main.ts",
+                    "type": "file",
+                    "path": "ATS-GradProject\\backend\\src\\main.ts",
+                    "extension": ".ts"
+                  }
+                ]
+              },
+              {
+                "name": "test",
+                "type": "directory",
+                "path": "ATS-GradProject\\backend\\test",
+                "children": [
+                  {
+                    "name": "app.e2e-spec.ts",
+                    "type": "file",
+                    "path": "ATS-GradProject\\backend\\test\\app.e2e-spec.ts",
+                    "extension": ".ts"
+                  },
+                  {
+                    "name": "jest-e2e.json",
+                    "type": "file",
+                    "path": "ATS-GradProject\\backend\\test\\jest-e2e.json",
+                    "extension": ".json"
+                  }
+                ]
+              },
+              {
+                "name": "README.md",
+                "type": "file",
+                "path": "ATS-GradProject\\backend\\README.md",
+                "extension": ".md"
+              },
+              {
+                "name": "nest-cli.json",
+                "type": "file",
+                "path": "ATS-GradProject\\backend\\nest-cli.json",
+                "extension": ".json"
+              },
+              {
+                "name": "package-lock.json",
+                "type": "file",
+                "path": "ATS-GradProject\\backend\\package-lock.json",
+                "extension": ".json"
+              },
+              {
+                "name": "package.json",
+                "type": "file",
+                "path": "ATS-GradProject\\backend\\package.json",
+                "extension": ".json"
+              },
+              {
+                "name": "tsconfig.build.json",
+                "type": "file",
+                "path": "ATS-GradProject\\backend\\tsconfig.build.json",
+                "extension": ".json"
+              },
+              {
+                "name": "tsconfig.json",
+                "type": "file",
+                "path": "ATS-GradProject\\backend\\tsconfig.json",
+                "extension": ".json"
+              }
+            ]
+          },
+          {
+            "name": "README.md",
+            "type": "file",
+            "path": "ATS-GradProject\\README.md",
+            "extension": ".md"
+          }
+        ]
+      },
+      {
+        "name": "Resume-Matcher",
+        "type": "directory",
+        "path": "Resume-Matcher",
+        "children": [
+          {
+            "name": "Data",
+            "type": "directory",
+            "path": "Resume-Matcher\\Data",
+            "children": [
+              {
+                "name": "Processed",
+                "type": "directory",
+                "path": "Resume-Matcher\\Data\\Processed",
+                "children": [
+                  {
+                    "name": "Resumes",
+                    "type": "directory",
+                    "path": "Resume-Matcher\\Data\\Processed\\Resumes",
+                    "children": [
+                      {
+                        "name": "Resume-Eng. MohamedA.ElGhany cv_Software Tester .pdf.json",
+                        "type": "file",
+                        "path": "Resume-Matcher\\Data\\Processed\\Resumes\\Resume-Eng. MohamedA.ElGhany cv_Software Tester .pdf.json",
+                        "extension": ".json"
+                      },
+                      {
+                        "name": "Resume-FATIMA ELSHEIKH.pdf.json",
+                        "type": "file",
+                        "path": "Resume-Matcher\\Data\\Processed\\Resumes\\Resume-FATIMA ELSHEIKH.pdf.json",
+                        "extension": ".json"
+                      },
+                      {
+                        "name": "Resume-MahmoudMeshrif-Software Test Engineer-CV .pdf.json",
+                        "type": "file",
+                        "path": "Resume-Matcher\\Data\\Processed\\Resumes\\Resume-MahmoudMeshrif-Software Test Engineer-CV .pdf.json",
+                        "extension": ".json"
+                      },
+                      {
+                        "name": "Resume-Mohannad's CV.pdf.json",
+                        "type": "file",
+                        "path": "Resume-Matcher\\Data\\Processed\\Resumes\\Resume-Mohannad's CV.pdf.json",
+                        "extension": ".json"
+                      },
+                      {
+                        "name": "Resume-Youssef Gamaleldin.pdf.json",
+                        "type": "file",
+                        "path": "Resume-Matcher\\Data\\Processed\\Resumes\\Resume-Youssef Gamaleldin.pdf.json",
+                        "extension": ".json"
+                      },
+                      {
+                        "name": "Resume-Zaynab Ibrahim Resume.pdf.json",
+                        "type": "file",
+                        "path": "Resume-Matcher\\Data\\Processed\\Resumes\\Resume-Zaynab Ibrahim Resume.pdf.json",
+                        "extension": ".json"
+                      },
+                      {
+                        "name": "Resume-alfred_pennyworth_pm.pdf.json",
+                        "type": "file",
+                        "path": "Resume-Matcher\\Data\\Processed\\Resumes\\Resume-alfred_pennyworth_pm.pdf.json",
+                        "extension": ".json"
+                      },
+                      {
+                        "name": "Resume-barry_allen_fe.pdf.json",
+                        "type": "file",
+                        "path": "Resume-Matcher\\Data\\Processed\\Resumes\\Resume-barry_allen_fe.pdf.json",
+                        "extension": ".json"
+                      },
+                      {
+                        "name": "Resume-bruce_wayne_fullstack.pdf.json",
+                        "type": "file",
+                        "path": "Resume-Matcher\\Data\\Processed\\Resumes\\Resume-bruce_wayne_fullstack.pdf.json",
+                        "extension": ".json"
+                      },
+                      {
+                        "name": "Resume-harvey_dent_mle.pdf.json",
+                        "type": "file",
+                        "path": "Resume-Matcher\\Data\\Processed\\Resumes\\Resume-harvey_dent_mle.pdf.json",
+                        "extension": ".json"
+                      },
+                      {
+                        "name": "Resume-john_doe.pdf.json",
+                        "type": "file",
+                        "path": "Resume-Matcher\\Data\\Processed\\Resumes\\Resume-john_doe.pdf.json",
+                        "extension": ".json"
+                      },
+                      {
+                        "name": "Resume-odoo_cv.pdf.json",
+                        "type": "file",
+                        "path": "Resume-Matcher\\Data\\Processed\\Resumes\\Resume-odoo_cv.pdf.json",
+                        "extension": ".json"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "Resumes",
+                "type": "directory",
+                "path": "Resume-Matcher\\Data\\Resumes",
+                "children": [
+                  {
+                    "name": "Eng. MohamedA.ElGhany cv_Software Tester .pdf",
+                    "type": "file",
+                    "path": "Resume-Matcher\\Data\\Resumes\\Eng. MohamedA.ElGhany cv_Software Tester .pdf",
+                    "extension": ".pdf"
+                  },
+                  {
+                    "name": "FATIMA ELSHEIKH.pdf",
+                    "type": "file",
+                    "path": "Resume-Matcher\\Data\\Resumes\\FATIMA ELSHEIKH.pdf",
+                    "extension": ".pdf"
+                  },
+                  {
+                    "name": "MahmoudMeshrif-Software Test Engineer-CV .pdf",
+                    "type": "file",
+                    "path": "Resume-Matcher\\Data\\Resumes\\MahmoudMeshrif-Software Test Engineer-CV .pdf",
+                    "extension": ".pdf"
+                  },
+                  {
+                    "name": "Mohannad's CV.pdf",
+                    "type": "file",
+                    "path": "Resume-Matcher\\Data\\Resumes\\Mohannad's CV.pdf",
+                    "extension": ".pdf"
+                  },
+                  {
+                    "name": "Youssef Gamaleldin.pdf",
+                    "type": "file",
+                    "path": "Resume-Matcher\\Data\\Resumes\\Youssef Gamaleldin.pdf",
+                    "extension": ".pdf"
+                  },
+                  {
+                    "name": "Zaynab Ibrahim Resume.pdf",
+                    "type": "file",
+                    "path": "Resume-Matcher\\Data\\Resumes\\Zaynab Ibrahim Resume.pdf",
+                    "extension": ".pdf"
+                  },
+                  {
+                    "name": "alfred_pennyworth_pm.pdf",
+                    "type": "file",
+                    "path": "Resume-Matcher\\Data\\Resumes\\alfred_pennyworth_pm.pdf",
+                    "extension": ".pdf"
+                  },
+                  {
+                    "name": "barry_allen_fe.pdf",
+                    "type": "file",
+                    "path": "Resume-Matcher\\Data\\Resumes\\barry_allen_fe.pdf",
+                    "extension": ".pdf"
+                  },
+                  {
+                    "name": "bruce_wayne_fullstack.pdf",
+                    "type": "file",
+                    "path": "Resume-Matcher\\Data\\Resumes\\bruce_wayne_fullstack.pdf",
+                    "extension": ".pdf"
+                  },
+                  {
+                    "name": "harvey_dent_mle.pdf",
+                    "type": "file",
+                    "path": "Resume-Matcher\\Data\\Resumes\\harvey_dent_mle.pdf",
+                    "extension": ".pdf"
+                  },
+                  {
+                    "name": "john_doe.pdf",
+                    "type": "file",
+                    "path": "Resume-Matcher\\Data\\Resumes\\john_doe.pdf",
+                    "extension": ".pdf"
+                  },
+                  {
+                    "name": "odoo_cv.pdf",
+                    "type": "file",
+                    "path": "Resume-Matcher\\Data\\Resumes\\odoo_cv.pdf",
+                    "extension": ".pdf"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "scripts",
+            "type": "directory",
+            "path": "Resume-Matcher\\scripts",
+            "children": [
+              {
+                "name": "parsers",
+                "type": "directory",
+                "path": "Resume-Matcher\\scripts\\parsers",
+                "children": [
+                  {
+                    "name": "ParseResumeToJson.py",
+                    "type": "file",
+                    "path": "Resume-Matcher\\scripts\\parsers\\ParseResumeToJson.py",
+                    "extension": ".py"
+                  },
+                  {
+                    "name": "__init__.py",
+                    "type": "file",
+                    "path": "Resume-Matcher\\scripts\\parsers\\__init__.py",
+                    "extension": ".py"
+                  }
+                ]
+              },
+              {
+                "name": "utils",
+                "type": "directory",
+                "path": "Resume-Matcher\\scripts\\utils",
+                "children": [
+                  {
+                    "name": "ReadFiles.py",
+                    "type": "file",
+                    "path": "Resume-Matcher\\scripts\\utils\\ReadFiles.py",
+                    "extension": ".py"
+                  },
+                  {
+                    "name": "Utils.py",
+                    "type": "file",
+                    "path": "Resume-Matcher\\scripts\\utils\\Utils.py",
+                    "extension": ".py"
+                  },
+                  {
+                    "name": "__init__.py",
+                    "type": "file",
+                    "path": "Resume-Matcher\\scripts\\utils\\__init__.py",
+                    "extension": ".py"
+                  },
+                  {
+                    "name": "logger.py",
+                    "type": "file",
+                    "path": "Resume-Matcher\\scripts\\utils\\logger.py",
+                    "extension": ".py"
+                  }
+                ]
+              },
+              {
+                "name": "Extractor.py",
+                "type": "file",
+                "path": "Resume-Matcher\\scripts\\Extractor.py",
+                "extension": ".py"
+              },
+              {
+                "name": "JobDescriptionProcessor.py",
+                "type": "file",
+                "path": "Resume-Matcher\\scripts\\JobDescriptionProcessor.py",
+                "extension": ".py"
+              },
+              {
+                "name": "ReadPdf.py",
+                "type": "file",
+                "path": "Resume-Matcher\\scripts\\ReadPdf.py",
+                "extension": ".py"
+              },
+              {
+                "name": "ResumeProcessor.py",
+                "type": "file",
+                "path": "Resume-Matcher\\scripts\\ResumeProcessor.py",
+                "extension": ".py"
+              },
+              {
+                "name": "TextCleaner.py",
+                "type": "file",
+                "path": "Resume-Matcher\\scripts\\TextCleaner.py",
+                "extension": ".py"
+              },
+              {
+                "name": "__init__.py",
+                "type": "file",
+                "path": "Resume-Matcher\\scripts\\__init__.py",
+                "extension": ".py"
+              }
+            ]
+          },
+          {
+            "name": "README.md",
+            "type": "file",
+            "path": "Resume-Matcher\\README.md",
+            "extension": ".md"
+          },
+          {
+            "name": "__init__.py",
+            "type": "file",
+            "path": "Resume-Matcher\\__init__.py",
+            "extension": ".py"
+          },
+          {
+            "name": "parse_resumes.py",
+            "type": "file",
+            "path": "Resume-Matcher\\parse_resumes.py",
+            "extension": ".py"
+          },
+          {
+            "name": "requirements.txt",
+            "type": "file",
+            "path": "Resume-Matcher\\requirements.txt",
+            "extension": ".txt"
+          },
+          {
+            "name": "spacy_similarity.py",
+            "type": "file",
+            "path": "Resume-Matcher\\spacy_similarity.py",
+            "extension": ".py"
+          }
+        ]
+      },
+      {
+        "name": "README.md",
+        "type": "file",
+        "path": "README.md",
+        "extension": ".md"
+      }
+    ]
+  },
+  "stats": {
+    "directories": 58,
+    "files": 178
+  }
+}

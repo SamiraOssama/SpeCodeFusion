@@ -1,4 +1,5 @@
 const express = require("express");
+const router = express.Router();
 const {
   createRepo,
   getUserRepositories,
@@ -11,112 +12,69 @@ const {
   getRepoOwner,
   getRepoRequests,
   getRepoHistory,
-  compareRequirementsWithCode 
+  compareRequirementsWithCode,
+  renameRepository,
+  getExtractedRequirements,
+  getCollaborators,
+  inviteCollaborator,
+  removeCollaborator,
+  handleInvitation,
+  cancelInvitation,
+  deletePendingRequest
 } = require("../controllers/repoController");
 
 const { getUserById } = require("../controllers/usercontroller");
 const authenticateUser = require("../middleware/authMiddleware");
 const multer = require("multer");
 const path = require("path");
-
 const fs = require("fs");
 const csv = require("csv-parser");
 const Repo = require("../models/repo");
-const repoController=require("../controllers/repoController");
 
-const router = express.Router();
+// Configure multer for file uploads
+const upload = multer({ 
+  dest: path.join(__dirname, "../uploads/"), 
+  limits: { fileSize: 20 * 1024 * 1024 } 
+});
 
 // =============================================
 // REPOSITORY CRUD OPERATIONS
 // =============================================
 
-// Create a new repository
-router.post("/create", authenticateUser, createRepo);
-
 // Get all repositories (public)
 router.get("/all", getAllRepositories);
 
-// Get repository details
-router.get("/:repoId/details", authenticateUser, getRepoDetails);
-
-// Get repository owner information
-router.get("/owner/:repoId", getRepoOwner);
-
-// Get repository history (SRS and Source Code)
-router.get("/:repoId/history", authenticateUser, getRepoHistory);
-
-// =============================================
-// USER REPOSITORIES
-// =============================================
-
-// Get repositories for current user (owned or member)
+// Get repositories for current user
 router.get("/my-repos", authenticateUser, getUserRepositories);
-// In repoRoutes.js, ensure you have:
+
+// Get repositories with requests
 router.get("/with-requests", authenticateUser, getReposWithRequests);
-// Get repositories with pending requests (for owners)
-router.get("/myrepos", authenticateUser, getReposWithRequests);
-router.get("/owner/:repoId",getRepoOwner);
+
+// Create new repository
+router.post("/create", authenticateUser, createRepo);
+
 // =============================================
-// ACCESS CONTROL & REQUESTS
+// REPOSITORY-SPECIFIC OPERATIONS
 // =============================================
 
-// Request access to a repository
-router.post("/:repoId/request-access", authenticateUser, requestAccess);
-
-// Get all requests for a specific repository (owner only)
+// These routes must come after non-parameterized routes
+router.get("/:repoId/details", authenticateUser, getRepoDetails);
+router.get("/:repoId/owner", authenticateUser, getRepoOwner);
+router.get("/:repoId/history", authenticateUser, getRepoHistory);
 router.get("/:repoId/requests", authenticateUser, getRepoRequests);
-
-// Handle access request (approve/reject)
+router.get("/:repoId/collaborators", authenticateUser, getCollaborators);
+router.post("/:repoId/invite", authenticateUser, inviteCollaborator);
+router.put("/:repoId/invitations/:invitationId", authenticateUser, handleInvitation);
+router.delete("/:repoId/invitations/:invitationId", authenticateUser, cancelInvitation);
+router.delete("/:repoId/collaborators/:userId", authenticateUser, removeCollaborator);
+router.post("/:repoId/request-access", authenticateUser, requestAccess);
 router.post("/:repoId/handle-request", authenticateUser, handleAccessRequest);
-
-// =============================================
-// FILE OPERATIONS & COMPARISON
-// =============================================
-
-// File upload configuration
-const upload = multer({ 
-  dest: path.join(__dirname, "../uploads/"), 
-  limits: { fileSize: 20 * 1024 * 1024 } // 10MB limit
-});
-
-// Upload SRS or Source Code files
 router.post("/:repoId/upload", authenticateUser, upload.single("file"), uploadFile);
-
-// Compare SRS and Source Code
 router.post("/:repoId/compare", authenticateUser, compareRequirementsWithCode);
+router.patch("/:repoId/rename", authenticateUser, renameRepository);
 
-// =============================================
-// USER MANAGEMENT
-// =============================================
-
-// Get user details by ID
-router.get("/users/:id", getUserById);
-// Add this route
-router.get("/:repoId/extracted", authenticateUser, async (req, res) => {
-  try {
-    const { repoId } = req.params;
-    const { useUpdated } = req.query;
-    
-    const repo = await Repo.findById(repoId);
-    if (!repo) {
-      return res.status(404).json({ message: "Repository not found" });
-    }
-
-    const fileName = useUpdated ? "latest_extracted_updated.csv" : "latest_extracted.csv";
-    const filePath = path.join(__dirname, "../extracted", repo.name, fileName);
-
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ message: "Extracted file not found" });
-    }
-
-    // Read and parse the CSV
-    const data = await parseCSV(filePath);
-    res.status(200).json(data);
-  } catch (error) {
-    console.error("Error fetching extracted requirements:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
-});
+// Delete a pending request
+router.delete("/:repoId/requests/:requestId", authenticateUser, deletePendingRequest);
 
 // Helper function to parse CSV
 async function parseCSV(filePath) {
@@ -129,6 +87,15 @@ async function parseCSV(filePath) {
       .on('error', reject);
   });
 }
-router.get('/:repoId/extracted', authenticateUser, repoController.getExtractedRequirements);
+
+// =============================================
+// USER MANAGEMENT
+// =============================================
+
+// Get user details by ID
+router.get("/users/:id", getUserById);
+
+// Get extracted requirements
+router.get("/:repoId/extracted", authenticateUser, getExtractedRequirements);
 
 module.exports = router;

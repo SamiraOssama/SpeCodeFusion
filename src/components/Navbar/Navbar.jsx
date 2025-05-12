@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { IoMdMenu } from "react-icons/io";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useRepo } from '../../context/RepoContext';
+import NotificationsDropdown from '../Notifications/NotificationsDropdown';
+import { useTheme } from '../../context/ThemeContext';
 
 const getNavbarMenu = (user) => {
   const menu = [
@@ -8,7 +11,7 @@ const getNavbarMenu = (user) => {
     { id: 2, title: "My Repos", path: "/Allrepos" },
     { id: 3, title: "All Repos", path: "/All" },
     { id: 4, title: "My Profile", path: "/profile" },
-    { id: 5, title: "Requests", path: "/Requestpage" },
+    { id: 5, title: "Requests", path: "/Requestpage", showNotifications: true },
   ];
 
   if (user?.role === "admin") {
@@ -19,10 +22,13 @@ const getNavbarMenu = (user) => {
 };
 
 const Navbar = () => {
+  const { darkMode } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [requestCount, setRequestCount] = useState(0);
   const navigate = useNavigate();
+  const { repoName } = useRepo();
+  const location = useLocation();
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -31,10 +37,10 @@ const Navbar = () => {
       setUser(parsedUser);
       fetchRequestCount(parsedUser.id);
     }
-  }, []);
-  
+  }, [location.pathname]); // Re-run when route changes
 
   const fetchRequestCount = async (userId) => {
+    if (!userId) return;
     try {
       const response = await fetch(`/api/users/${userId}/repo-requests/count`);
       const data = await response.json();
@@ -64,73 +70,77 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white shadow-md">
-      <div className="max-w-screen-xl mx-auto flex justify-between items-center py-4 px-4">
-
-        {/* Logo */}
-        <Link to="/" className="font-bold text-2xl text-blue-600 whitespace-nowrap">
-          SpeCode Fusion
-        </Link>
-
-        {/* Desktop Menu - All items in one line */}
-        <div className="hidden lg:flex items-center space-x-6">
-        {getNavbarMenu(user).map((menu) => (
-
-            <div key={menu.id} className="relative flex items-center">
-              <Link
-                to={menu.path}
-                className="text-gray-700 hover:text-blue-500 transition whitespace-nowrap"
-              >
-                {menu.title}
-                {menu.id === 5 && renderRequestBadge()}
-              </Link>
-            </div>
-          ))}
-
-          <button
-            onClick={handleRequirementExtraction}
-            className="text-gray-700 hover:text-blue-500 transition whitespace-nowrap"
-          >
-            Create Repository
-          </button>
-
-          {user ? (
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-700 whitespace-nowrap">Welcome, {user.username || user.email}!</span>
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition whitespace-nowrap"
-              >
-                Logout
-              </button>
-            </div>
-          ) : (
-            <Link 
-              to="/login" 
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition whitespace-nowrap"
-            >
-              Sign In
+    <nav className={`${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'} shadow-md transition-colors duration-200`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex">
+            <Link to="/" className={`font-bold text-2xl ${darkMode ? 'text-blue-400' : 'text-blue-600'} whitespace-nowrap`}>
+              SpeCode Fusion
             </Link>
-          )}
-        </div>
+          </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          className="lg:hidden text-3xl text-gray-700"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <IoMdMenu />
-        </button>
+          <div className="hidden lg:flex items-center space-x-6">
+            {getNavbarMenu(user).map((menu) => (
+              <div key={menu.id} className="relative flex items-center">
+                <Link
+                  to={menu.path}
+                  className={`${darkMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-700 hover:text-blue-500'} transition whitespace-nowrap`}
+                >
+                  {menu.title}
+                  {menu.id === 5 && renderRequestBadge()}
+                </Link>
+                {menu.showNotifications && user && <NotificationsDropdown />}
+              </div>
+            ))}
+
+            <button
+              onClick={handleRequirementExtraction}
+              className={`${darkMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-700 hover:text-blue-500'} transition whitespace-nowrap`}
+            >
+              Create Repository
+            </button>
+
+            {user ? (
+              <div className="flex items-center space-x-4">
+                <span className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} whitespace-nowrap`}>
+                  Welcome, {user.username || user.email}!
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition whitespace-nowrap"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link 
+                to="/login" 
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition whitespace-nowrap"
+              >
+                Sign In
+              </Link>
+            )}
+          </div>
+
+          <div className="lg:hidden flex items-center space-x-4">
+            <button
+              className={`text-3xl ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              <IoMdMenu />
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Mobile Menu Dropdown */}
+      
       {isOpen && (
-        <div className="lg:hidden bg-white shadow-md py-4 px-6">
-          {NavbarMenu.map((menu) => (
+        <div className={`lg:hidden ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-md py-4 px-6`}>
+          {getNavbarMenu(user).map((menu) => (
             <div key={menu.id} className="relative py-2">
               <Link
                 to={menu.path}
-                className="text-gray-700 hover:text-blue-500 transition flex items-center justify-between"
+                className={`${darkMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-700 hover:text-blue-500'} transition flex items-center justify-between`}
                 onClick={() => setIsOpen(false)}
               >
                 <span>{menu.title}</span>
@@ -144,14 +154,16 @@ const Navbar = () => {
               handleRequirementExtraction();
               setIsOpen(false);
             }}
-            className="w-full text-left text-gray-700 py-2 hover:text-blue-500 transition"
+            className={`w-full text-left ${darkMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-700 hover:text-blue-500'} py-2 transition`}
           >
             Create Repository
           </button>
 
           {user ? (
             <div className="mt-4">
-              <p className="text-gray-700 py-2">Welcome, {user.username || user.email}!</p>
+              <p className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} py-2`}>
+                Welcome, {user.username || user.email}!
+              </p>
               <button
                 onClick={handleLogout}
                 className="w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"

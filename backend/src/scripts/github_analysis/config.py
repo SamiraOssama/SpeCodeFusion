@@ -8,7 +8,8 @@ from dotenv import load_dotenv
 
 # Try to load environment variables from multiple locations
 env_paths = [
-    os.path.join(os.getcwd(), '.env'),
+    os.path.join(os.getcwd(), 'dotenv.env'),
+    os.path.join(os.getcwd(), 'backend', 'dotenv.env'),
     os.path.join(os.path.dirname(__file__), '../../../dotenv.env'),
     os.path.join(os.path.dirname(__file__), '../../../../dotenv.env'),
 ]
@@ -18,6 +19,8 @@ for env_path in env_paths:
         load_dotenv(env_path)
         logging.info(f"Loaded environment from {env_path}")
         break
+    else:
+        logging.debug(f"Environment file not found at {env_path}")
 
 class Config:
     """Global configuration for GitHub analysis."""

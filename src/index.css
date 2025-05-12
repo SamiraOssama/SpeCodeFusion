@@ -1,11 +1,30 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-  --color-primary: #0000FF;
-  --color-secondary: #0000BF;
-  --color-light: #0080FF;
-  --color-dark: #0000BF;
-  --color-dark2: #000080;
+:root {
+  /* Light theme variables */
+  --color-bg-primary: #F9FAFB;
+  --color-bg-secondary: #FFFFFF;
+  --color-bg-tertiary: #F3F4F6;
+  --color-text-primary: #1F2937;
+  --color-text-secondary: #6B7280;
+  --color-text-tertiary: #9CA3AF;
+  --color-border: #E5E7EB;
+  --color-border-hover: #D1D5DB;
+  --color-primary: #3B82F6;
+  --color-primary-hover: #2563EB;
+  --color-secondary: #10B981;
+  --color-secondary-hover: #059669;
+  --color-accent: #EF4444;
+  --color-accent-hover: #DC2626;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
 
   --container-center: true;
   --container-padding: 2rem;
@@ -15,21 +34,116 @@
   --container-xl: 1280px;
   --container-2xl: 1536px;
 }
+
+/* Dark theme variables */
+[data-theme="dark"] {
+  --color-bg-primary: #1F2937;
+  --color-bg-secondary: #374151;
+  --color-bg-tertiary: #4B5563;
+  --color-text-primary: #F9FAFB;
+  --color-text-secondary: #E5E7EB;
+  --color-text-tertiary: #D1D5DB;
+  --color-border: #4B5563;
+  --color-border-hover: #6B7280;
+  --color-primary: #60A5FA;
+  --color-primary-hover: #3B82F6;
+  --color-secondary: #34D399;
+  --color-secondary-hover: #10B981;
+  --color-accent: #F87171;
+  --color-accent-hover: #EF4444;
+  --color-success: #34D399;
+  --color-warning: #FBBF24;
+  --color-error: #F87171;
+  --color-info: #60A5FA;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Base styles */
+* {
+  transition: background-color 0.3s ease,
+              color 0.3s ease,
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+body {
+  @apply bg-primary text-primary min-h-screen w-full;
+}
+
+/* Utility classes */
+.bg-primary {
+  background-color: var(--color-bg-primary);
+}
+
+.bg-secondary {
+  background-color: var(--color-bg-secondary);
+}
+
+.bg-tertiary {
+  background-color: var(--color-bg-tertiary);
+}
+
+.text-primary {
+  color: var(--color-text-primary);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-tertiary {
+  color: var(--color-text-tertiary);
+}
+
+.border-color {
+  border-color: var(--color-border);
+}
+
+.border-hover {
+  border-color: var(--color-border-hover);
+}
+
+/* Component styles */
 @layer components {
-  .primary-btn {
-    @apply inline-block bg-primary text-white
-    font-semibold rounded-lg duration-299 shadow-[0px_10px_8px_7px_#0] py-2 px-6
-    transition-all ease-in-out;
+  .card {
+    @apply bg-secondary border border-[color:var(--color-border)] shadow-sm hover:border-[color:var(--color-border-hover)] hover:shadow-md;
   }
 
-  .primary-btn:hover {
-    @apply bg-secondary scale-100;
-    box-shadow: none; /* Removes the shadow on hover */
+  .button-primary {
+    @apply bg-[color:var(--color-primary)] text-white hover:bg-[color:var(--color-primary-hover)];
+  }
+
+  .button-secondary {
+    @apply bg-[color:var(--color-secondary)] text-white hover:bg-[color:var(--color-secondary-hover)];
+  }
+
+  .primary-btn {
+    @apply inline-block bg-[color:var(--color-primary)] text-white
+    font-semibold rounded-lg duration-300 shadow-none py-2 px-6
+    transition-all ease-in-out hover:bg-[color:var(--color-secondary)] hover:scale-100;
   }
 }
 
+/* Status colors */
+.status-success {
+  color: var(--color-success);
+}
 
+.status-warning {
+  color: var(--color-warning);
+}
 
+.status-error {
+  color: var(--color-error);
+}
+
+.status-info {
+  color: var(--color-info);
+}
+
+/* Font settings */
 @font-face {
   font-family: "Poppins", sans-serif;
 }

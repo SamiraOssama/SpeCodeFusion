@@ -1,0 +1,1526 @@
+{
+  "repo_url": "https://github.com/Omar2710/Gp_resufit",
+  "files_analyzed": 26,
+  "functions_found": 72,
+  "files_by_type": {
+    ".md": 6,
+    ".sample": 14,
+    ".idx": 1,
+    ".pack": 1,
+    ".rev": 1,
+    ".ts": 120,
+    ".js": 42,
+    ".json": 21,
+    ".svg": 2,
+    ".ico": 1,
+    ".tsx": 39,
+    ".css": 1,
+    ".map": 41,
+    ".tsbuildinfo": 1,
+    ".log": 1,
+    ".py": 15,
+    ".txt": 1,
+    ".pdf": 12
+  },
+  "functions": [
+    {
+      "name": "constructor",
+      "file": "auth-all.guard.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\auth\\auth guard\\auth-all.guard.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 15,
+      "end_line": 27,
+      "line_count": 13,
+      "body": "constructor(\n    private jwtService: JwtService,\n    private adminService: AdminService,\n    private applicantService: ApplicantService,\n  ) {}\n\n  async canActivate(context: ExecutionContext): Promise<boolean> {\n    const request = context.switchToHttp().getRequest();\n    const token = this.extractTokenFromHeader(request);\n\n    if (!token) {\n      throw new UnauthorizedException();\n    }",
+      "context": "",
+      "parameters": [],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "findAll",
+      "file": "job-vacany.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\job-vacany\\job-vacany.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 61,
+      "end_line": 66,
+      "line_count": 6,
+      "body": "async findAll() {\n    return await this.jobVacancyRepository.find();\n  }\n\n  async findOne(id: number) {\n    const { job_vacancy_screening_questions, job_vacancy_tech_skill, ...rest }",
+      "context": "",
+      "parameters": [],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "findOne",
+      "file": "job-vacany.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\job-vacany\\job-vacany.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 65,
+      "end_line": 66,
+      "line_count": 2,
+      "body": "async findOne(id: number) {\n    const { job_vacancy_screening_questions, job_vacancy_tech_skill, ...rest }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "id: number",
+          "original": "id: number"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "update",
+      "file": "job-vacany.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\job-vacany\\job-vacany.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 83,
+      "end_line": 89,
+      "line_count": 7,
+      "body": "async update(id: number, updateJobVacanyDto: UpdateJobVacanyDto) {\n    const {\n      skills,\n      screeningQuestions,\n      description: jobDescription,\n      ...updatedDetails\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "id: number",
+          "original": "id: number"
+        },
+        {
+          "name": "updateJobVacanyDto: UpdateJobVacanyDto",
+          "original": "updateJobVacanyDto: UpdateJobVacanyDto"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "remove",
+      "file": "job-vacany.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\job-vacany\\job-vacany.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 139,
+      "end_line": 144,
+      "line_count": 6,
+      "body": "async remove(id: number) {\n    // Find the job vacancy with related entities\n    const jobVacancy = await this.jobVacancyRepository.findOne({\n      where: { id },\n      relations: ['job_vacancy_tech_skill', 'job_vacancy_screening_questions'],\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "id: number",
+          "original": "id: number"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "getApplicantsByJobVacancyId",
+      "file": "job-vacany.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\job-vacany\\job-vacany.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 165,
+      "end_line": 169,
+      "line_count": 5,
+      "body": "async getApplicantsByJobVacancyId(id: number) {\n    const jobVacancy = await this.jobVacancyRepository.findOne({\n      where: { id },\n      relations: ['resumes', 'resumes.applicant'], // This loads both resumes and their related applicants\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "id: number",
+          "original": "id: number"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "getApplicantByJobVacancyId",
+      "file": "job-vacany.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\job-vacany\\job-vacany.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 186,
+      "end_line": 190,
+      "line_count": 5,
+      "body": "async getApplicantByJobVacancyId(id: number, userName: string) {\n    const jobVacancy = await this.jobVacancyRepository.findOne({\n      where: { id },\n      relations: ['resumes', 'resumes.applicant'], // This loads both resumes and their related applicants\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "id: number",
+          "original": "id: number"
+        },
+        {
+          "name": "userName: string",
+          "original": "userName: string"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "getTechSkillByJobVacancyId",
+      "file": "job-vacany.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\job-vacany\\job-vacany.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 199,
+      "end_line": 203,
+      "line_count": 5,
+      "body": "async getTechSkillByJobVacancyId(id: number) {\n    const jobVacancy = await this.jobVacancyRepository.findOne({\n      where: { id },\n      relations: ['job_vacancy_tech_skill'],\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "id: number",
+          "original": "id: number"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "getScreeningQuestionByJobVacancyId",
+      "file": "job-vacany.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\job-vacany\\job-vacany.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 217,
+      "end_line": 225,
+      "line_count": 9,
+      "body": "async getScreeningQuestionByJobVacancyId(id: number) {\n    // Find the job vacancy by id, including its related screening questions\n    const jobVacancy = await this.jobVacancyRepository.findOne({\n      where: { id },\n      relations: [\n        'job_vacancy_screening_questions',\n        'job_vacancy_screening_questions.screening_question',\n      ],\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "id: number",
+          "original": "id: number"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "constructor",
+      "file": "auth-admin.guard.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\auth\\auth guard\\auth-admin.guard.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 14,
+      "end_line": 25,
+      "line_count": 12,
+      "body": "constructor(\n    private jwtService: JwtService,\n    private adminService: AdminService,\n  ) {}\n\n  async canActivate(context: ExecutionContext): Promise<boolean> {\n    const request = context.switchToHttp().getRequest();\n    const token = this.extractTokenFromHeader(request);\n\n    if (!token) {\n      throw new UnauthorizedException();\n    }",
+      "context": "",
+      "parameters": [],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "constructor",
+      "file": "applicant.controller.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\applicant\\applicant.controller.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 23,
+      "end_line": 34,
+      "line_count": 12,
+      "body": "constructor(private readonly applicantService: ApplicantService) {}\n\n  @Post()\n  @UseInterceptors(FileInterceptor('resumeFile'))\n  create(\n    @Body() createApplicantDto: CreateApplicantDto,\n    @UploadedFile() resumeFile: Express.Multer.File,\n    @Request() req,\n  ) {\n    if (req.user) {\n      createApplicantDto.userName = req.user.userName;\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "private readonly applicantService: ApplicantService",
+          "original": "private readonly applicantService: ApplicantService"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "findAll",
+      "file": "applicant.controller.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\applicant\\applicant.controller.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 39,
+      "end_line": 69,
+      "line_count": 31,
+      "body": "findAll() {\n    return this.applicantService.findAll();\n  }\n\n  @Get(':id')\n  findOne(@Param('id') id: string) {\n    return this.applicantService.findOne(+id);\n  }\n\n  @Patch(':id')\n  update(\n    @Param('id') id: string,\n    @Body() updateApplicantDto: UpdateApplicantDto,\n  ) {\n    return this.applicantService.update(+id, updateApplicantDto);\n  }\n\n  @Delete(':id')\n  remove(@Param('id') id: string) {\n    return this.applicantService.remove(+id);\n  }\n\n  @Get('/resume/:jobVacancyId')\n  getResumeByJobVacancy(\n    @Param('jobVacancyId') jobVacancyId: number,\n    @Request() req,\n  ) {\n    return this.applicantService.getResumeForJobVacancy({\n      jobVacancyId,\n      userName: req.user?.userName,\n    }",
+      "context": "",
+      "parameters": [],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "constructor",
+      "file": "odoo.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\odoo\\odoo.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": "OdooService",
+      "start_line": 9,
+      "end_line": 16,
+      "line_count": 8,
+      "body": "constructor() {\n    this.odooConnector = new OdooConnector({\n      url: 'http://localhost',\n      port: 8069,\n      db: 'odoo-resufit',\n      username: 'donia2004436@miuegypt.edu.eg',\n      password: 'admin',\n    }",
+      "context": "",
+      "parameters": [],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "constructor",
+      "file": "auth.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\auth\\auth.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 11,
+      "end_line": 24,
+      "line_count": 14,
+      "body": "constructor(\n    private applicantService: ApplicantService,\n    private adminService: AdminService,\n    private jwtService: JwtService,\n  ) {}\n\n  async signIn(username: string, password: string): Promise<any> {\n    let role = 'applicant';\n    let user: Applicant | Admin =\n      await this.applicantService.findOneByUsername(username);\n    if (!user) {\n      user = await this.adminService.findOneByUsername(username);\n      role = 'admin';\n    }",
+      "context": "",
+      "parameters": [],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "comparePassword",
+      "file": "auth.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\auth\\auth.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 41,
+      "end_line": 44,
+      "line_count": 4,
+      "body": "async comparePassword(password: string, comparePassword: string) {\n    if (!(await bcrypt.compare(password, comparePassword))) {\n      return false;\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "password: string",
+          "original": "password: string"
+        },
+        {
+          "name": "comparePassword: string",
+          "original": "comparePassword: string"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "middleware",
+      "file": "middleware.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\admin\\src\\middleware.ts",
+      "language": "javascript",
+      "type": "function",
+      "class": null,
+      "start_line": 42,
+      "end_line": 44,
+      "line_count": 3,
+      "body": "function middleware(req: NextRequest) {\n  const publicPathnameRegex = RegExp(\n    `^(${publicPages.map((p) => p.replace(\"/\", \"\\\\/\") + \"/?\").join(\"|\")}",
+      "context": "",
+      "parameters": [
+        {
+          "name": "req: NextRequest",
+          "original": "req: NextRequest"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "middleware",
+      "file": "middleware.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\admin\\src\\middleware.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 42,
+      "end_line": 44,
+      "line_count": 3,
+      "body": "middleware(req: NextRequest) {\n  const publicPathnameRegex = RegExp(\n    `^(${publicPages.map((p) => p.replace(\"/\", \"\\\\/\") + \"/?\").join(\"|\")}",
+      "context": "",
+      "parameters": [
+        {
+          "name": "req: NextRequest",
+          "original": "req: NextRequest"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "bootstrap",
+      "file": "main.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\main.ts",
+      "language": "javascript",
+      "type": "function",
+      "class": null,
+      "start_line": 4,
+      "end_line": 8,
+      "line_count": 5,
+      "body": "async function bootstrap() {\n  const app = await NestFactory.create(AppModule);\n  app.enableCors({\n    origin: ['http://localhost:3000'], // Replace with your allowed origins\n  }",
+      "context": "",
+      "parameters": [],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "bootstrap",
+      "file": "main.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\main.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 4,
+      "end_line": 8,
+      "line_count": 5,
+      "body": "bootstrap() {\n  const app = await NestFactory.create(AppModule);\n  app.enableCors({\n    origin: ['http://localhost:3000'], // Replace with your allowed origins\n  }",
+      "context": "",
+      "parameters": [],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "findOne",
+      "file": "resume.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\applicant\\resume.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 11,
+      "end_line": 12,
+      "line_count": 2,
+      "body": "async findOne(id: number) {\n    return await this.resumeRepository.findOne({ where: { id } ,  relations: ['resumeScreeningQuestionsAnswers']}",
+      "context": "",
+      "parameters": [
+        {
+          "name": "id: number",
+          "original": "id: number"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "constructor",
+      "file": "chatgpt.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\chatgpt\\chatgpt.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": "ChatgptService",
+      "start_line": 9,
+      "end_line": 10,
+      "line_count": 2,
+      "body": "constructor() {\n    this.openai = new OpenAI({ apiKey: OPENAI_API_KEY }",
+      "context": "",
+      "parameters": [],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "promptChat",
+      "file": "chatgpt.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\chatgpt\\chatgpt.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 13,
+      "end_line": 17,
+      "line_count": 5,
+      "body": "async promptChat(prompt: string) {\n    const response = await this.openai.chat.completions.create({\n      messages: [{ role: 'user', content: prompt }],\n      model: 'gpt-4',\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "prompt: string",
+          "original": "prompt: string"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "onModuleInit",
+      "file": "admin.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\admin\\admin.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 16,
+      "end_line": 22,
+      "line_count": 7,
+      "body": "async onModuleInit() {\n    await this.create({\n      firstName: 'root',\n      lastName: 'root',\n      username: 'root',\n      password: 'root',\n    }",
+      "context": "Comments: runs with startup of the application and creates admin details in database (seeding database)",
+      "parameters": [],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "findAll",
+      "file": "admin.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\admin\\admin.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 36,
+      "end_line": 41,
+      "line_count": 6,
+      "body": "async findAll() {\n    return await this.adminRepository.find();\n  }\n\n  async findOneByUsername(username: string) {\n    return await this.adminRepository.findOne({ where: { username } }",
+      "context": "",
+      "parameters": [],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "findOneByUsername",
+      "file": "admin.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\admin\\admin.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 40,
+      "end_line": 41,
+      "line_count": 2,
+      "body": "async findOneByUsername(username: string) {\n    return await this.adminRepository.findOne({ where: { username } }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "username: string",
+          "original": "username: string"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "findOne",
+      "file": "admin.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\admin\\admin.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 44,
+      "end_line": 45,
+      "line_count": 2,
+      "body": "async findOne(id: number) {\n    return await this.adminRepository.findOne({ where: { id } }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "id: number",
+          "original": "id: number"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "update",
+      "file": "admin.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\admin\\admin.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 48,
+      "end_line": 53,
+      "line_count": 6,
+      "body": "async update(id: number, updateAdminDto: UpdateAdminDto) {\n    const admin = await this.findOne(id);\n\n    if (!admin) {\n      throw new NotFoundException(`Admin with ID ${id} not found`);\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "id: number",
+          "original": "id: number"
+        },
+        {
+          "name": "updateAdminDto: UpdateAdminDto",
+          "original": "updateAdminDto: UpdateAdminDto"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "remove",
+      "file": "admin.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\admin\\admin.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 58,
+      "end_line": 59,
+      "line_count": 2,
+      "body": "async remove(id: number) {\n    return await this.adminRepository.delete({ id }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "id: number",
+          "original": "id: number"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "findAll",
+      "file": "screening-questions.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\job-vacany\\screening-questions.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 15,
+      "end_line": 22,
+      "line_count": 8,
+      "body": "async findAll() {\n    return await this.screeningQuestionsRepository.find();\n  }\n\n  async findOne(id: number) {\n    return await this.screeningQuestionsRepository.findOne({\n      where: { id },\n    }",
+      "context": "",
+      "parameters": [],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "findOne",
+      "file": "screening-questions.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\job-vacany\\screening-questions.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 19,
+      "end_line": 22,
+      "line_count": 4,
+      "body": "async findOne(id: number) {\n    return await this.screeningQuestionsRepository.findOne({\n      where: { id },\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "id: number",
+          "original": "id: number"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "update",
+      "file": "screening-questions.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\job-vacany\\screening-questions.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 33,
+      "end_line": 42,
+      "line_count": 10,
+      "body": "async update(\n    id: number,\n    updateScreeningQuestionDto: UpdateScreeningQuestionDto,\n  ) {\n    await this.findOne(id);\n\n    return this.screeningQuestionsRepository.save({\n      id,\n      ...updateScreeningQuestionDto,\n    }",
+      "context": "",
+      "parameters": [],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "remove",
+      "file": "screening-questions.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\job-vacany\\screening-questions.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 45,
+      "end_line": 46,
+      "line_count": 2,
+      "body": "async remove(id: number) {\n    return await this.screeningQuestionsRepository.delete({ id }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "id: number",
+          "original": "id: number"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "onModuleInit",
+      "file": "applicant.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\applicant\\applicant.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 43,
+      "end_line": 51,
+      "line_count": 9,
+      "body": "async onModuleInit() {\n    await this.register({\n      firstName: 'test',\n      lastName: 'man',\n      userName: 'test',\n      password: 'test',\n      phoneNumber: '123456',\n      email: 'test@test.com',\n    }",
+      "context": "Comments: runs with startup of the application and creates admin details in database (seeding database)",
+      "parameters": [],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "register",
+      "file": "applicant.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\applicant\\applicant.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 193,
+      "end_line": 199,
+      "line_count": 7,
+      "body": "async register(registerApplicantDto: RegisterApplicantDto) {\n    const userExists = await this.findOneByUsername(\n      registerApplicantDto.userName,\n    );\n    if (userExists) {\n      return null;\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "registerApplicantDto: RegisterApplicantDto",
+          "original": "registerApplicantDto: RegisterApplicantDto"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "findAll",
+      "file": "applicant.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\applicant\\applicant.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 212,
+      "end_line": 219,
+      "line_count": 8,
+      "body": "async findAll() {\n    return await this.applicantRepository.find();\n  }\n  async findOneByUsername(userName: string) {\n    return await this.applicantRepository.findOne({\n      relations: ['resumes'],\n      where: { userName },\n    }",
+      "context": "",
+      "parameters": [],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "findOneByUsername",
+      "file": "applicant.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\applicant\\applicant.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 215,
+      "end_line": 219,
+      "line_count": 5,
+      "body": "async findOneByUsername(userName: string) {\n    return await this.applicantRepository.findOne({\n      relations: ['resumes'],\n      where: { userName },\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "userName: string",
+          "original": "userName: string"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "findOne",
+      "file": "applicant.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\applicant\\applicant.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 221,
+      "end_line": 222,
+      "line_count": 2,
+      "body": "async findOne(id: number) {\n    return `This action returns a #${id}",
+      "context": "",
+      "parameters": [
+        {
+          "name": "id: number",
+          "original": "id: number"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "update",
+      "file": "applicant.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\applicant\\applicant.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 225,
+      "end_line": 230,
+      "line_count": 6,
+      "body": "async update(id: number, updateApplicantDto: UpdateApplicantDto) {\n    const applicant = await this.findOne(id);\n\n    if (!applicant) {\n      throw new NotFoundException(`Applicant with ID ${id} not found`);\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "id: number",
+          "original": "id: number"
+        },
+        {
+          "name": "updateApplicantDto: UpdateApplicantDto",
+          "original": "updateApplicantDto: UpdateApplicantDto"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "remove",
+      "file": "applicant.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\applicant\\applicant.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 235,
+      "end_line": 236,
+      "line_count": 2,
+      "body": "async remove(id: number) {\n    return await this.applicantRepository.delete({ id }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "id: number",
+          "original": "id: number"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "getResumeForJobVacancy",
+      "file": "applicant.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\applicant\\applicant.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 239,
+      "end_line": 254,
+      "line_count": 16,
+      "body": "async getResumeForJobVacancy({\n    userName,\n    jobVacancyId,\n  }: {\n    userName: string;\n    jobVacancyId: number;\n  }) {\n    return await this.jobVacancyService.getApplicantByJobVacancyId(\n      jobVacancyId,\n      userName,\n    );\n  }\nescapeString(str: string) {\n    if (typeof str !== 'string') {\n      throw new Error('Input must be a string');\n    }",
+      "context": "",
+      "parameters": [],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "escapeString",
+      "file": "applicant.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\applicant\\applicant.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 251,
+      "end_line": 254,
+      "line_count": 4,
+      "body": "escapeString(str: string) {\n    if (typeof str !== 'string') {\n      throw new Error('Input must be a string');\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "str: string",
+          "original": "str: string"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "constructor",
+      "file": "auth-applicant.guard.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\auth\\auth guard\\auth-applicant.guard.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 14,
+      "end_line": 24,
+      "line_count": 11,
+      "body": "constructor(\n    private jwtService: JwtService,\n    private applicantService: ApplicantService,\n  ) {}\n\n  async canActivate(context: ExecutionContext): Promise<boolean> {\n    const request = context.switchToHttp().getRequest();\n    const token = this.extractTokenFromHeader(request);\n    if (!token) {\n      throw new UnauthorizedException();\n    }",
+      "context": "",
+      "parameters": [],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "constructor",
+      "file": "odoo-connector.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\odoo\\odoo-connector.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 15,
+      "end_line": 33,
+      "line_count": 19,
+      "body": "constructor(config: any = {}) {\n    this.config = config;\n    const urlparts = new URL(config.url);\n    this.host = urlparts.hostname;\n    this.port = config.port || urlparts.port;\n    this.db = config.db;\n    this.username = config.username;\n    this.password = config.password;\n    this.secure = urlparts.protocol === 'https:';\n    this.uid = 0;\n  }\n\n  _getClient(path) {\n    const createClientFn = this.secure ? createSecureClient : createClient;\n    return createClientFn({\n      host: this.host,\n      port: this.port,\n      path,\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "config: any",
+          "original": "config: any = {}"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "_getClient",
+      "file": "odoo-connector.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\odoo\\odoo-connector.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 27,
+      "end_line": 33,
+      "line_count": 7,
+      "body": "_getClient(path) {\n    const createClientFn = this.secure ? createSecureClient : createClient;\n    return createClientFn({\n      host: this.host,\n      port: this.port,\n      path,\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "path",
+          "original": "path"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "_methodCall",
+      "file": "odoo-connector.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\odoo\\odoo-connector.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 36,
+      "end_line": 44,
+      "line_count": 9,
+      "body": "_methodCall(client, method, params = []) {\n    return new Promise((resolve, reject) => {\n      client.methodCall(method, params, (err, value) => {\n        if (err) {\n          return reject(err);\n        }\n        return resolve(value);\n      });\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "client",
+          "original": "client"
+        },
+        {
+          "name": "method",
+          "original": "method"
+        },
+        {
+          "name": "params",
+          "original": "params = []"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "connect",
+      "file": "odoo-connector.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\odoo\\odoo-connector.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 47,
+      "end_line": 49,
+      "line_count": 3,
+      "body": "async connect() {\n    const client = this._getClient('/xmlrpc/2/common');\n    const params = [this.db, this.username, this.password, {}",
+      "context": "",
+      "parameters": [],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "execute_kw",
+      "file": "odoo-connector.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\odoo\\odoo-connector.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 58,
+      "end_line": 71,
+      "line_count": 14,
+      "body": "async execute_kw(model, method, params) {\n    const client = this._getClient('/xmlrpc/2/object');\n    const finalParams = [\n      this.db,\n      this.uid,\n      this.password,\n      model,\n      method,\n      ...params,\n    ];\n    try {\n      const value = await this._methodCall(client, 'execute_kw', finalParams);\n      return Promise.resolve(value);\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "model",
+          "original": "model"
+        },
+        {
+          "name": "method",
+          "original": "method"
+        },
+        {
+          "name": "params",
+          "original": "params"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "findAll",
+      "file": "tech-skill.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\settings\\tech-skill.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 24,
+      "end_line": 30,
+      "line_count": 7,
+      "body": "async findAll() {\n    return await this.TechSkillRepository.find();\n  }\n  async findOne(id: number) {\n    return await this.TechSkillRepository.findOne({\n      where: { id },\n    }",
+      "context": "",
+      "parameters": [],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "findOne",
+      "file": "tech-skill.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\settings\\tech-skill.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 27,
+      "end_line": 30,
+      "line_count": 4,
+      "body": "async findOne(id: number) {\n    return await this.TechSkillRepository.findOne({\n      where: { id },\n    }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "id: number",
+          "original": "id: number"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "update",
+      "file": "tech-skill.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\settings\\tech-skill.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 33,
+      "end_line": 36,
+      "line_count": 4,
+      "body": "async update(id: number, updateTechSkillDto: UpdateTechSkillDto) {\n    await this.findOne(id);\n\n    return this.TechSkillRepository.save({ id, ...updateTechSkillDto }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "id: number",
+          "original": "id: number"
+        },
+        {
+          "name": "updateTechSkillDto: UpdateTechSkillDto",
+          "original": "updateTechSkillDto: UpdateTechSkillDto"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "remove",
+      "file": "tech-skill.service.ts",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\ATS-GradProject\\backend\\src\\settings\\tech-skill.service.ts",
+      "language": "javascript",
+      "type": "method",
+      "class": null,
+      "start_line": 39,
+      "end_line": 40,
+      "line_count": 2,
+      "body": "async remove(id: number) {\n    return await this.TechSkillRepository.delete({ id }",
+      "context": "",
+      "parameters": [
+        {
+          "name": "id: number",
+          "original": "id: number"
+        }
+      ],
+      "is_async": false,
+      "is_exported": false
+    },
+    {
+      "name": "read_json",
+      "file": "parse_resumes.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\parse_resumes.py",
+      "language": "python",
+      "type": "function",
+      "class": null,
+      "start_line": 11,
+      "end_line": 14,
+      "line_count": 4,
+      "body": "def read_json(filename):\n    with open(filename) as f:\n        data = json.load(f)\n    return data",
+      "context": "",
+      "args": [
+        {
+          "name": "filename",
+          "type": ""
+        }
+      ],
+      "return_type": "",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "remove_old_files",
+      "file": "parse_resumes.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\parse_resumes.py",
+      "language": "python",
+      "type": "function",
+      "class": null,
+      "start_line": 16,
+      "end_line": 27,
+      "line_count": 12,
+      "body": "def remove_old_files(files_path):\n\n    for filename in os.listdir(files_path):\n        try:\n            file_path = os.path.join(files_path, filename)\n\n            if os.path.isfile(file_path):\n                os.remove(file_path)\n        except Exception as e:  \n            logging.error(f\"Error deleting {file_path}:\\n{e}\")\n\n    logging.info(\"Deleted old files from \"+files_path)",
+      "context": "",
+      "args": [
+        {
+          "name": "files_path",
+          "type": ""
+        }
+      ],
+      "return_type": "",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "read_doc",
+      "file": "spacy_similarity.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\spacy_similarity.py",
+      "language": "python",
+      "type": "function",
+      "class": null,
+      "start_line": 10,
+      "end_line": 17,
+      "line_count": 8,
+      "body": "def read_doc(path):\n    with open(path) as f:\n        try:\n            data = json.load(f)\n        except Exception as e:\n            logging.error(f'Error reading JSON file: {e}')\n            data = {}\n    return data",
+      "context": "",
+      "args": [
+        {
+          "name": "path",
+          "type": ""
+        }
+      ],
+      "return_type": "",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "find_path",
+      "file": "spacy_similarity.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\spacy_similarity.py",
+      "language": "python",
+      "type": "function",
+      "class": null,
+      "start_line": 19,
+      "end_line": 29,
+      "line_count": 11,
+      "body": "def find_path(folder_name):\n    curr_dir = os.getcwd()\n    while True:\n        if folder_name in os.listdir(curr_dir):\n            return os.path.join(curr_dir, folder_name)\n        else:\n            parent_dir = os.path.dirname(curr_dir)\n            if parent_dir == '/':\n                break\n            curr_dir = parent_dir\n    raise ValueError(f\"Folder '{folder_name}' not found.\")",
+      "context": "",
+      "args": [
+        {
+          "name": "folder_name",
+          "type": ""
+        }
+      ],
+      "return_type": "",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "similarity_match",
+      "file": "spacy_similarity.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\spacy_similarity.py",
+      "language": "python",
+      "type": "function",
+      "class": null,
+      "start_line": 32,
+      "end_line": 73,
+      "line_count": 42,
+      "body": "def similarity_match(job_keywords, resume_keywords):\n    results = []\n    results_weighted = []\n    total_weights = 0\n    resume_keywords_lower = set([word.lower() for word in resume_keywords])\n    for jd_word in job_keywords:\n        js_word_lower = jd_word.lower()\n        jd_word_results = []\n        jd_word_results_filtered = []\n        jd_word_nlp = nlp(js_word_lower)\n        if jd_word_nlp.vector.any():\n            for resume_word in resume_keywords_lower:\n                resume_word_nlp = nlp(resume_word)\n                if resume_word_nlp.has_vector:\n                    similarity = np.dot(jd_word_nlp.vector, resume_word_nlp.vector) / (np.linalg.norm(jd_word_nlp.vector) * np.linalg.norm(resume_word_nlp.vector))\n                    jd_word_results.append(similarity)\n                else:\n                    jd_word_results.append(0)\n            for result in jd_word_results:\n                if result >= 0.8:\n                    jd_word_results_filtered.append(result)\n                else:\n                    jd_word_results_filtered.append(0)\n            result = max(jd_word_results_filtered)\n            print(\"Max for \" + js_word_lower + \": \" + str(result))\n            results.append(result)\n            results_weighted.append(result * job_keywords[jd_word])\n        else:\n            if js_word_lower in resume_keywords_lower:\n                print(\"Word found! \" + js_word_lower)\n                results.append(1)\n                results_weighted.append(1 * job_keywords[jd_word])\n            else:\n                print(\"Word not found! \" + js_word_lower)\n                results.append(0)\n                results_weighted.append(0)\n                results_weighted.append(0 * job_keywords[jd_word])\n        total_weights += job_keywords[jd_word]\n\n    print(results_weighted)\n    # Calculate the weights\n    return round((sum(results_weighted) / (len(results) + total_weights)) * 100, 2)",
+      "context": "Function comments: Algorithm for matching job keywords against extracted resume keywords using cosine similarty forumla",
+      "args": [
+        {
+          "name": "job_keywords",
+          "type": ""
+        },
+        {
+          "name": "resume_keywords",
+          "type": ""
+        }
+      ],
+      "return_type": "",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "get_pdf_files",
+      "file": "ReadPdf.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\scripts\\ReadPdf.py",
+      "language": "python",
+      "type": "function",
+      "class": null,
+      "start_line": 6,
+      "end_line": 19,
+      "line_count": 14,
+      "body": "def get_pdf_files(file_path):\n    \"\"\"\n    Get all PDF files from the specified file path.\n\n    Args:\n        file_path (str): The directory path containing the PDF files.\n\n    Returns:\n        list: A list containing the paths of all the PDF files in the directory.\n    \"\"\"\n    if os.path.exists(file_path):\n        return glob.glob(os.path.join(file_path, '*.pdf'))\n    else:\n        return []",
+      "context": "Function docstring: Get all PDF files from the specified file path.\n\nArgs:\n    file_path (str): The directory path containing the PDF files.\n\nReturns:\n    list: A list containing the paths of all the PDF files in the directory.",
+      "args": [
+        {
+          "name": "file_path",
+          "type": ""
+        }
+      ],
+      "return_type": "",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "read_multiple_pdf",
+      "file": "ReadPdf.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\scripts\\ReadPdf.py",
+      "language": "python",
+      "type": "function",
+      "class": null,
+      "start_line": 22,
+      "end_line": 44,
+      "line_count": 23,
+      "body": "def read_multiple_pdf(file_path: str) -> list:\n    \"\"\"\n    Read multiple PDF files from the specified file path and extract the text from each page.\n\n    Args:\n        file_path (str): The directory path containing the PDF files.\n\n    Returns:\n        list: A list containing the extracted text from each page of the PDF files.\n    \"\"\"\n    pdf_files = get_pdf_files(file_path)\n    output = []\n    for file in pdf_files:\n        try:\n            with open(file, 'rb') as f:\n                pdf_reader = PdfReader(f)\n                count = pdf_reader.getNumPages()\n                for i in range(count):\n                    page = pdf_reader.getPage(i)\n                    output.append(page.extractText())\n        except Exception as e:\n            print(f\"Error reading file '{file}': {str(e)}\")\n    return output",
+      "context": "Function docstring: Read multiple PDF files from the specified file path and extract the text from each page.\n\nArgs:\n    file_path (str): The directory path containing the PDF files.\n\nReturns:\n    list: A list containing the extracted text from each page of the PDF files.",
+      "args": [
+        {
+          "name": "file_path",
+          "type": "str"
+        }
+      ],
+      "return_type": "list",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "read_single_pdf",
+      "file": "ReadPdf.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\scripts\\ReadPdf.py",
+      "language": "python",
+      "type": "function",
+      "class": null,
+      "start_line": 47,
+      "end_line": 67,
+      "line_count": 21,
+      "body": "def read_single_pdf(file_path: str) -> str:\n    \"\"\"\n    Read a single PDF file and extract the text from each page.\n\n    Args:\n        file_path (str): The path of the PDF file.\n\n    Returns:\n        list: A list containing the extracted text from each page of the PDF file.\n    \"\"\"\n    output = []\n    try:\n        with open(file_path, 'rb') as f:\n            pdf_reader = PdfReader(f)\n            count = len(pdf_reader.pages)\n            for i in range(count):\n                page = pdf_reader.pages[i]\n                output.append(page.extract_text())\n    except Exception as e:\n        print(f\"Error reading file '{file_path}': {str(e)}\")\n    return str(\" \".join(output))",
+      "context": "Function docstring: Read a single PDF file and extract the text from each page.\n\nArgs:\n    file_path (str): The path of the PDF file.\n\nReturns:\n    list: A list containing the extracted text from each page of the PDF file.",
+      "args": [
+        {
+          "name": "file_path",
+          "type": "str"
+        }
+      ],
+      "return_type": "str",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "get_pdf_files",
+      "file": "ReadPdf.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\scripts\\ReadPdf.py",
+      "language": "python",
+      "type": "function",
+      "class": null,
+      "start_line": 70,
+      "end_line": 85,
+      "line_count": 16,
+      "body": "def get_pdf_files(file_path: str) -> list:\n    \"\"\"\n    Get a list of PDF files from the specified directory path.\n\n    Args:\n        file_path (str): The directory path containing the PDF files.\n\n    Returns:\n        list: A list of PDF file paths.\n    \"\"\"\n    pdf_files = []\n    try:\n        pdf_files = glob.glob(os.path.join(file_path, '*.pdf'))\n    except Exception as e:\n        print(f\"Error getting PDF files from '{file_path}': {str(e)}\")\n    return pdf_files",
+      "context": "Function docstring: Get a list of PDF files from the specified directory path.\n\nArgs:\n    file_path (str): The directory path containing the PDF files.\n\nReturns:\n    list: A list of PDF file paths.",
+      "args": [
+        {
+          "name": "file_path",
+          "type": "str"
+        }
+      ],
+      "return_type": "list",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "extract_particular_words",
+      "file": "Extractor.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\scripts\\Extractor.py",
+      "language": "python",
+      "type": "method",
+      "class": "DataExtractor",
+      "start_line": 51,
+      "end_line": 63,
+      "line_count": 13,
+      "body": "def extract_particular_words(self):\n        \"\"\"\n        Extract nouns and proper nouns from the given text.\n\n        Args:\n            text (str): The input text to extract nouns from.\n\n        Returns:\n            list: A list of extracted nouns.\n        \"\"\"\n        pos_tags = ['NOUN', 'PROPN']\n        nouns = [token.text for token in self.doc if token.pos_ in pos_tags]\n        return nouns",
+      "context": "Class: DataExtractor\nFunction docstring: Extract nouns and proper nouns from the given text.\n\nArgs:\n    text (str): The input text to extract nouns from.\n\nReturns:\n    list: A list of extracted nouns.",
+      "args": [
+        {
+          "name": "self",
+          "type": ""
+        }
+      ],
+      "return_type": "",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "extract_entities",
+      "file": "Extractor.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\scripts\\Extractor.py",
+      "language": "python",
+      "type": "method",
+      "class": "DataExtractor",
+      "start_line": 65,
+      "end_line": 78,
+      "line_count": 14,
+      "body": "def extract_entities(self):\n        \"\"\"\n        Extract named entities of types 'GPE' (geopolitical entity) and 'ORG' (organization) from the given text.\n\n        Args:\n            text (str): The input text to extract entities from.\n\n        Returns:\n            list: A list of extracted entities.\n        \"\"\"\n        entity_labels = ['GPE', 'ORG']\n        entities = [\n            token.text for token in self.doc.ents if token.label_ in entity_labels]\n        return list(set(entities))",
+      "context": "Class: DataExtractor\nFunction docstring: Extract named entities of types 'GPE' (geopolitical entity) and 'ORG' (organization) from the given text.\n\nArgs:\n    text (str): The input text to extract entities from.\n\nReturns:\n    list: A list of extracted entities.",
+      "args": [
+        {
+          "name": "self",
+          "type": ""
+        }
+      ],
+      "return_type": "",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "_read_resumes",
+      "file": "JobDescriptionProcessor.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\scripts\\JobDescriptionProcessor.py",
+      "language": "python",
+      "type": "method",
+      "class": "JobDescriptionProcessor",
+      "start_line": 26,
+      "end_line": 29,
+      "line_count": 4,
+      "body": "def _read_resumes(self) -> dict:\n        data = read_single_pdf(self.input_file_name)\n        output = ParseResume(data).get_JSON()\n        return output",
+      "context": "Class: JobDescriptionProcessor",
+      "args": [
+        {
+          "name": "self",
+          "type": ""
+        }
+      ],
+      "return_type": "dict",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "_write_json_file",
+      "file": "JobDescriptionProcessor.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\scripts\\JobDescriptionProcessor.py",
+      "language": "python",
+      "type": "method",
+      "class": "JobDescriptionProcessor",
+      "start_line": 31,
+      "end_line": 37,
+      "line_count": 7,
+      "body": "def _write_json_file(self, resume_dictionary: dict):\n        file_name = str(\"JobDescription-\" + self.input_file +\n                        resume_dictionary[\"unique_id\"] + \".json\")\n        save_directory_name = pathlib.Path(SAVE_DIRECTORY) / file_name\n        json_object = json.dumps(resume_dictionary, sort_keys=True, indent=14)\n        with open(save_directory_name, \"w+\") as outfile:\n            outfile.write(json_object)",
+      "context": "Class: JobDescriptionProcessor",
+      "args": [
+        {
+          "name": "self",
+          "type": ""
+        },
+        {
+          "name": "resume_dictionary",
+          "type": "dict"
+        }
+      ],
+      "return_type": "",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "_read_resumes",
+      "file": "ResumeProcessor.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\scripts\\ResumeProcessor.py",
+      "language": "python",
+      "type": "method",
+      "class": "ResumeProcessor",
+      "start_line": 25,
+      "end_line": 28,
+      "line_count": 4,
+      "body": "def _read_resumes(self) -> dict:\n        data = read_single_pdf(self.input_file_name)\n        output = ParseResume(data).get_JSON()\n        return output",
+      "context": "Class: ResumeProcessor",
+      "args": [
+        {
+          "name": "self",
+          "type": ""
+        }
+      ],
+      "return_type": "dict",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "_write_json_file",
+      "file": "ResumeProcessor.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\scripts\\ResumeProcessor.py",
+      "language": "python",
+      "type": "method",
+      "class": "ResumeProcessor",
+      "start_line": 31,
+      "end_line": 36,
+      "line_count": 6,
+      "body": "def _write_json_file(self, resume_dictionary: dict):\n        file_name = str(\"Resume-\" + self.input_file + \".json\")\n        save_directory_name = pathlib.Path(SAVE_DIRECTORY) / file_name\n        json_object = json.dumps(resume_dictionary, sort_keys=True, indent=14)\n        with open(save_directory_name, \"w+\") as outfile:\n            outfile.write(json_object)",
+      "context": "Class: ResumeProcessor",
+      "args": [
+        {
+          "name": "self",
+          "type": ""
+        },
+        {
+          "name": "resume_dictionary",
+          "type": "dict"
+        }
+      ],
+      "return_type": "",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "clean_text",
+      "file": "TextCleaner.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\scripts\\TextCleaner.py",
+      "language": "python",
+      "type": "method",
+      "class": "TextCleaner",
+      "start_line": 16,
+      "end_line": 21,
+      "line_count": 6,
+      "body": "def clean_text(self) -> str:\n        tokens = word_tokenize(self.raw_input_text.lower())\n        tokens = [token for token in tokens if token not in self.stopwords_set]\n        tokens = [self.lemmatizer.lemmatize(token) for token in tokens]\n        cleaned_text = ' '.join(tokens)\n        return cleaned_text",
+      "context": "Class: TextCleaner",
+      "args": [
+        {
+          "name": "self",
+          "type": ""
+        }
+      ],
+      "return_type": "str",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "get_JSON",
+      "file": "ParseResumeToJson.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\scripts\\parsers\\ParseResumeToJson.py",
+      "language": "python",
+      "type": "method",
+      "class": "ParseResume",
+      "start_line": 19,
+      "end_line": 30,
+      "line_count": 12,
+      "body": "def get_JSON(self) -> dict:\n        \"\"\"\n        Returns a dictionary of resume data.\n        \"\"\"\n        resume_dictionary = {\n            \"unique_id\": generate_unique_id(),\n            \"resume_data\": self.resume_data,\n            \"clean_data\": self.clean_data,\n            \"extracted_keywords\": self.key_words,\n        }\n\n        return resume_dictionary",
+      "context": "Class: ParseResume\nFunction docstring: Returns a dictionary of resume data.",
+      "args": [
+        {
+          "name": "self",
+          "type": ""
+        }
+      ],
+      "return_type": "dict",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "get_filenames_from_dir",
+      "file": "ReadFiles.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\scripts\\utils\\ReadFiles.py",
+      "language": "python",
+      "type": "function",
+      "class": null,
+      "start_line": 3,
+      "end_line": 5,
+      "line_count": 3,
+      "body": "def get_filenames_from_dir(directory_path: str) -> list:\n    filenames = [f for f in os.listdir(directory_path) if os.path.isfile(os.path.join(directory_path, f)) and f != '.DS_Store']\n    return filenames",
+      "context": "",
+      "args": [
+        {
+          "name": "directory_path",
+          "type": "str"
+        }
+      ],
+      "return_type": "list",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "remove_emails_links",
+      "file": "Utils.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\scripts\\utils\\Utils.py",
+      "language": "python",
+      "type": "method",
+      "class": "TextCleaner",
+      "start_line": 30,
+      "end_line": 42,
+      "line_count": 13,
+      "body": "def remove_emails_links(text):\n        \"\"\"\n        Clean the input text by removing specific patterns.\n\n        Args:\n            text (str): The input text to clean.\n\n        Returns:\n            str: The cleaned text.\n        \"\"\"\n        for pattern in REGEX_PATTERNS:\n            text = re.sub(REGEX_PATTERNS[pattern], '', text)\n        return text",
+      "context": "Class: TextCleaner\nClass docstring: A class for cleaning a text by removing specific patterns.\nFunction docstring: Clean the input text by removing specific patterns.\n\nArgs:\n    text (str): The input text to clean.\n\nReturns:\n    str: The cleaned text.",
+      "args": [
+        {
+          "name": "text",
+          "type": ""
+        }
+      ],
+      "return_type": "",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "remove_new_lines",
+      "file": "Utils.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\scripts\\utils\\Utils.py",
+      "language": "python",
+      "type": "method",
+      "class": "TextCleaner",
+      "start_line": 44,
+      "end_line": 45,
+      "line_count": 2,
+      "body": "def remove_new_lines(text):\n        return text.replace('\\\\n', '')",
+      "context": "Class: TextCleaner\nClass docstring: A class for cleaning a text by removing specific patterns.",
+      "args": [
+        {
+          "name": "text",
+          "type": ""
+        }
+      ],
+      "return_type": "",
+      "is_async": false,
+      "decorators": []
+    },
+    {
+      "name": "clean_text",
+      "file": "Utils.py",
+      "filepath": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone\\Resume-Matcher\\scripts\\utils\\Utils.py",
+      "language": "python",
+      "type": "method",
+      "class": "TextCleaner",
+      "start_line": 47,
+      "end_line": 64,
+      "line_count": 18,
+      "body": "def clean_text(text):\n        \"\"\"\n        Clean the input text by removing specific patterns.\n\n        Args:\n            text (str): The input text to clean.\n\n        Returns:\n            str: The cleaned text.\n        \"\"\"\n        text = TextCleaner.remove_emails_links(text)\n        text = TextCleaner.remove_new_lines(text)\n        doc = nlp(text)\n        # This breaks the words and make them appear without and o\n        # for token in doc:\n        #     if token.pos_ == 'PUNCT':\n        #         text = text.replace(token.text, '')\n        return str(text)",
+      "context": "Class: TextCleaner\nClass docstring: A class for cleaning a text by removing specific patterns.\nFunction docstring: Clean the input text by removing specific patterns.\n\nArgs:\n    text (str): The input text to clean.\n\nReturns:\n    str: The cleaned text.",
+      "args": [
+        {
+          "name": "text",
+          "type": ""
+        }
+      ],
+      "return_type": "",
+      "is_async": false,
+      "decorators": []
+    }
+  ],
+  "start_time": 1747013578.589803,
+  "status": "success",
+  "output_files": {
+    "json": "D:\\SpeCodeFusion\\backend\\src\\extracted\\reemtrial\\sourcecode.json",
+    "code_tree": "D:\\SpeCodeFusion\\backend\\src\\extracted\\reemtrial\\code_tree.json"
+  },
+  "repo_path": "D_\\SpeCodeFusion\\backend\\src\\uploads\\reemtrial\\github_clone",
+  "end_time": 1747013580.187981,
+  "duration": 1.5981779098510742
+}

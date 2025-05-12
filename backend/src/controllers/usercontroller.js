@@ -284,3 +284,24 @@ exports.updateUserProfile = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
+exports.googleCallback = (req, res) => {
+  try {
+    // Generate JWT token
+    const token = jwt.sign(
+      { 
+        id: req.user.id, 
+        email: req.user.email, 
+        role: req.user.role 
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "3h" }
+    );
+
+    // Redirect to frontend with token
+    res.redirect(`http://localhost:5173/google-login-success?token=${token}`);
+  } catch (error) {
+    console.error('Google callback error:', error);
+    res.redirect('http://localhost:5173/login?error=auth_failed');
+  }
+};

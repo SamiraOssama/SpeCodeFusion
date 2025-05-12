@@ -23,6 +23,31 @@ const requestSchema = new mongoose.Schema({
   }
 });
 
+const invitationSchema = new mongoose.Schema({
+  user: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "User", 
+    required: true 
+  },
+  status: {
+    type: String,
+    enum: ["pending", "accepted", "rejected"],
+    default: "pending"
+  },
+  invitedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+  },
+  invitedAt: {
+    type: Date,
+    default: Date.now
+  },
+  respondedAt: {
+    type: Date
+  }
+});
+
 const repoSchema = new mongoose.Schema(
   {
     name: { 
@@ -42,6 +67,7 @@ const repoSchema = new mongoose.Schema(
       ref: "User", 
       default: [] 
     }],
+    invitations: [invitationSchema],
     requests: [requestSchema],
 
     // File storage

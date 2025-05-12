@@ -1,5 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import React from "react";
+import { RepoProvider } from "./context/RepoContext";
+import { NotificationsProvider } from "./context/NotificationsContext";
+import { ThemeProvider } from "./context/ThemeContext";
+import { useTheme } from "./context/ThemeContext";
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home";
 import UploadSrs from "./pages/upload_srs";
@@ -29,109 +33,31 @@ import AdminAddUser from "./pages/AdminAddUser";
 import AdminEditUser from "./pages/AdminEditUser";
 import AdminRepositories from './pages/AdminRepositories'; 
 import ManageAdmins from "./pages/ManageAdmins";
+import RepoSettings from './pages/RepoSettings/RepoSettings';
+import InvitationResponse from './pages/InvitationResponse';
 
-function App() {
+// Wrap the app content in a theme-aware component
+const ThemedApp = () => {
+  const { darkMode } = useTheme();
+
   return (
-    <Router>
-      <main className="overflow-x-hidden bg-white">
+    <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+        <Navbar />
         <Routes>
-          {/* Public Routes with Navbar */}
-          <Route 
-            path="/" 
-            element={
-              <>
-                <Navbar />
-                <Home />
-              </>
-            } 
-          />
-          <Route 
-            path="/Upload" 
-            element={
-              <>
-                <Navbar />
-                <Upload />
-              </>
-            } 
-          />
-            <Route 
-            path="/All" 
-            element={
-              <>
-                <Navbar />
-                <All />
-              </>
-            } 
-          />
-          
-            <Route 
-            path="/Allrepos" 
-            element={
-              <>
-                <Navbar />
-                <Allrepos />
-              </>
-            } 
-          />
-             <Route 
-            path="/Requestpage" 
-            element={
-              <>
-                <Navbar />
-                <RequestPage />
-              </>
-            } 
-          />
-            <Route 
-            path="/Dashboarddmalak" 
-            element={
-              <>
-                <Navbar />
-                <Dashboarddmalak />
-              </>
-            } 
-          />
-          <Route 
-            path="/upload-srs" 
-            element={
-              <>
-                <Navbar />
-                <UploadSrs />
-              </>
-            } 
-          />
-                 <Route 
-            path="/repo/:repoId" 
-            element={
-              <>
-                <Navbar />
-                <RepoDetails />
-              </>
-            } 
-          />
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/Upload" element={<Upload />} />
+          <Route path="/All" element={<All />} />
+          <Route path="/Allrepos" element={<Allrepos />} />
+          <Route path="/Requestpage" element={<RequestPage />} />
+          <Route path="/Dashboarddmalak" element={<Dashboarddmalak />} />
+          <Route path="/upload-srs" element={<UploadSrs />} />
+          <Route path="/repo/:repoId" element={<RepoDetails />} />
           <Route path="/repo-history/:repoId" element={<RepoHistory />} />
-
-          {/* <Route 
-            path="/Extractedreq" 
-            element={
-              <>
-                <Navbar />
-                <Extractedreq />
-              </>
-            } 
-          /> */}
-
-          <Route 
-            path="/upload-code" 
-            element={
-              <>
-                <Navbar />
-                <UploadSourceCode />
-              </>
-            } 
-          />
-
-          {/* Auth Pages (No Navbar) */}
+          <Route path="/upload-code" element={<UploadSourceCode />} />
+          
+          {/* Auth Pages */}
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
           <Route path="/reset-password" element={<ResetPassword />} />
@@ -140,41 +66,35 @@ function App() {
           <Route path="/AdminDashboard" element={<AdminDashboard />} />
           <Route path="/AdminUsers" element={<AdminUsers />} />
           <Route path="/AdminPerformance" element={<AdminPerformance />} />
-           <Route path="/AdminSettings" element={<AdminSettings />}/>
-           <Route path="/Upload" element={<Upload />}/>
-           <Route path="/Dashboarddmalak" element={<Dashboarddmalak />}/>
-           <Route path="/RepoDetails" element={<RepoDetails />}/>
-           <Route path="/Allrepos" element={<Allrepos />}/>
-           <Route path="/All" element={<All />}/>
-           <Route path="/Requestpage" element={<RequestPage />}/>
-           <Route path="/google-login-success" element={<GoogleSuccess />} />
-           <Route 
-            path="/step-upload" 
-            element={
-              <>
-                <Navbar />
-                <StepUpload />
-              </>
-            } 
-          />
-          <Route 
-            path="/report/:repoId" 
-            element={
-              <>
-                <Navbar />
-                <Report />
-              </>
-            } 
-          />
-           <Route path="/change-password" element={<ChangePassword />} />
-           <Route path="/AdminAddUser" element={<AdminAddUser />} /> 
-           <Route path="/admin/users/edit/:id" element={<AdminEditUser />} />
-           <Route path="/AdminRepositories" element={<AdminRepositories />} />
-           <Route path="/admin/manage-admins" element={<ManageAdmins />} />
+          <Route path="/AdminSettings" element={<AdminSettings />} />
+          <Route path="/google-login-success" element={<GoogleSuccess />} />
+          <Route path="/step-upload" element={<StepUpload />} />
+          <Route path="/report/:repoId" element={<Report />} />
+          <Route path="/change-password" element={<ChangePassword />} />
+          <Route path="/AdminAddUser" element={<AdminAddUser />} />
+          <Route path="/admin/users/edit/:id" element={<AdminEditUser />} />
+          <Route path="/AdminRepositories" element={<AdminRepositories />} />
+          <Route path="/admin/manage-admins" element={<ManageAdmins />} />
+          <Route path="/repo/:repoId/settings/*" element={<RepoSettings />} />
+          <Route path="/repo/:repoId/invitation" element={<InvitationResponse />} />
         </Routes>
-      </main>
-    </Router>
+      </div>
+    </div>
   );
-}
+};
+
+const App = () => {
+  return (
+    <ThemeProvider>
+      <RepoProvider>
+        <NotificationsProvider>
+          <Router>
+            <ThemedApp />
+          </Router>
+        </NotificationsProvider>
+      </RepoProvider>
+    </ThemeProvider>
+  );
+};
 
 export default App;

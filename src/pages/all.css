@@ -240,6 +240,40 @@ a:hover {
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
+    transition: all 0.3s ease;
+  }
+  
+  /* Dark mode styles */
+  .dark .all-repos-container {
+    background-color: #1F2937;
+    color: #F9FAFB;
+  }
+  
+  .dark .repo-card {
+    background-color: #374151;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+  
+  .dark .repo-card:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+  
+  .dark .search-bar input {
+    background-color: #374151;
+    border-color: #4B5563;
+    color: #F9FAFB;
+  }
+  
+  .dark .search-bar input::placeholder {
+    color: #9CA3AF;
+  }
+  
+  .dark .repo-count {
+    color: #9CA3AF;
+  }
+  
+  .dark .empty-state p {
+    color: #F9FAFB;
   }
   
   .repos-header {
