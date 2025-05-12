@@ -1315,7 +1315,8 @@ exports.inviteCollaborator = async (req, res) => {
     }
 
     // Check if user is already a member
-    if (repo.members.includes(userId)) {
+    const isMember = repo.members.some(memberId => memberId.toString() === userId);
+    if (isMember) {
       return res.status(400).json({ message: "User is already a collaborator" });
     }
 
@@ -1338,6 +1339,9 @@ exports.inviteCollaborator = async (req, res) => {
 
     await repo.save();
 
+    // Get the saved invitation with its generated _id
+    const savedInvitation = repo.invitations[repo.invitations.length - 1];
+
     // Create notification for the invited user
     await createNotification(
       userId,
@@ -1345,7 +1349,7 @@ exports.inviteCollaborator = async (req, res) => {
       `You have been invited to collaborate on repository: ${repo.name}`,
       repo._id,
       {
-        invitationId: repo.invitations[repo.invitations.length - 1]._id.toString(),
+        invitationId: savedInvitation._id.toString(),
         invitedBy: inviterId.toString(),
         repoName: repo.name
       }

@@ -191,7 +191,43 @@ exports.matchRequirementsToCode = async (req, res) => {
             if (reportContent.trim().length === 0) {
               throw new Error("Empty report file generated");
             }
-            return JSON.parse(reportContent);
+            const reportData = JSON.parse(reportContent);
+
+            // Calculate statistics
+            const totalReqs = reportData.requirements.length;
+            const implementedReqs = reportData.requirements.filter(
+              req => req.status === 'implemented'
+            ).length;
+            const coveragePercentage = Math.round((implementedReqs / totalReqs) * 100);
+
+            // Save report to database
+            repo.report = {
+              timestamp: new Date(),
+              statistics: {
+                total_requirements: totalReqs,
+                implemented_count: implementedReqs,
+                coverage_percentage: coveragePercentage
+              },
+              requirements: reportData.requirements.map(req => ({
+                requirement: req.requirement,
+                status: req.status,
+                implementation_details: req.implementation_details
+              }))
+            };
+            await repo.save();
+
+            return {
+              statistics: {
+                total_requirements: totalReqs,
+                implemented_count: implementedReqs,
+                coverage_percentage: coveragePercentage
+              },
+              requirements: reportData.requirements.map(req => ({
+                requirement: req.requirement,
+                status: req.status,
+                details: req.implementation_details
+              }))
+            };
           } catch (readError) {
             console.error(`❌ Error reading report: ${readError.message}`);
             throw new Error(`Failed to read report: ${readError.message}`);
@@ -208,11 +244,7 @@ exports.matchRequirementsToCode = async (req, res) => {
         success: true,
         message: "Compatibility analysis completed successfully",
         statistics: result.statistics,
-        requirements: result.requirements.map(req => ({
-          requirement: req.requirement,
-          status: req.status,
-          details: req.implementation_details
-        }))
+        requirements: result.requirements
       });
     } catch (scriptError) {
       console.error("❌ Error running Python script:", scriptError);
@@ -240,22 +272,58 @@ exports.getCompatibilityReport = async (req, res) => {
       return res.status(404).json({ message: "Repository not found" });
     }
 
-    const extractedDir = path.join(__dirname, "../extracted", repo.name);
-    const reportPath = path.join(extractedDir, "implementation_report.json");
-    const summaryPath = path.join(extractedDir, "implementation_summary.csv");
-
-    if (!fs.existsSync(reportPath)) {
+    if (!repo.report) {
       return res.status(404).json({ message: "Report not found. Please generate the report first." });
     }
 
-    const report = require(reportPath);
     res.json({
       success: true,
-      report: report,
-      summaryPath: summaryPath
+      report: repo.report
     });
   } catch (error) {
     console.error("Error fetching compatibility report:", error);
     res.status(500).json({ message: "Server error fetching report" });
+  }
+};
+
+exports.exportReport = async (req, res) => {
+  try {
+    const { repoId } = req.params;
+    
+    const repo = await Repo.findById(repoId);
+    if (!repo) {
+      return res.status(404).json({ message: "Repository not found" });
+    }
+
+    if (!repo.report) {
+      return res.status(404).json({ message: "Report not found. Please generate the report first." });
+    }
+
+    // Create CSV content
+    const csvRows = [
+      // Header row
+      ['Requirement', 'Status', 'Implementation Details'],
+      // Data rows
+      ...repo.report.requirements.map(req => [
+        req.requirement,
+        req.status,
+        req.implementation_details
+      ])
+    ];
+
+    // Convert to CSV string
+    const csvContent = csvRows
+      .map(row => row.map(cell => `"${cell?.toString().replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+
+    // Set headers for file download
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', `attachment; filename=compatibility-report-${repo.name}.csv`);
+    
+    // Send the CSV content
+    res.send(csvContent);
+  } catch (error) {
+    console.error("Error exporting report:", error);
+    res.status(500).json({ message: "Server error exporting report" });
   }
 }; 

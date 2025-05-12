@@ -16,9 +16,13 @@ export const NotificationsProvider = ({ children }) => {
   const token = localStorage.getItem('token');
 
   const fetchNotifications = async () => {
-    if (!token) return;
+    if (!token) {
+      console.log('No token found, skipping notification fetch');
+      return;
+    }
 
     try {
+      console.log('Fetching notifications...');
       const response = await fetch('http://localhost:5000/api/notifications', {
         headers: {
           Authorization: `Bearer ${token}`
@@ -27,8 +31,11 @@ export const NotificationsProvider = ({ children }) => {
       
       if (response.ok) {
         const data = await response.json();
+        console.log('Notifications received:', data);
         setNotifications(data);
         setUnreadCount(data.filter(n => !n.read).length);
+      } else {
+        console.error('Failed to fetch notifications:', await response.text());
       }
     } catch (error) {
       console.error('Error fetching notifications:', error);

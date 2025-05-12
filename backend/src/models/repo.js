@@ -29,15 +29,15 @@ const invitationSchema = new mongoose.Schema({
     ref: "User", 
     required: true 
   },
-  status: {
-    type: String,
-    enum: ["pending", "accepted", "rejected"],
-    default: "pending"
-  },
   invitedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true
+  },
+  status: {
+    type: String,
+    enum: ["pending", "accepted", "rejected"],
+    default: "pending"
   },
   invitedAt: {
     type: Date,
@@ -82,6 +82,21 @@ const repoSchema = new mongoose.Schema(
     extractedFiles: {
       srsRequirements: { type: String },  // Path to extracted SRS requirements CSV
       codeAnalysis: { type: String }     // Path to code analysis JSON
+    },
+
+    // Report data
+    report: {
+      timestamp: { type: Date },
+      statistics: {
+        total_requirements: { type: Number },
+        implemented_count: { type: Number },
+        coverage_percentage: { type: Number }
+      },
+      requirements: [{
+        requirement: { type: String },
+        status: { type: String },
+        implementation_details: { type: String }
+      }]
     },
 
     // SRS File History

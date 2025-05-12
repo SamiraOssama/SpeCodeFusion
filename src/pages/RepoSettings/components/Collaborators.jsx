@@ -161,6 +161,7 @@ const Collaborators = () => {
   const handleInviteUser = async (userId) => {
     try {
       setError(null);
+      console.log('Sending invitation to user:', userId);
       const response = await makeAuthenticatedRequest(`${API_BASE_URL}/api/repos/${repoId}/invite`, {
         method: 'POST',
         headers: {
@@ -168,21 +169,27 @@ const Collaborators = () => {
         },
         body: JSON.stringify({ userId })
       });
-      if (!response) return;
+      if (!response) {
+        console.error('No response received from invitation request');
+        return;
+      }
 
       if (!response.ok) {
-        throw new Error('Failed to invite user');
+        const errorData = await response.json();
+        console.error('Invitation failed:', errorData);
+        throw new Error(errorData.message || 'Failed to invite user');
       }
 
       const result = await response.json();
+      console.log('Invitation sent successfully:', result);
       setSuccessMessage(result.message || 'Invitation sent successfully!');
       setSearchQuery('');
       fetchCollaborators();
       
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error) {
+      console.error('Error in handleInviteUser:', error);
       setError(error.message);
-      console.error('Error:', error);
     }
   };
 
@@ -335,12 +342,41 @@ const Collaborators = () => {
           return;
         }
 
-        await Promise.all([
-          fetchCollaborators(),
-          fetchAllUsers(),
-          fetchRepoOwner(),
-          fetchRequests()
+        // Fetch all data in parallel
+        const [collaboratorsRes, usersRes, ownerRes, requestsRes] = await Promise.all([
+          makeAuthenticatedRequest(`${API_BASE_URL}/api/repos/${repoId}/collaborators`),
+          makeAuthenticatedRequest(`${API_BASE_URL}/api/users/all`),
+          makeAuthenticatedRequest(`${API_BASE_URL}/api/repos/${repoId}/owner`),
+          makeAuthenticatedRequest(`${API_BASE_URL}/api/repos/${repoId}/requests`)
         ]);
+
+        // Handle collaborators response
+        if (collaboratorsRes && collaboratorsRes.ok) {
+          const collaboratorsData = await collaboratorsRes.json();
+          console.log("Collaborators data:", collaboratorsData);
+          setCollaborators(collaboratorsData.members || []);
+          setPendingInvitations(collaboratorsData.pendingInvitations || []);
+          setDebugInfo(prev => ({ ...prev, collaboratorsLoaded: true }));
+        }
+
+        // Handle users response
+        if (usersRes && usersRes.ok) {
+          const usersData = await usersRes.json();
+          setAllUsers(usersData);
+        }
+
+        // Handle owner response
+        if (ownerRes && ownerRes.ok) {
+          const ownerData = await ownerRes.json();
+          setRepoOwner(ownerData._id);
+          setDebugInfo(prev => ({ ...prev, ownerLoaded: true }));
+        }
+
+        // Handle requests response
+        if (requestsRes && requestsRes.ok) {
+          const requestsData = await requestsRes.json();
+          setPendingRequests(requestsData.filter(req => req.status === 'pending') || []);
+        }
 
         setIsLoading(false);
       } catch (error) {
@@ -492,7 +528,36 @@ const Collaborators = () => {
                 </div>
               )}
 
-             
+              {pendingInvitations.length > 0 && (
+                <div className="space-y-3">
+                  <h3 className={`font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                    Pending Invitations
+                  </h3>
+                  {pendingInvitations.map((invitation) => (
+                    <div
+                      key={invitation._id}
+                      className={`flex items-center justify-between p-3 rounded-lg ${
+                        darkMode 
+                          ? 'bg-blue-900 bg-opacity-20' 
+                          : 'bg-blue-50'
+                      }`}
+                    >
+                      <div>
+                        <p className={`font-medium ${darkMode ? 'text-gray-200' : 'text-gray-900'}`}>
+                          {invitation.user.username || invitation.user.email}
+                        </p>
+                        <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          {invitation.user.email}
+                        </p>
+                        <p className="text-xs flex items-center mt-1 text-blue-400">
+                          <FiClock className="mr-1" /> Invited by {invitation.invitedBy.username || invitation.invitedBy.email}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               {pendingRequests.length > 0 && (
                 <div className="space-y-3">
                   <h3 className={`font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>

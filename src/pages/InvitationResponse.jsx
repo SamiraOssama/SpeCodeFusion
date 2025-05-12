@@ -11,7 +11,6 @@ const InvitationResponse = () => {
   const location = useLocation();
   const { markAsRead } = useNotifications();
   
-  
   const invitation = location.state?.invitation;
   const notificationId = location.state?.notificationId;
 
@@ -57,6 +56,7 @@ const InvitationResponse = () => {
       }
 
       setLoading(true);
+      setError(null);
       
       const response = await fetch(`http://localhost:5000/api/repos/${repoId}/invitations/${invitation.invitationId}`, {
         method: 'PUT',
@@ -67,23 +67,32 @@ const InvitationResponse = () => {
         body: JSON.stringify({ status })
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const data = await response.json();
         throw new Error(data.message || 'Failed to process invitation');
       }
 
-     
+      // Mark notification as read if it exists
       if (notificationId) {
-        await markAsRead(notificationId);
+        try {
+          await markAsRead(notificationId);
+        } catch (error) {
+          console.error('Error marking notification as read:', error);
+        }
       }
 
-      
+      // Show success message
       alert(status === 'accepted' 
         ? 'You have successfully joined the repository!' 
         : 'You have declined the invitation.');
 
-      
-      navigate(status === 'accepted' ? `/repo/${repoId}/settings/general` : '/');
+      // Navigate based on response
+      if (status === 'accepted') {
+        navigate(`/repo/${repoId}/settings/general`);
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       console.error('Error in handleResponse:', err);
       setError(err.message);

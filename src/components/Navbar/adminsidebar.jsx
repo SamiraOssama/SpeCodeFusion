@@ -91,8 +91,8 @@ const AdminSidebar = () => {
       {/* Logout Button */}
       <div className="p-4">
         <button
-          onClick={handleLogout} // Call the logout function when button is clicked
-          className="w-full flex items-center space-x-3 px-4 py-2 bg-blue-500 hover:bg-red-600 rounded-md transition"
+          onClick={handleLogout}
+          className="w-full flex items-center space-x-3 px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-md transition"
         >
           <FaSignOutAlt />
           <span>Logout</span>

@@ -11,30 +11,40 @@ const NotificationsDropdown = () => {
   const { darkMode } = useTheme();
   const navigate = useNavigate();
 
-  const handleNotificationClick = (notification) => {
-    if (notification.type === 'repo_invitation') {
-      navigate(`/repo/${notification.repoId}/invitation`, {
-        state: {
-          invitation: {
-            invitationId: notification.metadata?.invitationId || '',
-            invitedBy: notification.metadata?.invitedBy || ''
-          },
-          notificationId: notification._id
+  const handleNotificationClick = async (notification) => {
+    try {
+      if (notification.type === 'repo_invitation') {
+        // Ensure we have all required data
+        if (!notification.metadata?.invitationId || !notification.repoId) {
+          console.error('Missing required invitation data:', notification);
+          return;
         }
-      });
-    } else if (notification.type === 'request_response' && notification.metadata?.response === 'removed') {
-     
-      if (!notification.read) {
-        markAsRead(notification._id);
+
+        // Navigate to invitation response page
+        navigate(`/repo/${notification.repoId}/invitation`, {
+          state: {
+            invitation: {
+              invitationId: notification.metadata.invitationId,
+              invitedBy: notification.metadata.invitedBy
+            },
+            notificationId: notification._id
+          }
+        });
+      } else if (notification.type === 'request_response' && notification.metadata?.response === 'removed') {
+        if (!notification.read) {
+          await markAsRead(notification._id);
+        }
+        navigate('/');
+      } else {
+        if (!notification.read) {
+          await markAsRead(notification._id);
+        }
+        navigate(`/repo/${notification.repoId}`);
       }
-    } else {
-      
-      if (!notification.read) {
-        markAsRead(notification._id);
-      }
-      navigate(`/repo/${notification.repoId}`);
+      setIsOpen(false);
+    } catch (error) {
+      console.error('Error handling notification click:', error);
     }
-    setIsOpen(false);
   };
 
   return (
@@ -49,7 +59,6 @@ const NotificationsDropdown = () => {
         </span>
       )}
 
-     
       {isOpen && (
         <div className={`absolute right-0 mt-2 w-80 ${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-xl z-50 top-full`}>
           <div className={`p-4 border-b ${darkMode ? 'border-gray-700' : ''}`}>
