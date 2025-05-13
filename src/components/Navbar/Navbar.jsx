@@ -6,6 +6,12 @@ import NotificationsDropdown from '../Notifications/NotificationsDropdown';
 import { useTheme } from '../../context/ThemeContext';
 
 const getNavbarMenu = (user) => {
+  if (!user) {
+    return [
+      { id: 1, title: "Home", path: "/" }
+    ];
+  }
+
   const menu = [
     { id: 1, title: "Home", path: "/" },
     { id: 2, title: "My Repos", path: "/Allrepos" },
@@ -93,12 +99,14 @@ const Navbar = () => {
               </div>
             ))}
 
-            <button
-              onClick={handleRequirementExtraction}
-              className={`${darkMode ? 'text-white-300 px-4 py-2 rounded-lg hover:text-blue-400' : 'text-white-700 hover:text-blue-500'} transition whitespace-nowrap`}
-            >
-              Create Repository
-            </button>
+            {user && (
+              <button
+                onClick={handleRequirementExtraction}
+                className={`${darkMode ? 'text-white-300 px-4 py-2 rounded-lg hover:text-blue-400' : 'text-white-700 hover:text-blue-500'} transition whitespace-nowrap`}
+              >
+                Create Repository
+              </button>
+            )}
 
             {user ? (
               <div className="flex items-center space-x-4">
@@ -149,15 +157,17 @@ const Navbar = () => {
             </div>
           ))}
           
-          <button
-            onClick={() => {
-              handleRequirementExtraction();
-              setIsOpen(false);
-            }}
-            className={`w-full text-left ${darkMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-700 hover:text-blue-500'} py-2 transition`}
-          >
-            Create Repository
-          </button>
+          {user && (
+            <button
+              onClick={() => {
+                handleRequirementExtraction();
+                setIsOpen(false);
+              }}
+              className={`w-full text-left ${darkMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-700 hover:text-blue-500'} py-2 transition`}
+            >
+              Create Repository
+            </button>
+          )}
 
           {user ? (
             <div className="mt-4">

@@ -11,7 +11,7 @@ const CircularProgress = ({ percentage }) => {
   return (
     <div className="circular-progress-container">
       <svg className="circular-progress" viewBox="0 0 100 100" width="200" height="200">
-        {/* Solid white background circle */}
+     
         <circle
           cx="50"
           cy="50"
@@ -19,7 +19,7 @@ const CircularProgress = ({ percentage }) => {
           fill="white"
           className="progress-background"
         />
-        {/* Gray track circle */}
+      
         <circle
           className="circular-progress-background"
           cx="50"
@@ -29,7 +29,7 @@ const CircularProgress = ({ percentage }) => {
           fill="transparent"
           stroke="#e6e6e6"
         />
-        {/* Blue progress circle */}
+       
         <circle
           className="circular-progress-bar"
           cx="50"
@@ -43,7 +43,7 @@ const CircularProgress = ({ percentage }) => {
           strokeLinecap="round"
           transform="rotate(-90 50 50)"
         />
-        {/* Percentage text */}
+     
         <text
           x="50"
           y="50"
@@ -71,7 +71,7 @@ const Report = () => {
 
   useEffect(() => {
     if (message) {
-      // Clear message after 5 seconds
+     
       const timer = setTimeout(() => setMessage(null), 5000);
       return () => clearTimeout(timer);
     }
@@ -79,7 +79,7 @@ const Report = () => {
 
   useEffect(() => {
     fetchReport();
-    // Cleanup function to remove stored report when unmounting
+  
     return () => {
       localStorage.removeItem(`report_${repoId}`);
     };
@@ -106,13 +106,13 @@ const Report = () => {
         throw new Error(response.data.message || "Failed to fetch report");
       }
 
-      // Always use the report from the API response if it exists
+     
       if (response.data.report) {
         setReport(response.data.report);
-        // Store the report in localStorage for persistence
+      
         localStorage.setItem(`report_${repoId}`, JSON.stringify(response.data.report));
       } else if (initialStats) {
-        // Use initial statistics only if no report exists
+       
         const savedReport = localStorage.getItem(`report_${repoId}`);
         if (savedReport) {
           setReport(JSON.parse(savedReport));
@@ -124,7 +124,7 @@ const Report = () => {
       }
     } catch (err) {
       console.error("Error fetching report:", err);
-      // Try to load from localStorage if API fails
+    
       const savedReport = localStorage.getItem(`report_${repoId}`);
       if (savedReport) {
         setReport(JSON.parse(savedReport));
