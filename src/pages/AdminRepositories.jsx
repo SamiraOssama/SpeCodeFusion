@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from "../components/Navbar/Navbar";
 import AdminSidebar from "../components/Navbar/adminsidebar";
 
 const AdminRepositories = () => {
@@ -80,117 +79,114 @@ const AdminRepositories = () => {
   }, []);
 
   return (
-    <>
-      <Navbar />
-      <div className="min-h-screen flex">
-        <AdminSidebar />
-        <div className="p-6 overflow-y-auto text-gray-800 flex-1">
-          <h1 className="text-3xl font-bold mb-6 text-blue-700">All Repositories</h1>
+    <div className="min-h-screen flex">
+      <AdminSidebar />
+      <div className="p-6 overflow-y-auto text-gray-800 flex-1">
+        <h1 className="text-3xl font-bold mb-6 text-blue-700">All Repositories</h1>
 
-          {/* Search Bar, Sort, and Items per page selector on the same line */}
-          <div className="mb-6 flex justify-between items-center space-x-4">
-            <div className="flex-1">
-              <input
-                type="text"
-                placeholder="Search by repo name or owner"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="p-2 border rounded w-full"
-              />
-            </div>
-
-            {/* Items per page selector */}
-            <div className="flex items-center">
-              <label className="mr-2">Items per page:</label>
-              <select
-                value={itemsPerPage}
-                onChange={handleItemsPerPageChange}
-                className="p-2 border rounded"
-              >
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-              </select>
-            </div>
-
-            {/* Sort options as a select dropdown */}
-            <div className="flex items-center">
-              <span className="mr-2">Sort by:</span>
-              <select
-                value={sortOption}
-                onChange={(e) => setSortOption(e.target.value)}
-                className="p-2 border rounded"
-              >
-                <option value="none">No Sort</option>
-                <option value="asc">A-Z</option>
-                <option value="desc">Z-A</option>
-              </select>
-            </div>
+        {/* Search Bar, Sort, and Items per page selector on the same line */}
+        <div className="mb-6 flex justify-between items-center space-x-4">
+          <div className="flex-1">
+            <input
+              type="text"
+              placeholder="Search by repo name or owner"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="p-2 border rounded w-full"
+            />
           </div>
 
-          {loading && <p className="text-blue-500">Loading...</p>}
-          {error && <p className="text-red-500">Error: {error}</p>}
+          {/* Items per page selector */}
+          <div className="flex items-center">
+            <label className="mr-2">Items per page:</label>
+            <select
+              value={itemsPerPage}
+              onChange={handleItemsPerPageChange}
+              className="p-2 border rounded"
+            >
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </select>
+          </div>
 
-          {!loading && !error && (
-            <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-              <table className="w-full border-collapse">
-                <thead className="bg-blue-600 text-white">
-                  <tr>
-                    <th className="px-6 py-3 text-left">Repo Name</th>
-                    <th className="px-6 py-3 text-left">Owner</th>
-                    <th className="px-6 py-3 text-left">Email</th>
-                    <th className="px-6 py-3 text-left">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentRepositories.length > 0 ? (
-                    currentRepositories.map((repo) => (
-                      <tr key={repo._id} className="hover:bg-gray-100 border-b">
-                        <td className="px-6 py-4">{repo.name}</td>
-                        <td className="px-6 py-4">{repo.owner?.username || 'N/A'}</td>
-                        <td className="px-6 py-4">{repo.owner?.email || 'N/A'}</td>
-                        <td className="px-6 py-4">
-                          <button
-                            onClick={() => handleDelete(repo._id)}
-                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="4" className="text-center px-6 py-4">No repositories found</td>
+          {/* Sort options as a select dropdown */}
+          <div className="flex items-center">
+            <span className="mr-2">Sort by:</span>
+            <select
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+              className="p-2 border rounded"
+            >
+              <option value="none">No Sort</option>
+              <option value="asc">A-Z</option>
+              <option value="desc">Z-A</option>
+            </select>
+          </div>
+        </div>
+
+        {loading && <p className="text-blue-500">Loading...</p>}
+        {error && <p className="text-red-500">Error: {error}</p>}
+
+        {!loading && !error && (
+          <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+            <table className="w-full border-collapse">
+              <thead className="bg-blue-600 text-white">
+                <tr>
+                  <th className="px-6 py-3 text-left">Repo Name</th>
+                  <th className="px-6 py-3 text-left">Owner</th>
+                  <th className="px-6 py-3 text-left">Email</th>
+                  <th className="px-6 py-3 text-left">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentRepositories.length > 0 ? (
+                  currentRepositories.map((repo) => (
+                    <tr key={repo._id} className="hover:bg-gray-100 border-b">
+                      <td className="px-6 py-4">{repo.name}</td>
+                      <td className="px-6 py-4">{repo.owner?.username || 'N/A'}</td>
+                      <td className="px-6 py-4">{repo.owner?.email || 'N/A'}</td>
+                      <td className="px-6 py-4">
+                        <button
+                          onClick={() => handleDelete(repo._id)}
+                          className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                        >
+                          Delete
+                        </button>
+                      </td>
                     </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4" className="text-center px-6 py-4">No repositories found</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
 
-          {/* Pagination */}
-          <div className="flex justify-between items-center mt-6">
-            <div>
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="px-4 py-2 bg-blue-500 text-white rounded mr-2"
-              >
-                Prev
-              </button>
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage * itemsPerPage >= filteredRepositories.length}
-                className="px-4 py-2 bg-blue-500 text-white rounded"
-              >
-                Next
-              </button>
-            </div>
+        {/* Pagination */}
+        <div className="flex justify-between items-center mt-6">
+          <div>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 bg-blue-500 text-white rounded mr-2"
+            >
+              Prev
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage * itemsPerPage >= filteredRepositories.length}
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

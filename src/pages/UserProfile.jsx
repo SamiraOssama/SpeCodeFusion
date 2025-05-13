@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiEdit, FiX, FiSave, FiLock, FiTrash2, FiFileText, FiMoon, FiSun, FiSettings, FiUser } from "react-icons/fi";
+import { FiEdit, FiX, FiSave, FiLock, FiTrash2, FiMoon, FiSun, FiSettings, FiUser } from "react-icons/fi";
 import { useTheme } from "../context/ThemeContext";
 import "./UserProfile.css";
 import ChangePassword from "../pages/ChangePassword";
@@ -17,11 +17,9 @@ const UserProfile = () => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [reports, setReports] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
- 
   const colors = {
     primary: "#3B82F6",
     secondary: "#10B981",
@@ -32,7 +30,6 @@ const UserProfile = () => {
     muted: darkMode ? "#9CA3AF" : "#6B7280",
   };
 
- 
   const fadeIn = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.5 } },
@@ -56,7 +53,6 @@ const UserProfile = () => {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
       fetchUserProfile(parsedUser.id);
-      fetchReports(parsedUser.id);
     } else {
       navigate("/login");
     }
@@ -82,16 +78,6 @@ const UserProfile = () => {
       setError(err.response?.data?.message || "Failed to load profile data");
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const fetchReports = async (userId) => {
-    try {
-      const res = await axios.get(`http://localhost:5000/api/reports/user/${userId}`);
-      setReports(res.data.reports || []);
-    } catch (err) {
-      console.error("Failed to fetch reports", err);
-      setReports([]);
     }
   };
 
@@ -172,7 +158,6 @@ const UserProfile = () => {
             darkMode ? 'bg-gray-800 shadow-xl' : 'bg-white shadow-lg'
           }`}
         >
-         
           <div className={`relative p-6 ${darkMode ? 'border-b border-gray-700' : 'border-b'}`}>
             <h1 className={`text-2xl font-bold flex items-center gap-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
               <FiUser className="text-blue-500" />
@@ -180,9 +165,7 @@ const UserProfile = () => {
             </h1>
           </div>
 
-       
           <div className={`p-6 space-y-6 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-          
             <motion.div 
               className={`p-6 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}
               variants={slideUp} 
@@ -228,7 +211,6 @@ const UserProfile = () => {
               </div>
             </motion.div>
 
-           
             <motion.div 
               className={`p-6 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}
               variants={slideUp}
@@ -270,62 +252,6 @@ const UserProfile = () => {
               </div>
             </motion.div>
 
-           
-            <motion.div 
-              className={`p-6 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}
-              variants={slideUp}
-            >
-              <div className="flex items-center gap-2 mb-4">
-                <FiFileText className="text-blue-500" />
-                <h3 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                  Reports History
-                </h3>
-              </div>
-
-              {isLoading ? (
-                <div className="flex justify-center">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
-                </div>
-              ) : reports.length > 0 ? (
-                <div className="space-y-4">
-                  {reports.map((report) => (
-                    <motion.div 
-                      key={report.id}
-                      className={`p-4 rounded-lg ${
-                        darkMode ? 'bg-gray-800 hover:bg-gray-600' : 'bg-white hover:bg-gray-100'
-                      }`}
-                      whileHover={{ scale: 1.01 }}
-                    >
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <p className={`font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                            {report.title}
-                          </p>
-                          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                            {new Date(report.date).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <span className={`px-3 py-1 rounded-full text-sm ${
-                          report.status === 'completed'
-                            ? 'bg-green-100 text-green-800'
-                            : report.status === 'in_progress'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-gray-100 text-gray-800'
-                        }`}>
-                          {report.status}
-                        </span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              ) : (
-                <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-                  No reports found
-                </p>
-              )}
-            </motion.div>
-
-           
             <div className="flex justify-center gap-4 pt-4">
               <motion.button
                 onClick={handleLogout}
@@ -352,7 +278,6 @@ const UserProfile = () => {
           </div>
         </motion.div>
 
-       
         <AnimatePresence>
           {editing && (
             <motion.div 
@@ -450,3 +375,4 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
+

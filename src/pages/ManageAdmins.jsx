@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../components/Navbar/Navbar";
 import AdminSidebar from "../components/Navbar/adminsidebar";
 
 const ManageAdmins = () => {
@@ -65,59 +64,56 @@ const ManageAdmins = () => {
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="flex min-h-screen">
-        <AdminSidebar />
-        <div className="flex-1 bg-gray-50 p-8">
-          <div className="max-w-7xl mx-auto bg-white shadow-md rounded-xl p-8">
-            <h2 className="text-3xl font-bold mb-6 text-blue-700 text-center">
-              Manage Admins
-            </h2>
+    <div className="flex min-h-screen">
+      <AdminSidebar />
+      <div className="flex-1 bg-gray-50 p-8">
+        <div className="max-w-7xl mx-auto bg-white shadow-md rounded-xl p-8">
+          <h2 className="text-3xl font-bold mb-6 text-blue-700 text-center">
+            Manage Admins
+          </h2>
 
-            {error && (
-              <p className="mb-4 text-center text-sm font-medium text-red-600">
-                {error}
-              </p>
-            )}
+          {error && (
+            <p className="mb-4 text-center text-sm font-medium text-red-600">
+              {error}
+            </p>
+          )}
 
-            {/* Admin Table */}
-            <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-              <table className="w-full border-collapse">
-                <thead className="bg-blue-600 text-white">
+          {/* Admin Table */}
+          <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+            <table className="w-full border-collapse">
+              <thead className="bg-blue-600 text-white">
+                <tr>
+                  <th className="px-6 py-3 text-left">Username</th>
+                  <th className="px-6 py-3 text-left">Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                {admins.length === 0 ? (
                   <tr>
-                    <th className="px-6 py-3 text-left">Username</th>
-                    <th className="px-6 py-3 text-left">Email</th>
+                    <td colSpan="2" className="text-center text-gray-500">
+                      No admins found
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {admins.length === 0 ? (
-                    <tr>
-                      <td colSpan="2" className="text-center text-gray-500">
-                        No admins found
-                      </td>
+                ) : (
+                  admins.map((admin) => (
+                    <tr key={admin._id} className="hover:bg-gray-100 border-b">
+                      <td className="px-6 py-4">{admin.username}</td>
+                      <td className="px-6 py-4">{admin.email}</td>
                     </tr>
-                  ) : (
-                    admins.map((admin) => (
-                      <tr key={admin._id} className="hover:bg-gray-100 border-b">
-                        <td className="px-6 py-4">{admin.username}</td>
-                        <td className="px-6 py-4">{admin.email}</td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
 
-            {/* Button to Add New Admin */}
-            <div className="mt-6 text-center">
-              <button
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition"
-                onClick={() => setShowModal(true)}
-              >
-                Add New Admin
-              </button>
-            </div>
+          {/* Button to Add New Admin */}
+          <div className="mt-6 text-center">
+            <button
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition"
+              onClick={() => setShowModal(true)}
+            >
+              Add New Admin
+            </button>
           </div>
         </div>
       </div>
@@ -184,7 +180,7 @@ const ManageAdmins = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

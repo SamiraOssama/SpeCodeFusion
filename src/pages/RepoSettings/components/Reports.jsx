@@ -13,23 +13,7 @@ const Reports = () => {
   const [error, setError] = useState(null);
 
   const isReportEmpty = (report) => {
-    if (!report) return true;
-    
-   
-    if (!report.statistics || 
-        typeof report.statistics.total_requirements === 'undefined' || 
-        typeof report.statistics.implemented_requirements === 'undefined' || 
-        typeof report.statistics.missing_requirements === 'undefined' || 
-        typeof report.statistics.coverage_percentage === 'undefined') {
-      return true;
-    }
-
-   
-    if (!Array.isArray(report.requirements)) {
-      return true;
-    }
-
-    return false;
+    return !report || !report.requirements || report.requirements.length === 0;
   };
 
   useEffect(() => {
@@ -49,61 +33,36 @@ const Reports = () => {
           }
         );
 
-        console.log('Raw report data:', response.data); 
-
-        if (response.data.success && response.data.report) {
-         
-          const formattedRequirements = response.data.report.requirements.map(req => ({
-            requirement: req.requirement || req.text || '',
-            implemented: req.status === 'implemented',
-            implementation: req.implementation_details || req.implementation || req.details || '',
-            status: req.status || 'missing'
-          }));
-
-          
-          const totalReqs = formattedRequirements.length;
-          const implementedReqs = formattedRequirements.filter(req => req.implemented).length;
-          
-          const reportData = {
-            requirements: formattedRequirements,
-            statistics: {
-              total_requirements: totalReqs,
-              implemented_requirements: implementedReqs,
-              missing_requirements: totalReqs - implementedReqs,
-              coverage_percentage: totalReqs > 0 ? Math.round((implementedReqs / totalReqs) * 100) : 0
-            }
-          };
-          
-          console.log('Formatted report data:', reportData);
-          
-          localStorage.setItem(`report_${repoId}`, JSON.stringify(reportData));
-          setReport(reportData);
-        } else {
-         
-          const savedReport = localStorage.getItem(`report_${repoId}`);
-          if (savedReport) {
-            const parsedReport = JSON.parse(savedReport);
-            if (!isReportEmpty(parsedReport)) {
-              setReport(parsedReport);
-              return;
-            }
-          }
+        // If no report exists, the backend should return a 404
+        if (!response.data.success || !response.data.report) {
           setReport(null);
+          return;
         }
+
+        const formattedRequirements = response.data.report.requirements.map(req => ({
+          requirement: req.requirement || req.text || '',
+          implemented: req.status === 'implemented',
+          implementation: req.implementation_details || req.implementation || req.details || '',
+          status: req.status || 'missing'
+        }));
+
+        const totalReqs = formattedRequirements.length;
+        const implementedReqs = formattedRequirements.filter(req => req.implemented).length;
+        
+        const reportData = {
+          requirements: formattedRequirements,
+          statistics: {
+            total_requirements: totalReqs,
+            implemented_requirements: implementedReqs,
+            missing_requirements: totalReqs - implementedReqs,
+            coverage_percentage: totalReqs > 0 ? Math.round((implementedReqs / totalReqs) * 100) : 0
+          }
+        };
+
+        setReport(reportData);
       } catch (error) {
         console.error('Error fetching report:', error);
-        
-        const savedReport = localStorage.getItem(`report_${repoId}`);
-        if (savedReport) {
-          const parsedReport = JSON.parse(savedReport);
-          if (!isReportEmpty(parsedReport)) {
-            setReport(parsedReport);
-            return;
-          }
-        }
-        if (error.response?.status !== 404) {
-          setError(error.response?.data?.message || error.message);
-        }
+        // If it's a 404 error or any other error, we show the start process screen
         setReport(null);
       } finally {
         setIsLoading(false);

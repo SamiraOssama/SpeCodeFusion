@@ -20,7 +20,8 @@ const {
   removeCollaborator,
   handleInvitation,
   cancelInvitation,
-  deletePendingRequest
+  deletePendingRequest,
+  deleteRepository
 } = require("../controllers/repoController");
 
 const { getUserById } = require("../controllers/usercontroller");
@@ -75,6 +76,9 @@ router.patch("/:repoId/rename", authenticateUser, renameRepository);
 
 // Delete a pending request
 router.delete("/:repoId/requests/:requestId", authenticateUser, deletePendingRequest);
+
+// Delete repository
+router.delete("/:repoId", authenticateUser, deleteRepository);
 
 // Helper function to parse CSV
 async function parseCSV(filePath) {

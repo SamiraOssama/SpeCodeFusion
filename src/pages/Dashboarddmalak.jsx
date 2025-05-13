@@ -165,7 +165,7 @@ const Dashboarddmalak = () => {
           }
 
           .analyze-btn {
-            background: #4CAF50;
+            background: #3B82F6;
             color: white;
             border: none;
             padding: 8px 16px;
@@ -177,7 +177,7 @@ const Dashboarddmalak = () => {
           }
 
           .analyze-btn:hover {
-            background: #45a049;
+            background: #2563EB;
           }
         `}</style>
       </div>

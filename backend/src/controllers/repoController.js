@@ -1629,3 +1629,29 @@ exports.deletePendingRequest = async (req, res) => {
     res.status(500).json({ message: "Failed to delete request" });
   }
 };
+
+exports.deleteRepository = async (req, res) => {
+  try {
+    const { repoId } = req.params;
+    const userId = req.user.id;
+
+    // Find the repository
+    const repo = await Repo.findById(repoId);
+    if (!repo) {
+      return res.status(404).json({ message: "Repository not found" });
+    }
+
+    // Check if the user is the owner
+    if (repo.owner.toString() !== userId) {
+      return res.status(403).json({ message: "Only the repository owner can delete this repository" });
+    }
+
+    // Delete the repository
+    await Repo.findByIdAndDelete(repoId);
+
+    res.status(200).json({ message: "Repository deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting repository:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

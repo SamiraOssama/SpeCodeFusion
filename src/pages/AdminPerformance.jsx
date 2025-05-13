@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from "../components/Navbar/Navbar";
 import AdminSidebar from "../components/Navbar/adminsidebar"; 
 
 const AdminPerformance = () => {
@@ -31,29 +30,24 @@ const AdminPerformance = () => {
   }
 
   return (
-    <>
-    <Navbar />
-
     <div className="min-h-screen flex">
-      {/* Sidebar */}
       <AdminSidebar /> 
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-6 text-blue-700">System Performance</h1>
+      <div className="p-6">
+        <h1 className="text-3xl font-bold mb-6 text-blue-700">System Statistics</h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div className="bg-blue-600 text-white p-6 rounded-lg shadow-md">
-          <h2 className="text-lg font-semibold">Total Users</h2>
-          <p className="text-3xl">{stats.userCount}</p>
-        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="bg-blue-600 text-white p-6 rounded-lg shadow-md">
+            <h2 className="text-lg font-semibold">Total Users</h2>
+            <p className="text-3xl">{stats.userCount}</p>
+          </div>
 
-        <div className="bg-blue-600 text-white p-6 rounded-lg shadow-md">
-          <h2 className="text-lg font-semibold">Total Repositories</h2>
-          <p className="text-3xl">{stats.repoCount}</p>
+          <div className="bg-blue-600 text-white p-6 rounded-lg shadow-md">
+            <h2 className="text-lg font-semibold">Total Repositories</h2>
+            <p className="text-3xl">{stats.repoCount}</p>
+          </div>
         </div>
       </div>
     </div>
-    </div>
-    </>
   );
 };
 

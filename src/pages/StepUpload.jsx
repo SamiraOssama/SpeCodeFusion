@@ -302,7 +302,7 @@ const StepUpload = () => {
         }
 
         .progress-step.active {
-          background: #4CAF50;
+          background: #3B82F6;
           color: white;
         }
 
@@ -334,8 +334,8 @@ const StepUpload = () => {
         }
 
         .repo-item.selected {
-          border-color: #4CAF50;
-          background: #f1f8e9;
+          border-color: #3B82F6;
+          background: #EFF6FF;
         }
 
         .status-list {
@@ -345,7 +345,7 @@ const StepUpload = () => {
         .status-item {
           padding: 10px;
           margin: 5px 0;
-          background: #f1f8e9;
+          background: #EFF6FF;
           border-radius: 4px;
         }
 
@@ -359,13 +359,17 @@ const StepUpload = () => {
 
         button {
           padding: 10px 20px;
-          background: #4CAF50;
+          background: #3B82F6;
           color: white;
           border: none;
           border-radius: 4px;
           cursor: pointer;
           font-size: 16px;
           margin-top: 20px;
+        }
+
+        button:hover {
+          background: #2563EB;
         }
 
         button:disabled {
@@ -387,16 +391,16 @@ const StepUpload = () => {
         }
 
         .selected-repo-info {
-          background: #f1f8e9;
+          background: #EFF6FF;
           padding: 10px 20px;
           border-radius: 4px;
           margin-bottom: 20px;
-          border-left: 4px solid #4CAF50;
+          border-left: 4px solid #3B82F6;
         }
 
         .selected-repo-info h3 {
           margin: 0;
-          color: #2e7d32;
+          color: #1D4ED8;
         }
       `}</style>
     </div>
