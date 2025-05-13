@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 import signup from "../assets/images/signup.png";
-import Navbar from "../components/Navbar/Navbar";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -91,92 +90,89 @@ const ResetPassword = () => {
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="min-h-screen flex">
-        <div className="w-full md:w-1/2 bg-blue-500 flex justify-center items-center">
-          <img
-            src={signup}
-            alt="Reset Password"
-            className="w-full h-full object-cover"
-          />
-        </div>
+    <div className="min-h-screen flex">
+      <div className="w-full md:w-1/2 bg-blue-500 flex justify-center items-center">
+        <img
+          src={signup}
+          alt="Reset Password"
+          className="w-full h-full object-cover"
+        />
+      </div>
 
-        <div className="w-full md:w-1/2 bg-blue-500 flex flex-col justify-center items-center p-6">
-          <h2 className="text-center text-2xl font-semibold text-white mb-4">
-            {isResetMode ? 'Set New Password' : 'Reset Password'}
-          </h2>
+      <div className="w-full md:w-1/2 bg-blue-500 flex flex-col justify-center items-center p-6">
+        <h2 className="text-center text-2xl font-semibold text-white mb-4">
+          {isResetMode ? 'Set New Password' : 'Reset Password'}
+        </h2>
 
-          {errorMessage && <p className="text-red-500 bg-white p-2 rounded-md mb-4">{errorMessage}</p>}
-          {successMessage && <p className="text-green-500 bg-white p-2 rounded-md mb-4">{successMessage}</p>}
+        {errorMessage && <p className="text-red-500 bg-white p-2 rounded-md mb-4">{errorMessage}</p>}
+        {successMessage && <p className="text-green-500 bg-white p-2 rounded-md mb-4">{successMessage}</p>}
 
-          {!isResetMode ? (
-            <form onSubmit={handleRequestReset} className="space-y-4 w-full max-w-md">
-              <div className="relative">
-                <FaEnvelope className="absolute left-3 top-3 text-blue-500" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  placeholder="Enter your email"
-                  className="mt-1 block w-full pl-10 pr-3 py-2 bg-white text-blue-500 border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 placeholder-blue-500"
-                />
-              </div>
+        {!isResetMode ? (
+          <form onSubmit={handleRequestReset} className="space-y-4 w-full max-w-md">
+            <div className="relative">
+              <FaEnvelope className="absolute left-3 top-3 text-blue-500" />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="Enter your email"
+                className="mt-1 block w-full pl-10 pr-3 py-2 bg-white text-blue-500 border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 placeholder-blue-500"
+              />
+            </div>
 
-              <button
-                type="submit"
-                className="w-full py-2 px-4 bg-white text-blue-500 font-semibold rounded-2xl shadow-md hover:bg-yellow-500 transition duration-200"
-              >
-                Send Reset Link
-              </button>
-            </form>
-          ) : (
-            <form onSubmit={handlePasswordReset} className="space-y-4 w-full max-w-md">
-              <div className="relative">
-                <FaLock className="absolute left-3 top-3 text-blue-500" />
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  required
-                  placeholder="Enter new password"
-                  className="mt-1 block w-full pl-10 pr-3 py-2 bg-white text-blue-500 border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 placeholder-blue-500"
-                />
-              </div>
-
-              <div className="relative">
-                <FaLock className="absolute left-3 top-3 text-blue-500" />
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  placeholder="Confirm new password"
-                  className="mt-1 block w-full pl-10 pr-3 py-2 bg-white text-blue-500 border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 placeholder-blue-500"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-2 px-4 bg-white text-blue-500 font-semibold rounded-2xl shadow-md hover:bg-yellow-500 transition duration-200"
-              >
-                Reset Password
-              </button>
-            </form>
-          )}
-
-          <div className="mt-4 text-center">
-            <p 
-              onClick={() => navigate('/login')}
-              className="text-sm text-white hover:text-gray-200 cursor-pointer font-semibold hover:underline"
+            <button
+              type="submit"
+              className="w-full py-2 px-4 bg-white text-blue-500 font-semibold rounded-2xl shadow-md hover:bg-yellow-500 transition duration-200"
             >
-              Remembered your password?
-            </p>
-          </div>
+              Send Reset Link
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handlePasswordReset} className="space-y-4 w-full max-w-md">
+            <div className="relative">
+              <FaLock className="absolute left-3 top-3 text-blue-500" />
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
+                placeholder="Enter new password"
+                className="mt-1 block w-full pl-10 pr-3 py-2 bg-white text-blue-500 border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 placeholder-blue-500"
+              />
+            </div>
+
+            <div className="relative">
+              <FaLock className="absolute left-3 top-3 text-blue-500" />
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                placeholder="Confirm new password"
+                className="mt-1 block w-full pl-10 pr-3 py-2 bg-white text-blue-500 border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 placeholder-blue-500"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-2 px-4 bg-white text-blue-500 font-semibold rounded-2xl shadow-md hover:bg-yellow-500 transition duration-200"
+            >
+              Reset Password
+            </button>
+          </form>
+        )}
+
+        <div className="mt-4 text-center">
+          <p 
+            onClick={() => navigate('/login')}
+            className="text-sm text-white hover:text-gray-200 cursor-pointer font-semibold hover:underline"
+          >
+            Remembered your password?
+          </p>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

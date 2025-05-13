@@ -1,6 +1,6 @@
 const Notification = require('../models/notification');
 
-// Get all notifications for a user
+
 exports.getNotifications = async (req, res) => {
   try {
     const notifications = await Notification.find({ user: req.user.id })
@@ -14,7 +14,7 @@ exports.getNotifications = async (req, res) => {
   }
 };
 
-// Mark a notification as read
+
 exports.markAsRead = async (req, res) => {
   try {
     const notification = await Notification.findOneAndUpdate(
@@ -34,7 +34,7 @@ exports.markAsRead = async (req, res) => {
   }
 };
 
-// Mark all notifications as read
+
 exports.markAllAsRead = async (req, res) => {
   try {
     await Notification.updateMany(
@@ -49,7 +49,7 @@ exports.markAllAsRead = async (req, res) => {
   }
 };
 
-// Create a new notification
+
 exports.createNotification = async (userId, type, message, repoId = null, metadata = {}) => {
   try {
     const notification = new Notification({
@@ -68,7 +68,7 @@ exports.createNotification = async (userId, type, message, repoId = null, metada
   }
 };
 
-// Delete a notification
+
 exports.deleteNotification = async (req, res) => {
   try {
     const notification = await Notification.findOneAndDelete({
@@ -87,7 +87,7 @@ exports.deleteNotification = async (req, res) => {
   }
 };
 
-// Get unread count
+
 exports.getUnreadCount = async (req, res) => {
   try {
     const count = await Notification.countDocuments({

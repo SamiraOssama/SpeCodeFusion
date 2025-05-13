@@ -117,7 +117,7 @@ const Report = () => {
         if (savedReport) {
           setReport(JSON.parse(savedReport));
         } else {
-          setReport({ statistics: initialStats });
+        setReport({ statistics: initialStats });
         }
       } else {
         throw new Error("No report data available");
@@ -129,7 +129,7 @@ const Report = () => {
       if (savedReport) {
         setReport(JSON.parse(savedReport));
       } else {
-        setError(err.response?.data?.message || err.message || "Failed to fetch report");
+      setError(err.response?.data?.message || err.message || "Failed to fetch report");
       }
     } finally {
       setIsLoading(false);
@@ -220,28 +220,28 @@ const Report = () => {
     return (
       <>
         {renderCharts()}
-        <div className="stats-container">
-          <div className="stat-item">
-            <h3>Total Requirements</h3>
-            <p>{stats.total_requirements}</p>
-          </div>
-          <div className="stat-item">
-            <h3>Fully Implemented</h3>
-            <p className="text-blue-600">{stats.implemented_requirements}</p>
-          </div>
-          <div className="stat-item">
-            <h3>Not Implemented</h3>
-            <p className="text-red-600">{stats.missing_requirements}</p>
-          </div>
-          <div className="stat-item">
-            <h3>Unknown Status</h3>
-            <p className="text-amber-500">{stats.unknown_requirements || 0}</p>
-          </div>
-          <div className="stat-item highlight">
-            <h3>Coverage</h3>
-            <p>{stats.coverage_percentage}%</p>
-          </div>
+      <div className="stats-container">
+        <div className="stat-item">
+          <h3>Total Requirements</h3>
+          <p>{stats.total_requirements}</p>
         </div>
+        <div className="stat-item">
+          <h3>Fully Implemented</h3>
+            <p className="text-blue-600">{stats.implemented_requirements}</p>
+        </div>
+        <div className="stat-item">
+          <h3>Not Implemented</h3>
+            <p className="text-red-600">{stats.missing_requirements}</p>
+        </div>
+        <div className="stat-item">
+          <h3>Unknown Status</h3>
+            <p className="text-amber-500">{stats.unknown_requirements || 0}</p>
+        </div>
+        <div className="stat-item highlight">
+          <h3>Coverage</h3>
+          <p>{stats.coverage_percentage}%</p>
+        </div>
+      </div>
       </>
     );
   };

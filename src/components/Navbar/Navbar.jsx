@@ -95,7 +95,7 @@ const Navbar = () => {
 
             <button
               onClick={handleRequirementExtraction}
-              className={`${darkMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-700 hover:text-blue-500'} transition whitespace-nowrap`}
+              className={`${darkMode ? 'text-white-300 px-4 py-2 rounded-lg hover:text-blue-400' : 'text-white-700 hover:text-blue-500'} transition whitespace-nowrap`}
             >
               Create Repository
             </button>

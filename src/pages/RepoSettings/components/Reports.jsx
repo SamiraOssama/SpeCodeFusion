@@ -209,7 +209,7 @@ const Reports = () => {
                         <span className={`ml-4 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                           ({report.statistics.implemented_requirements}/{report.statistics.total_requirements} implemented)
                         </span>
-                      </div>
+              </div>
                     </td>
                     <td className={`px-6 py-4 whitespace-nowrap`}>
                       <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${

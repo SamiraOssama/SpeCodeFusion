@@ -557,7 +557,7 @@ const Collaborators = () => {
                   ))}
                 </div>
               )}
-
+             
               {pendingRequests.length > 0 && (
                 <div className="space-y-3">
                   <h3 className={`font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>

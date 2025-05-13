@@ -76,7 +76,7 @@ const InvitationResponse = () => {
       // Mark notification as read if it exists
       if (notificationId) {
         try {
-          await markAsRead(notificationId);
+        await markAsRead(notificationId);
         } catch (error) {
           console.error('Error marking notification as read:', error);
         }

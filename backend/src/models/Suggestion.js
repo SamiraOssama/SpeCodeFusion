@@ -2,13 +2,14 @@ const mongoose = require('mongoose');
 
 const suggestionSchema = new mongoose.Schema({
   repoId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Repository',
-    required: true
+    type: String,
+    required: true,
+    index: true
   },
   requirementId: {
     type: String,
-    required: true
+    required: true,
+    index: true
   },
   content: {
     type: String,
@@ -17,6 +18,12 @@ const suggestionSchema = new mongoose.Schema({
   isAIGenerated: {
     type: Boolean,
     default: false
+  },
+  metadata: {
+    model: String,
+    prompt: String,
+    requirementDescription: String,
+    context: String
   },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
@@ -33,10 +40,14 @@ const suggestionSchema = new mongoose.Schema({
   }
 });
 
-// Update the updatedAt timestamp before saving
+
 suggestionSchema.pre('save', function(next) {
   this.updatedAt = Date.now();
   next();
 });
+
+
+suggestionSchema.index({ repoId: 1, requirementId: 1 });
+suggestionSchema.index({ createdAt: -1 });
 
 module.exports = mongoose.model('Suggestion', suggestionSchema); 

@@ -52,11 +52,16 @@ console.log("🛠️ Serving extracted files from:", extractedDir);
 app.use("/extracted", express.static(extractedDir));
 
 // ✅ Import Routes
-app.use("/api/users", require("./routes/userRoutes"));
-app.use("/api/repos", require("./routes/repoRoutes"));
-app.use("/api/files", require("./routes/fileRoutes"));
+const userRoutes = require("./routes/userRoutes");
+const repoRoutes = require("./routes/repoRoutes");
+const fileRoutes = require("./routes/fileRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+
+app.use("/api/users", userRoutes);
+app.use("/api/repos", repoRoutes);
+app.use("/api/files", fileRoutes);
 app.use("/api/compatibility", compatibilityRoutes);
-app.use("/api/admin", require("./routes/adminRoutes"));
+app.use("/api/admin", adminRoutes);
 app.use("/api", codeRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api', suggestionsRoutes);

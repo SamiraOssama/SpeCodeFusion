@@ -14,6 +14,8 @@ const CodeSuggestions = () => {
   const [editedContent, setEditedContent] = useState('');
   const [generatingSuggestion, setGeneratingSuggestion] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, suggestionId: null });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetchRequirementsAndSuggestions();
@@ -173,10 +175,17 @@ const CodeSuggestions = () => {
     }
   };
 
-  const handleDeleteSuggestion = async (suggestionId) => {
+  const handleDeleteClick = (suggestionId) => {
+    setDeleteConfirmation({ open: true, suggestionId });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteConfirmation.suggestionId) return;
+
     try {
+      setIsDeleting(true);
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/repos/${repoId}/suggestions/${suggestionId}`, {
+      const response = await fetch(`http://localhost:5000/api/repos/${repoId}/suggestions/${deleteConfirmation.suggestionId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -193,11 +202,26 @@ const CodeSuggestions = () => {
         }
       }
 
-      setSuggestions(suggestions.filter(sug => sug._id !== suggestionId));
+      // Immediately update the UI by filtering out the deleted suggestion
+      const updatedSuggestions = suggestions.filter(sug => sug._id !== deleteConfirmation.suggestionId);
+      setSuggestions(updatedSuggestions);
+      
+      setSuccessMessage('Suggestion deleted successfully!');
+      setTimeout(() => setSuccessMessage(''), 3000);
+
+      // Trigger a re-fetch to ensure data consistency
+      await fetchRequirementsAndSuggestions();
     } catch (error) {
       console.error('Error deleting suggestion:', error);
       setError(error.message);
+    } finally {
+      setIsDeleting(false);
+      setDeleteConfirmation({ open: false, suggestionId: null });
     }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteConfirmation({ open: false, suggestionId: null });
   };
 
   if (loading) {
@@ -212,154 +236,188 @@ const CodeSuggestions = () => {
     <div className={`min-h-screen w-full ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
       <div className={`container mx-auto px-4 py-8 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
         <div className="max-w-4xl mx-auto">
-          <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-none`}>
-            <div className={`p-6 ${darkMode ? 'border-gray-700' : 'border-gray-200'} border-b`}>
+          {/* Header */}
+          <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-t-lg shadow-sm border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+            <div className="p-6">
               <h2 className={`text-2xl font-bold flex items-center gap-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                 <FiCode className="text-blue-500" />
                 Code Suggestions
               </h2>
             </div>
+          </div>
 
-            <div className={`p-6 space-y-6 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-              {error && (
-                <div className={`mb-4 p-3 rounded-md ${
-                  darkMode ? 'bg-red-900 text-red-200' : 'bg-red-100 text-red-800'
-                } border-0`}>
-                  {error}
-                </div>
-              )}
+          {/* Messages */}
+          <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm px-6 py-4`}>
+            {error && (
+              <div className={`mb-4 p-3 rounded-md ${
+                darkMode ? 'bg-red-900/50 text-red-200' : 'bg-red-100 text-red-800'
+              } border-l-4 border-red-500`}>
+                {error}
+              </div>
+            )}
 
-              {successMessage && (
-                <div className={`mb-4 p-3 rounded-md ${
-                  darkMode ? 'bg-green-900 text-green-200' : 'bg-green-100 text-green-800'
-                } border-0`}>
-                  {successMessage}
-                </div>
-              )}
+            {successMessage && (
+              <div className={`mb-4 p-3 rounded-md ${
+                darkMode ? 'bg-green-900/50 text-green-200' : 'bg-green-100 text-green-800'
+              } border-l-4 border-green-500 animate-fade-in`}>
+                {successMessage}
+              </div>
+            )}
+          </div>
 
-              {/* Unimplemented Requirements List */}
+          {/* Requirements and Suggestions */}
+          <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-b-lg shadow-sm`}>
+            <div className="p-6 space-y-6">
               <div className="space-y-4">
                 <h3 className={`font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                   Unimplemented Requirements
                 </h3>
                 {requirements.length === 0 ? (
-                  <p className={`text-center py-4 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    No unimplemented requirements found
-                  </p>
+                  <div className={`text-center py-8 ${darkMode ? 'text-gray-400' : 'text-gray-600'} bg-opacity-50 rounded-lg border ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+                    <p>No unimplemented requirements found</p>
+                  </div>
                 ) : (
                   requirements.map(requirement => (
                     <div
                       key={requirement._id}
-                      className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}
+                      className={`p-6 rounded-lg ${darkMode ? 'bg-gray-700/50' : 'bg-gray-50'} border ${darkMode ? 'border-gray-600' : 'border-gray-200'}`}
                     >
                       <div className="flex justify-between items-start mb-4">
-                        <div>
+                        <div className="flex-1 mr-4">
                           <h4 className={`font-medium ${darkMode ? 'text-gray-200' : 'text-gray-900'}`}>
                             {requirement.description}
                           </h4>
                           {requirement.context && (
                             <p className={`mt-2 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                              Context: {requirement.context}
+                              {requirement.context}
                             </p>
                           )}
                         </div>
                         <button
                           onClick={() => generateAISuggestion(requirement._id)}
                           disabled={generatingSuggestion}
-                          className={`flex items-center px-4 py-2 rounded-lg ${
+                          className={`flex items-center px-4 py-2 rounded-lg transition-colors ${
                             generatingSuggestion
                               ? 'bg-gray-400 cursor-not-allowed'
-                              : 'bg-blue-500 hover:bg-blue-600'
-                          } text-white`}
+                              : 'bg-blue-500 hover:bg-blue-600 active:bg-blue-700'
+                          } text-white shadow-sm`}
                         >
                           <FiCpu className="mr-2" />
                           {generatingSuggestion ? 'Generating...' : 'Generate Suggestion'}
                         </button>
                       </div>
 
-                      {/* Suggestions for this requirement */}
-                      {suggestions
-                        .filter(sug => sug.requirementId === requirement._id)
-                        .map(suggestion => (
-                          <div
-                            key={suggestion._id}
-                            className={`mt-4 p-4 rounded-lg ${
-                              darkMode ? 'bg-gray-600' : 'bg-white'
-                            } border ${darkMode ? 'border-gray-500' : 'border-gray-200'}`}
-                          >
-                            <div className="flex justify-between items-start mb-2">
-                              <div className="flex items-center">
-                                <span className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                                  {suggestion.isAIGenerated ? 'AI Generated' : 'User Suggestion'}
-                                </span>
-                              </div>
-                              <div className="flex space-x-2">
-                                <button
-                                  onClick={() => handleCopySuggestion(suggestion.content)}
-                                  className="p-2 text-blue-500 hover:bg-blue-100 rounded"
-                                  title="Copy code"
-                                >
-                                  <FiCopy />
-                                </button>
-                                {!suggestion.isAIGenerated && (
-                                  <>
-                                    <button
-                                      onClick={() => {
-                                        setEditingSuggestion(suggestion._id);
-                                        setEditedContent(suggestion.content);
-                                      }}
-                                      className="p-2 text-blue-500 hover:bg-blue-100 rounded"
-                                    >
-                                      <FiEdit2 />
-                                    </button>
-                                    <button
-                                      onClick={() => handleDeleteSuggestion(suggestion._id)}
-                                      className="p-2 text-red-500 hover:bg-red-100 rounded"
-                                    >
-                                      <FiTrash2 />
-                                    </button>
-                                  </>
-                                )}
-                              </div>
-                            </div>
-                            {editingSuggestion === suggestion._id ? (
-                              <div className="space-y-2">
-                                <textarea
-                                  value={editedContent}
-                                  onChange={(e) => setEditedContent(e.target.value)}
-                                  className={`w-full p-2 rounded-lg ${
-                                    darkMode 
-                                      ? 'bg-gray-700 text-white border-gray-600' 
-                                      : 'bg-white text-gray-900 border-gray-300'
-                                  } border min-h-[100px]`}
-                                />
-                                <div className="flex justify-end space-x-2">
+                      {/* Suggestions List */}
+                      <div className="space-y-4 mt-6">
+                        {suggestions
+                          .filter(sug => sug.requirementId === requirement._id)
+                          .map(suggestion => (
+                            <div
+                              key={suggestion._id}
+                              className={`p-4 rounded-lg ${
+                                darkMode ? 'bg-gray-800' : 'bg-white'
+                              } border ${darkMode ? 'border-gray-700' : 'border-gray-200'} shadow-sm`}
+                            >
+                              <div className="flex justify-between items-center mb-3">
+                                <div className="flex items-center">
+                                  <span className={`text-sm px-2 py-1 rounded ${
+                                    suggestion.isAIGenerated 
+                                      ? darkMode ? 'bg-blue-900/30 text-blue-200' : 'bg-blue-100 text-blue-800'
+                                      : darkMode ? 'bg-purple-900/30 text-purple-200' : 'bg-purple-100 text-purple-800'
+                                  }`}>
+                                    {suggestion.isAIGenerated ? 'AI Generated' : 'User Suggestion'}
+                                  </span>
+                                </div>
+                                <div className="flex space-x-2">
                                   <button
-                                    onClick={() => handleEditSuggestion(suggestion._id)}
-                                    className="p-2 text-green-500 hover:bg-green-100 rounded"
+                                    onClick={() => handleCopySuggestion(suggestion.content)}
+                                    className={`p-2 rounded transition-colors ${
+                                      darkMode 
+                                        ? 'text-blue-400 hover:bg-blue-900/30' 
+                                        : 'text-blue-600 hover:bg-blue-50'
+                                    }`}
+                                    title="Copy code"
                                   >
-                                    <FiCheck />
+                                    <FiCopy />
                                   </button>
-                                  <button
-                                    onClick={() => {
-                                      setEditingSuggestion(null);
-                                      setEditedContent('');
-                                    }}
-                                    className="p-2 text-red-500 hover:bg-red-100 rounded"
-                                  >
-                                    <FiX />
-                                  </button>
+                                  {!suggestion.isAIGenerated && (
+                                    <>
+                                      <button
+                                        onClick={() => {
+                                          setEditingSuggestion(suggestion._id);
+                                          setEditedContent(suggestion.content);
+                                        }}
+                                        className={`p-2 rounded transition-colors ${
+                                          darkMode 
+                                            ? 'text-green-400 hover:bg-green-900/30' 
+                                            : 'text-green-600 hover:bg-green-50'
+                                        }`}
+                                      >
+                                        <FiEdit2 />
+                                      </button>
+                                      <button
+                                        onClick={() => handleDeleteClick(suggestion._id)}
+                                        className={`p-2 rounded transition-colors ${
+                                          darkMode 
+                                            ? 'text-red-400 hover:bg-red-900/30' 
+                                            : 'text-red-600 hover:bg-red-50'
+                                        }`}
+                                      >
+                                        <FiTrash2 />
+                                      </button>
+                                    </>
+                                  )}
                                 </div>
                               </div>
-                            ) : (
-                              <pre className={`mt-2 p-4 rounded-lg overflow-x-auto ${
-                                darkMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-50 text-gray-700'
-                              }`}>
-                                {suggestion.content}
-                              </pre>
-                            )}
-                          </div>
-                        ))}
+
+                              {editingSuggestion === suggestion._id ? (
+                                <div className="space-y-3">
+                                  <textarea
+                                    value={editedContent}
+                                    onChange={(e) => setEditedContent(e.target.value)}
+                                    className={`w-full p-3 rounded-lg font-mono text-sm ${
+                                      darkMode 
+                                        ? 'bg-gray-900 text-gray-100 border-gray-700' 
+                                        : 'bg-gray-50 text-gray-900 border-gray-200'
+                                    } border focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                                    rows={10}
+                                  />
+                                  <div className="flex justify-end space-x-2">
+                                    <button
+                                      onClick={() => handleEditSuggestion(suggestion._id)}
+                                      className={`p-2 rounded transition-colors ${
+                                        darkMode 
+                                          ? 'bg-green-900/30 text-green-200 hover:bg-green-900/50' 
+                                          : 'bg-green-100 text-green-700 hover:bg-green-200'
+                                      }`}
+                                    >
+                                      <FiCheck />
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        setEditingSuggestion(null);
+                                        setEditedContent('');
+                                      }}
+                                      className={`p-2 rounded transition-colors ${
+                                        darkMode 
+                                          ? 'bg-red-900/30 text-red-200 hover:bg-red-900/50' 
+                                          : 'bg-red-100 text-red-700 hover:bg-red-200'
+                                      }`}
+                                    >
+                                      <FiX />
+                                    </button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <pre className={`mt-3 p-4 rounded-lg overflow-x-auto font-mono text-sm ${
+                                  darkMode ? 'bg-gray-900 text-gray-300' : 'bg-gray-50 text-gray-800'
+                                }`}>
+                                  <code>{suggestion.content}</code>
+                                </pre>
+                              )}
+                            </div>
+                          ))}
+                      </div>
                     </div>
                   ))
                 )}
@@ -368,6 +426,49 @@ const CodeSuggestions = () => {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      {deleteConfirmation.open && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-xl max-w-md w-full p-6`}>
+            <h3 className={`text-xl font-semibold mb-4 ${darkMode ? 'text-gray-200' : 'text-gray-900'}`}>
+              Delete Suggestion
+            </h3>
+            <p className={`mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              Are you sure you want to delete this suggestion? This action cannot be undone.
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={handleCancelDelete}
+                disabled={isDeleting}
+                className={`px-4 py-2 rounded-lg transition-colors ${
+                  darkMode 
+                    ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                } ${isDeleting ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmDelete}
+                disabled={isDeleting}
+                className={`px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors flex items-center ${
+                  isDeleting ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+              >
+                {isDeleting ? (
+                  <>
+                    <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                    Deleting...
+                  </>
+                ) : (
+                  'Delete'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

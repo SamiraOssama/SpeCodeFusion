@@ -3,22 +3,16 @@ import { useNavigate } from "react-router-dom";
 import signup from "../assets/images/signup.png";
 import { FaUser, FaEnvelope, FaLock} from "react-icons/fa"; 
 import { FcGoogle } from "react-icons/fc";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import Navbar from "../components/Navbar/Navbar";
 
 const SignUp = () => {
   const navigate = useNavigate();
 
- 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [errorMessage, setErrorMessage] = useState(""); 
-  const [showPassword, setShowPassword] = useState(false);
 
-
- 
   const checkPasswordStrength = (password) => {
     const lengthCriteria = password.length >= 8;
     const numberCriteria = /[0-9]/.test(password);
@@ -34,12 +28,10 @@ const SignUp = () => {
     setPasswordStrength(strength);
   };
 
- 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage(""); 
 
-   
     if (!password.match(/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d@#$%^&*!?.]{8,}$/)) {
       setErrorMessage(
         "Password must be at least 8 characters long, include a number and an uppercase letter."
@@ -71,7 +63,6 @@ const SignUp = () => {
     }
   };
 
-
   const getPasswordStrengthMessage = () => {
     if (passwordStrength === 0) return "Weak";
     if (passwordStrength <= 25) return "Weak";
@@ -81,10 +72,7 @@ const SignUp = () => {
   };
 
   return (
-    <>
-      <Navbar />
     <div className="min-h-screen flex">
-   
       <div className="w-full md:w-1/2 bg-blue-500 flex justify-center items-center">
         <img
           src={signup}
@@ -93,114 +81,98 @@ const SignUp = () => {
         />
       </div>
 
-  
-      <div className="w-full md:w-1/2 bg-blue-500 flex flex-col justify-center items-center p-6">
-        <h1 className="text-center text-lg font-semibold text-white mb-4">
-          Sign Up
-        </h1>
+      <div className="w-full md:w-1/2 bg-blue-500 flex flex-col justify-center items-center p-8">
+        <div className="w-full max-w-md">
+          <h2 className="text-center text-2xl font-semibold text-white mb-6">Sign Up</h2>
 
-     
-        {errorMessage && (
-          <p className="text-red-500 bg-white p-2 rounded-md">{errorMessage}</p>
-        )}
+          {errorMessage && (
+            <div className="mb-6">
+              <p className="text-red-500 bg-white p-3 rounded-lg text-center">{errorMessage}</p>
+            </div>
+          )}
 
-   
-<button 
-  onClick={() => window.location.href = "http://localhost:5000/api/users/google"}
-  className="w-[400px] flex items-center justify-center py-2 px-4 bg-white text-blue-500 font-semibold rounded-2xl shadow-md hover:bg-blue-100 transition duration-200 mb-6"
->
-  <FcGoogle className="mr-2 text-yellow-500" /> Continue with Google
-</button>
-
-
-        <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md">
-
-<div className="relative">
-            <FaUser className="absolute left-3 top-3 text-blue-500" />
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              placeholder="Username"
-              className="mt-1 block w-full pl-10 pr-3 py-2 bg-white text-blue-500 border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 placeholder-blue-500"
-            />
-          </div>
-     
-          <div className="relative">
-            <FaEnvelope className="absolute left-3 top-3 text-blue-500" />
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="Email"
-              className="mt-1 block w-full pl-10 pr-3 py-2 bg-white text-blue-500 border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 placeholder-blue-500"
-            />
+          <div className="mb-8">
+            <p className="text-white text-center mb-3">Sign up with:</p>
+            <button 
+              onClick={() => window.location.href = "http://localhost:5000/api/users/google"}
+              className="w-full h-12 flex items-center justify-center bg-white text-blue-500 font-semibold rounded-lg shadow-md hover:bg-blue-50 transition duration-200"
+            >
+              <FcGoogle className="text-xl mr-2" /> Sign up with Google
+            </button>
           </div>
 
-          
-
-        
-          <div className="relative">
-  <FaLock className="absolute left-3 top-3 text-blue-500" />
-
-  <input
-    type={showPassword ? "text" : "password"}
-    id="password"
-    name="password"
-    value={password}
-    onChange={(e) => {
-      setPassword(e.target.value);
-      checkPasswordStrength(e.target.value);
-    }}
-    required
-    placeholder="Password"
-    className="mt-1 block w-full pl-10 pr-12 py-2 bg-white text-blue-500 border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 placeholder-blue-500"
-  />
-
-  {/* Always render the eye icon but position it so it doesn't affect layout */}
-  <span
-    onClick={() => setShowPassword((prev) => !prev)}
-    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-500 cursor-pointer"
-  >
-    {showPassword ? <FaEyeSlash /> : <FaEye />}
-  </span>
-</div>
-
-
-<div className="mt-2 text-sm text-white">
-            {getPasswordStrengthMessage()}
+          <div className="relative mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-white/30"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-4 text-white bg-blue-500">Or continue with</span>
+            </div>
           </div>
 
-          {/* Submit Button */}
-          <div className="flex justify-center mt-6">
-            <button
-              type="submit"
-              className="w-[400px] py-2 px-4 bg-white text-blue-500 font-semibold rounded-2xl shadow-md hover:bg-yellow-500 transition duration-200 mt-6"
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="relative">
+              <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-500 text-lg" />
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                placeholder="Username"
+                className="w-full h-12 pl-12 pr-4 bg-white text-blue-500 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base shadow-sm"
+              />
+            </div>
+
+            <div className="relative">
+              <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-500 text-lg" />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="Email"
+                className="w-full h-12 pl-12 pr-4 bg-white text-blue-500 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base shadow-sm"
+              />
+            </div>
+
+            <div className="relative">
+              <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-500 text-lg" />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  checkPasswordStrength(e.target.value);
+                }}
+                required
+                placeholder="Password"
+                className="w-full h-12 pl-12 pr-4 bg-white text-blue-500 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base shadow-sm"
+              />
+            </div>
+
+            <div className="text-sm text-white text-center">
+              Password Strength: {getPasswordStrengthMessage()}
+            </div>
+
+            <button 
+              type="submit" 
+              className="w-full h-12 bg-white text-blue-500 font-semibold rounded-lg shadow-md hover:bg-blue-50 transition duration-200"
             >
               Create Account
             </button>
+          </form>
+
+          <div className="mt-6 text-center">
+            <p 
+              className="text-sm text-white hover:text-gray-200 cursor-pointer"
+              onClick={() => navigate("/login")}
+            >
+              Already have an account? <span className="font-semibold underline">Login</span>
+            </p>
           </div>
-        </form>
-
-        
-  <span
-    className="text-blue-600 hover:underline cursor-pointer"
-    onClick={() => navigate("/login")}
-  >
-    <p className="mt-4 text-sm text-white">
-    Already have an account?{" "}
-    </p>
-  </span>
-
+        </div>
       </div>
     </div>
-    </>
   );
 };
 
