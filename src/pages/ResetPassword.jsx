@@ -1,29 +1,28 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FaEnvelope, FaUser, FaLock } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { FaEnvelope, FaLock } from 'react-icons/fa';
 import signup from "../assets/images/signup.png";
 import Navbar from "../components/Navbar/Navbar";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
-
+  const { token } = useParams();
 
   const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [resetToken, setResetToken] = useState('');
-  const [step, setStep] = useState(1); 
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
+  // If we have a token, we're in reset mode, otherwise we're in request mode
+  const isResetMode = !!token;
 
-  const handleVerification = async (e) => {
+  const handleRequestReset = async (e) => {
     e.preventDefault();
     setErrorMessage('');
     
-    if (!email || !username) {
-      setErrorMessage('Please enter both email and username');
+    if (!email) {
+      setErrorMessage('Please enter your email address');
       return;
     }
 
@@ -33,25 +32,24 @@ const ResetPassword = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, username }),
+        body: JSON.stringify({ email }),
       });
 
       const data = await response.json();
       
       if (response.ok) {
-        setResetToken(data.resetToken);
-        setStep(2);
-        setSuccessMessage('Verification successful. Please set your new password.');
+        setSuccessMessage('Reset link has been sent to your email address. Please check your inbox.');
+        // Clear the form
+        setEmail('');
       } else {
-        setErrorMessage(data.message || 'Verification failed. Please check your email and username.');
+        setErrorMessage(data.message || 'Failed to send reset email. Please try again.');
       }
     } catch (error) {
-      console.error("Error during verification:", error);
+      console.error("Error requesting password reset:", error);
       setErrorMessage("Server error. Please try again later.");
     }
   };
 
-  
   const handlePasswordReset = async (e) => {
     e.preventDefault();
     setErrorMessage('');
@@ -73,7 +71,7 @@ const ResetPassword = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ 
-          token: resetToken,
+          token,
           newPassword 
         }),
       });
@@ -96,7 +94,6 @@ const ResetPassword = () => {
     <>
       <Navbar />
       <div className="min-h-screen flex">
-       
         <div className="w-full md:w-1/2 bg-blue-500 flex justify-center items-center">
           <img
             src={signup}
@@ -105,19 +102,16 @@ const ResetPassword = () => {
           />
         </div>
 
-       
         <div className="w-full md:w-1/2 bg-blue-500 flex flex-col justify-center items-center p-6">
           <h2 className="text-center text-2xl font-semibold text-white mb-4">
-            {step === 1 ? 'Reset Password - Verification' : 'Set New Password'}
+            {isResetMode ? 'Set New Password' : 'Reset Password'}
           </h2>
 
-      
           {errorMessage && <p className="text-red-500 bg-white p-2 rounded-md mb-4">{errorMessage}</p>}
           {successMessage && <p className="text-green-500 bg-white p-2 rounded-md mb-4">{successMessage}</p>}
 
-          {step === 1 ? (
-            
-            <form onSubmit={handleVerification} className="space-y-4 w-full max-w-md">
+          {!isResetMode ? (
+            <form onSubmit={handleRequestReset} className="space-y-4 w-full max-w-md">
               <div className="relative">
                 <FaEnvelope className="absolute left-3 top-3 text-blue-500" />
                 <input
@@ -130,27 +124,14 @@ const ResetPassword = () => {
                 />
               </div>
 
-              <div className="relative">
-                <FaUser className="absolute left-3 top-3 text-blue-500" />
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                  placeholder="Enter your username"
-                  className="mt-1 block w-full pl-10 pr-3 py-2 bg-white text-blue-500 border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 placeholder-blue-500"
-                />
-              </div>
-
               <button
                 type="submit"
                 className="w-full py-2 px-4 bg-white text-blue-500 font-semibold rounded-2xl shadow-md hover:bg-yellow-500 transition duration-200"
               >
-                Verify Account
+                Send Reset Link
               </button>
             </form>
           ) : (
-           
             <form onSubmit={handlePasswordReset} className="space-y-4 w-full max-w-md">
               <div className="relative">
                 <FaLock className="absolute left-3 top-3 text-blue-500" />

@@ -4,6 +4,7 @@ import RepoSidebar from '../../components/RepoSidebar/RepoSidebar';
 import GeneralSettings from './components/GeneralSettings';
 import Collaborators from './components/Collaborators';
 import Reports from './components/Reports';
+import CodeSuggestions from './components/CodeSuggestions';
 import './RepoSettings.css';
 
 const ProtectedCollaborators = () => {
@@ -90,6 +91,7 @@ const RepoSettings = () => {
           <Route path="general" element={<GeneralSettings />} />
           <Route path="collaborators" element={<ProtectedCollaborators />} />
           <Route path="reports" element={<Reports />} />
+          <Route path="suggestions" element={<CodeSuggestions />} />
         </Routes>
       </div>
     </div>

@@ -4,7 +4,16 @@ const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const axios = require('axios');
 const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 
+// Configure nodemailer transporter
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_APP_PASSWORD
+  }
+});
 
 exports.signup = async (req, res) => {
   const errors = validationResult(req);
@@ -157,38 +166,118 @@ exports.deleteProfile = async (req, res) => {
   }
 };
 
-// Direct password reset without email verification
+// Direct password reset with email verification
 exports.sendResetEmail = async (req, res) => {
-  const { email, username } = req.body;
+  const { email } = req.body;
 
   try {
-    // Find user by email and username combination
-    const user = await User.findOne({ email, username });
+    // Find user by email
+    const user = await User.findOne({ email });
     
     if (!user) {
       return res.status(400).json({ 
-        message: 'User not found. Please check your email and username.' 
+        message: 'No account with that email address exists.' 
       });
     }
 
-    // Generate a simple reset token
-    const resetToken = crypto.randomBytes(20).toString('hex');
+    // Generate a reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
     
-    // Update user with reset token
-    user.resetPasswordToken = resetToken;
+    // Hash the token before saving it
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
+    
+    // Update user with reset token (save the hashed version)
+    user.resetPasswordToken = hashedToken;
     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
     await user.save();
 
-    // Send token to frontend
+    // Create reset URL
+    const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+
+    // Email content
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: 'Reset Your Password - SpeCodeFusion',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Reset Your Password</title>
+        </head>
+        <body style="margin: 0; padding: 0; background-color: #f6f9fc;">
+          <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f6f9fc;">
+            <tr>
+              <td align="center" style="padding: 40px 0;">
+                <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                  <tr>
+                    <td align="center" style="padding: 40px;">
+                      <h1 style="color: #2563eb; margin: 0; font-family: Arial, sans-serif; font-size: 24px;">Reset Your Password</h1>
+                      <p style="color: #64748b; font-family: Arial, sans-serif; font-size: 16px; line-height: 24px; margin-top: 20px;">
+                        You have requested to reset your password. Click the button below to set a new password:
+                      </p>
+                      
+                      <!-- Button -->
+                      <table border="0" cellpadding="0" cellspacing="0" style="margin: 30px 0;">
+                        <tr>
+                          <td align="center" bgcolor="#2563eb" style="border-radius: 4px;">
+                            <a href="${resetUrl}"
+                               target="_blank"
+                               style="display: inline-block; padding: 16px 36px; font-family: Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 4px;">
+                              Set New Password
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                      
+                      <p style="color: #64748b; font-family: Arial, sans-serif; font-size: 14px; line-height: 24px;">
+                        This link will expire in 1 hour for security reasons.
+                      </p>
+                      <p style="color: #64748b; font-family: Arial, sans-serif; font-size: 14px; line-height: 24px;">
+                        If you did not request this password reset, please ignore this email and your password will remain unchanged.
+                      </p>
+                      
+                      <!-- Footer -->
+                      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 40px; border-top: 1px solid #e2e8f0;">
+                        <tr>
+                          <td align="center" style="padding-top: 20px;">
+                            <p style="color: #94a3b8; font-family: Arial, sans-serif; font-size: 12px; line-height: 20px;">
+                              This is an automated message from SpeCodeFusion. Please do not reply to this email.
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </body>
+        </html>
+      `
+    };
+
+    // Send email
+    await transporter.sendMail(mailOptions);
+
     res.json({ 
-      message: 'Verification successful',
-      resetToken 
+      message: 'Password reset link sent to your email address.' 
     });
 
   } catch (error) {
     console.error('Reset process error:', error);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+    
     res.status(500).json({ 
-      message: 'An error occurred during verification. Please try again.' 
+      message: 'Error sending reset email. Please try again.' 
     });
   }
 };
@@ -198,15 +287,21 @@ exports.resetPassword = async (req, res) => {
   const { token, newPassword } = req.body;
 
   try {
+    // Hash the token from the URL to compare with stored hash
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(token)
+      .digest('hex');
+
     // Find user with valid reset token
     const user = await User.findOne({
-      resetPasswordToken: token,
+      resetPasswordToken: hashedToken,
       resetPasswordExpires: { $gt: Date.now() }
     });
 
     if (!user) {
       return res.status(400).json({ 
-        message: 'Invalid or expired reset token. Please try again.' 
+        message: 'Invalid or expired reset token. Please request a new reset link.' 
       });
     }
 
@@ -219,8 +314,21 @@ exports.resetPassword = async (req, res) => {
     user.resetPasswordExpires = undefined;
     await user.save();
 
+    // Send confirmation email
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: 'Your password has been changed',
+      html: `
+        <h1>Password Reset Successful</h1>
+        <p>This is a confirmation that the password for your account ${user.email} has just been changed.</p>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+
     res.json({ 
-      message: 'Password successfully reset. You can now login with your new password.' 
+      message: 'Your password has been reset successfully. You can now login with your new password.' 
     });
   } catch (error) {
     console.error('Password reset error:', error);

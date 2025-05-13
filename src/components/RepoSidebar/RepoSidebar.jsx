@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
-import { FiSettings, FiUsers, FiBarChart } from 'react-icons/fi';
+import { FiSettings, FiUsers, FiBarChart, FiCode } from 'react-icons/fi';
 import { useTheme } from '../../context/ThemeContext';
 import './RepoSidebar.css';
 
@@ -21,7 +21,6 @@ const RepoSidebar = () => {
           return;
         }
 
-      
         const tokenPayload = JSON.parse(atob(token.split('.')[1]));
         const userId = tokenPayload.id;
         console.log('User ID from JWT:', userId);
@@ -62,7 +61,6 @@ const RepoSidebar = () => {
       icon: <FiSettings />,
       label: 'General Settings'
     },
-   
     ...(isOwner ? [{
       path: `/repo/${repoId}/settings/collaborators`,
       icon: <FiUsers />,
@@ -72,12 +70,16 @@ const RepoSidebar = () => {
       path: `/repo/${repoId}/settings/reports`,
       icon: <FiBarChart />,
       label: 'Reports'
+    },
+    {
+      path: `/repo/${repoId}/settings/suggestions`,
+      icon: <FiCode />,
+      label: 'Code Suggestions'
     }
   ];
 
   if (error) {
     console.error('RepoSidebar error:', error);
-   
   }
 
   return (

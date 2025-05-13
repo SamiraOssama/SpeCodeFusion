@@ -10,6 +10,7 @@ require('./config/passport');
 const Repo = require("./models/repo");
 const codeRoutes = require("./routes/codeRoutes");
 const compatibilityRoutes = require("./routes/compatibilityRoutes");
+const suggestionsRoutes = require('./routes/suggestions');
 const { initialize } = require("./scripts/init");
 const { execSync } = require('child_process');
 const notificationRoutes = require('./routes/notificationRoutes');
@@ -58,6 +59,7 @@ app.use("/api/compatibility", compatibilityRoutes);
 app.use("/api/admin", require("./routes/adminRoutes"));
 app.use("/api", codeRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api', suggestionsRoutes);
 
 // ✅ Connect to MongoDB and start server
 async function startServer() {

@@ -35,6 +35,7 @@ import AdminRepositories from './pages/AdminRepositories';
 import ManageAdmins from "./pages/ManageAdmins";
 import RepoSettings from './pages/RepoSettings/RepoSettings';
 import InvitationResponse from './pages/InvitationResponse';
+import NewPassword from "./pages/NewPassword";
 
 // Wrap the app content in a theme-aware component
 const ThemedApp = () => {
@@ -61,6 +62,7 @@ const ThemedApp = () => {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/reset-password/:token" element={<NewPassword />} />
           <Route path="/ReportDetail" element={<ReportDetail />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/AdminDashboard" element={<AdminDashboard />} />
